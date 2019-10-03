@@ -1,0 +1,40 @@
+package models;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+public class GameMap {
+	ArrayList<Country> countries;
+	ArrayList<Continent> continents;
+	ArrayList<Border> borders;
+
+	public GameMap(HashMap<String, ArrayList<String>> mapData) {
+		this.countries = mapData.get("[countries]").stream().map(Country::new)
+				.collect(Collectors.toCollection(ArrayList::new));
+		this.continents = mapData.get("[continents]").stream().map(Continent::new)
+				.collect(Collectors.toCollection(ArrayList::new));
+		this.borders = mapData.get("[borders]").stream().map(Border::new)
+				.collect(Collectors.toCollection(ArrayList::new));
+	}
+
+	public void showMapByContinents() {
+		Map<Integer, List<Country>> groupedCountries = this.countries.stream()
+				.collect(Collectors.groupingBy(Country::getContinent));
+		groupedCountries.forEach((k, v) -> {
+			System.out.printf("[%s]\n%s\n\n", this.continents.get(k - 1).name,
+					v.stream().map(Country::toString).collect(Collectors.joining("\n")));
+		});
+	}
+
+	@Override
+	public String toString() {
+		return String.format("[continents]\n%s\n\n[countries]\n%s\n\n[borders]\n%s\n",
+				this.continents.stream().map(Continent::toString).collect(Collectors.joining("\n")),
+				this.countries.stream().map(Country::toString).collect(Collectors.joining("\n")),
+				this.borders.stream().map(Border::toString).collect(Collectors.joining("\n")));
+
+	}
+}
