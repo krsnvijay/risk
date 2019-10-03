@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GameMap {
-	ArrayList<Country> countries;
-	ArrayList<Continent> continents;
-	ArrayList<Border> borders;
+	private ArrayList<Border> borders;
+	private ArrayList<Continent> continents;
+	private ArrayList<Country> countries;
 
 	public GameMap(HashMap<String, ArrayList<String>> mapData) {
 		this.countries = mapData.get("[countries]").stream().map(Country::new)
@@ -20,11 +20,35 @@ public class GameMap {
 				.collect(Collectors.toCollection(ArrayList::new));
 	}
 
+	public ArrayList<Border> getBorders() {
+		return borders;
+	}
+
+	public ArrayList<Continent> getContinents() {
+		return continents;
+	}
+
+	public ArrayList<Country> getCountries() {
+		return countries;
+	}
+
+	public void setBorders(ArrayList<Border> borders) {
+		this.borders = borders;
+	}
+
+	public void setContinents(ArrayList<Continent> continents) {
+		this.continents = continents;
+	}
+
+	public void setCountries(ArrayList<Country> countries) {
+		this.countries = countries;
+	}
+
 	public void showMapByContinents() {
 		Map<Integer, List<Country>> groupedCountries = this.countries.stream()
 				.collect(Collectors.groupingBy(Country::getContinent));
 		groupedCountries.forEach((k, v) -> {
-			System.out.printf("[%s]\n%s\n\n", this.continents.get(k - 1).name,
+			System.out.printf("[%s]\n%s\n\n", this.continents.get(k - 1).getName(),
 					v.stream().map(Country::toString).collect(Collectors.joining("\n")));
 		});
 	}

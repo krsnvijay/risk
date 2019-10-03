@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+/**
+ * @author v_valla
+ *
+ */
 public class Border {
-	int id;
-	ArrayList<Integer> neighbors;
+	private int id;
+	private ArrayList<Integer> neighbors;
 
 	public Border(String borderLine) {
 		String[] splitBorderLine = borderLine.split(" ");
@@ -14,6 +18,22 @@ public class Border {
 		this.neighbors = Arrays.stream(splitBorderLine, 1, splitBorderLine.length).map(Integer::parseInt)
 				.collect(Collectors.toCollection(ArrayList::new));
 
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public ArrayList<Integer> getNeighbors() {
+		return neighbors;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setNeighbors(ArrayList<Integer> neighbors) {
+		this.neighbors = neighbors;
 	}
 
 	@Override

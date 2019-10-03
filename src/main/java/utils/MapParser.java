@@ -8,7 +8,20 @@ import java.util.Scanner;
 
 import models.GameMap;
 
+/**
+ * @author v_valla
+ *
+ */
 public class MapParser {
+	/**
+	 * @param fileName
+	 *            the location of the map file to be parsed
+	 * @return GameMap the parsed GameMap Object
+	 * @throws IOException
+	 *             when file location/contents are invalid
+	 * @throws Exception
+	 *             when map file does'nt contain all the required sections
+	 */
 	public static GameMap loadMap(String fileName) throws IOException, Exception {
 		HashMap<String, ArrayList<String>> mapData = new HashMap<String, ArrayList<String>>();
 		Scanner scanner = new Scanner(new File(fileName));
@@ -26,7 +39,8 @@ public class MapParser {
 			}
 		}
 		scanner.close();
-		if(!mapData.containsKey("[countries]") || !mapData.containsKey("[continents]") || !mapData.containsKey("[borders]"))
+		if (!mapData.containsKey("[countries]") || !mapData.containsKey("[continents]")
+				|| !mapData.containsKey("[borders]"))
 			throw new Exception("Map file is invalid");
 		return new GameMap(mapData);
 	}
@@ -38,11 +52,10 @@ public class MapParser {
 			System.exit(-1);
 		}
 		try {
-			GameMap testMap = loadMap(args[0]);	
+			GameMap testMap = loadMap(args[0]);
 			testMap.showMapByContinents();
 			System.out.println();
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 
