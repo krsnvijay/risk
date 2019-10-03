@@ -15,6 +15,7 @@ public class MapParser {
    * @return GameMap the parsed GameMap Object
    * @throws IOException when file location/contents are invalid
    * @throws Exception when map file does'nt contain all the required sections
+   *
    */
   public static GameMap loadMap(String fileName) throws IOException, Exception {
     HashMap<String, ArrayList<String>> mapData = new HashMap<>();
