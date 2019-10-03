@@ -6,17 +6,14 @@ import org.junit.Test;
 
 public class PlaceholderTest {
 
-	@Before
-	public void setUp() throws Exception {
-	}
+  @Before
+  public void setUp() throws Exception {}
 
-	@After
-	public void tearDown() throws Exception {
-	}
+  @After
+  public void tearDown() throws Exception {}
 
-	@Test
-	public void test() {
-		fail("Not yet implemented");
-	}
-
+  @Test
+  public void test() {
+    fail("Not yet implemented");
+  }
 }
