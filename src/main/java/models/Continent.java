@@ -1,35 +1,18 @@
 package models;
 
 public class Continent {
-  private static int counter = 0;
   private String color;
-  private int id;
   private String name;
   private int value;
 
-  public Continent(String continentLine) {
-    String[] splitContinentLine = continentLine.split(" ");
-    counter += 1;
-    this.id = counter;
-    this.name = splitContinentLine[0];
-    this.value = Integer.parseInt(splitContinentLine[1]);
-    this.color = splitContinentLine[2];
-  }
-
-  public static int getCounter() {
-    return counter;
-  }
-
-  public static void setCounter(int counter) {
-    Continent.counter = counter;
+	public Continent(String color, String name, int value) {
+		this.color = color;
+		this.name = name;
+		this.value = value;
   }
 
   public String getColor() {
     return color;
-  }
-
-  public int getId() {
-    return id;
   }
 
   public String getName() {
@@ -44,10 +27,6 @@ public class Continent {
     this.color = color;
   }
 
-  public void setId(int id) {
-    this.id = id;
-  }
-
   public void setName(String name) {
     this.name = name;
   }
@@ -58,6 +37,6 @@ public class Continent {
 
   @Override
   public String toString() {
-    return String.format("%d %s %d %s", this.id, this.name, this.value, this.color);
+	  return String.format("%s %d %s", this.name, this.value, this.color);
   }
 }

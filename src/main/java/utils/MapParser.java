@@ -47,9 +47,10 @@ public class MapParser {
     try {
       GameMap testMap = loadMap(args[0]);
       testMap.showMapByContinents();
-      System.out.println();
+		System.out.println(testMap.toMapFileFormat());
     } catch (Exception e) {
       System.out.println(e.getMessage());
+		e.printStackTrace();
     }
   }
 }
