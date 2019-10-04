@@ -12,7 +12,12 @@ import models.Continent;
 import models.GameMap;
 
 /** @author v_valla */
-public class MapParser {
+public class MapParser extends GameMap {
+
+  public MapParser(String fileName, HashMap<String, ArrayList<String>> mapData) {
+    super(fileName, mapData);
+  }
+
   /**
    * @param fileName the location of the map file to be parsed
    * @return GameMap the parsed GameMap Object
