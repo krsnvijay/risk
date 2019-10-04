@@ -19,13 +19,19 @@ public class MapParser {
    */
   public static GameMap loadMap(String fileName) throws IOException, Exception {
     HashMap<String, ArrayList<String>> mapData = new HashMap<>();
+    String mapName = null;
     Scanner scanner = new Scanner(new File(fileName));
     while (scanner.hasNext()) {
       String line = scanner.nextLine();
+      if (line.startsWith("name")) {
+        mapName = line;
+        continue;
+      }
       if (line.matches("\\[\\w*\\]")) {
         ArrayList<String> sectionData = new ArrayList<>();
         while (scanner.hasNext()) {
           String sectionLine = scanner.nextLine();
+
           if (sectionLine.trim().isEmpty())
             break;
           sectionData.add(sectionLine);
@@ -35,9 +41,9 @@ public class MapParser {
     }
     scanner.close();
     if (!mapData.containsKey("[countries]") || !mapData.containsKey("[continents]")
-        || !mapData.containsKey("[borders]"))
+        || !mapData.containsKey("[borders]") || mapName == null)
       throw new Exception("Map file is invalid");
-    return new GameMap(mapData);
+    return new GameMap(mapName, mapData);
   }
 
   public static void saveMap(GameMap gameMap, String fileName) throws IOException {

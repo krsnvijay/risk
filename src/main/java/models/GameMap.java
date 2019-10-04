@@ -4,11 +4,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameMap {
-  private Map<String, ArrayList<String>> borders;
+  private ArrayList<String> fileSectionData;
+  private Map<String, Set<String>> borders;
   private Map<String, Continent> continents;
   private Map<String, Country> countries;
-
-  public GameMap(HashMap<String, ArrayList<String>> mapData) {
+  private String fileName;
+  public GameMap(String fileName ,HashMap<String, ArrayList<String>> mapData) {
+    this.fileName = fileName;
+    this.fileSectionData = mapData.get("[files]");
     ArrayList<String> continentsInOrder =
             mapData.get("[continents]").stream()
                     .map(line -> line.split(" ")[0])
@@ -47,18 +50,18 @@ public class GameMap {
     return new Pair<>(name, new Continent(color, name, value));
   }
 
-  public static Pair<String, ArrayList<String>> mapBorders(
+  public static Pair<String, Set<String>> mapBorders(
           String borderLine, ArrayList<String> countryNames) {
     String[] splitBorderLine = borderLine.split(" ");
     String key = countryNames.get(Integer.parseInt(splitBorderLine[0]) - 1);
-    ArrayList<String> value =
+    Set<String> value =
             Arrays.stream(splitBorderLine, 1, splitBorderLine.length)
                     .map(str -> countryNames.get(Integer.parseInt(str) - 1))
-            .collect(Collectors.toCollection(ArrayList::new));
+            .collect(Collectors.toSet());
     return new Pair<>(key, value);
   }
 
-  public static String showBorders(Map.Entry<String, ArrayList<String>> border) {
+  public static String showBorders(Map.Entry<String, Set<String>> border) {
     return String.format("%s %s", border.getKey(), String.join(" ", border.getValue()));
   }
 
@@ -82,6 +85,7 @@ public class GameMap {
   }
 
   public String serializeMap() {
+    String files = this.fileSectionData.stream().collect(Collectors.joining("\n"));
     ArrayList<String> continentsOrder =
             this.continents.keySet().stream().sorted().collect(Collectors.toCollection(ArrayList::new));
     ArrayList<String> countriesOrder =
@@ -99,7 +103,7 @@ public class GameMap {
                               int countryId = countriesOrder.indexOf(country.getName()) + 1;
                               String countryName = country.getName();
                               int continentId = continentsOrder.indexOf(country.getContinent()) + 1;
-                              return String.format("%d %s %d", countryId, countryName, continentId);
+                              return String.format("%d %s %d %d %d", countryId, countryName, continentId,country.getX(), country.getY());
                             })
                     .collect(Collectors.joining("\n"));
 
@@ -117,7 +121,7 @@ public class GameMap {
                             })
                     .collect(Collectors.joining("\n"));
     return String.format(
-            "[continents]\n%s\n\n[countries]\n%s\n\n[borders]\n%s\n", continents, countries, borders);
+            "%s\n\n[files]\n%s\n\n[continents]\n%s\n\n[countries]\n%s\n\n[borders]\n%s\n", this.fileName,files,continents, countries, borders);
   }
 
   @Override
@@ -133,11 +137,11 @@ public class GameMap {
                     .collect(Collectors.joining("\n")));
   }
 
-  public Map<String, ArrayList<String>> getBorders() {
+  public Map<String, Set<String>> getBorders() {
     return borders;
   }
 
-  public void setBorders(Map<String, ArrayList<String>> borders) {
+  public void setBorders(Map<String, Set<String>> borders) {
     this.borders = borders;
   }
 
