@@ -4,6 +4,8 @@ import models.GameMap;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -15,7 +17,6 @@ public class MapParser {
    * @return GameMap the parsed GameMap Object
    * @throws IOException when file location/contents are invalid
    * @throws Exception when map file does'nt contain all the required sections
-   *
    */
   public static GameMap loadMap(String fileName) throws IOException, Exception {
     HashMap<String, ArrayList<String>> mapData = new HashMap<>();
@@ -39,19 +40,24 @@ public class MapParser {
     return new GameMap(mapData);
   }
 
+  public static void saveMap(GameMap gameMap, String fileName) throws IOException {
+    Files.write(Paths.get(fileName), gameMap.serializeMap().getBytes());
+  }
+
   public static void main(String[] args) {
-    if (args.length != 1) {
+    if (args.length < 1) {
       System.out.println("Invalid argument");
-      System.out.println("Usage : MapParser <map_location>");
+      System.out.println("Usage : MapParser <map_location> <map_location_to_save(optional)>");
       System.exit(-1);
     }
     try {
       GameMap testMap = loadMap(args[0]);
       testMap.showMapByContinents();
-		System.out.println(testMap.toMapFileFormat());
+      System.out.println(testMap.serializeMap());
+      if (args.length == 2) saveMap(testMap, args[1]);
     } catch (Exception e) {
       System.out.println(e.getMessage());
-		e.printStackTrace();
+      e.printStackTrace();
     }
   }
 }
