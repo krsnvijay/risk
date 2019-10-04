@@ -1,14 +1,13 @@
 package utils;
 
-import models.GameMap;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
+import models.GameMap;
 
 /** @author v_valla */
 public class MapParser {
@@ -27,16 +26,17 @@ public class MapParser {
         ArrayList<String> sectionData = new ArrayList<>();
         while (scanner.hasNext()) {
           String sectionLine = scanner.nextLine();
-          if (sectionLine.trim().isEmpty()) break;
+          if (sectionLine.trim().isEmpty())
+            break;
           sectionData.add(sectionLine);
         }
         mapData.put(line, sectionData);
       }
     }
     scanner.close();
-    if (!mapData.containsKey("[countries]")
-        || !mapData.containsKey("[continents]")
-        || !mapData.containsKey("[borders]")) throw new Exception("Map file is invalid");
+    if (!mapData.containsKey("[countries]") || !mapData.containsKey("[continents]")
+        || !mapData.containsKey("[borders]"))
+      throw new Exception("Map file is invalid");
     return new GameMap(mapData);
   }
 
@@ -54,41 +54,40 @@ public class MapParser {
       GameMap testMap = loadMap(args[0]);
       testMap.showMapByContinents();
       System.out.println();
-      System.out.println(testMap.toMapFileFormat());
       System.out.println(testMap.serializeMap());
       if (args.length == 2)
         saveMap(testMap, args[1]);
       // Scanner keyboard = new Scanner(System.in);
       // while (true) {
-      //   String command = keyboard.nextLine();
+      // String command = keyboard.nextLine();
 
-      //   String[] commandSplit_original = command.split(" -");
-      //   String[] commandSplit =
-      //       Arrays.copyOfRange(commandSplit_original, 1, commandSplit_original.length);
+      // String[] commandSplit_original = command.split(" -");
+      // String[] commandSplit =
+      // Arrays.copyOfRange(commandSplit_original, 1, commandSplit_original.length);
 
-      //   if (command.startsWith("editcontinent")) {
-      //     if (!EditMap.editContinent(commandSplit, testMap)) {
-      //       System.out.println("Failed to perform certain continent operations");
-      //     }
+      // if (command.startsWith("editcontinent")) {
+      // if (!EditMap.editContinent(commandSplit, testMap)) {
+      // System.out.println("Failed to perform certain continent operations");
+      // }
 
-      //   } else if (command.startsWith("editcountry")) {
-      //     if (!EditMap.editCountry(commandSplit, testMap)) {
-      //       System.out.println("Failed to perform certain country operations");
-      //     }
+      // } else if (command.startsWith("editcountry")) {
+      // if (!EditMap.editCountry(commandSplit, testMap)) {
+      // System.out.println("Failed to perform certain country operations");
+      // }
 
-      //   } else if (command.startsWith("editneighbor")) {
-      //     if (!EditMap.editNeighbor(commandSplit, testMap)) {
-      //       System.out.println("Failed to perform certain neighbor country operations");
-      //     }
+      // } else if (command.startsWith("editneighbor")) {
+      // if (!EditMap.editNeighbor(commandSplit, testMap)) {
+      // System.out.println("Failed to perform certain neighbor country operations");
+      // }
 
-      //   } else {
-      //     if (command.startsWith("showmap")) {
-      //       System.out.println(testMap);
-      //     } else {
-      //       System.out.println("INVALID COMMAND! TRY AGAIN!");
-      //       continue;
-      //     }
-      //   }
+      // } else {
+      // if (command.startsWith("showmap")) {
+      // System.out.println(testMap);
+      // } else {
+      // System.out.println("INVALID COMMAND! TRY AGAIN!");
+      // continue;
+      // }
+      // }
       // }
     } catch (Exception e) {
       System.out.println(e.getMessage());

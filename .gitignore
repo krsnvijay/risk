@@ -1,3 +1,8 @@
+# IDE Specific Files
+*.idea/
+*.settings/
+*.iml
+
 # Compiled class file
 *.class
 
