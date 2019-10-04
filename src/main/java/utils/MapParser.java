@@ -1,10 +1,10 @@
 package utils;
 
 import models.GameMap;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -48,6 +48,38 @@ public class MapParser {
       GameMap testMap = loadMap(args[0]);
       testMap.showMapByContinents();
       System.out.println();
+      Scanner keyboard = new Scanner(System.in);
+      while (true) {
+        String command = keyboard.nextLine();
+
+        String[] commandSplit_original = command.split(" -");
+        String[] commandSplit =
+            Arrays.copyOfRange(commandSplit_original, 1, commandSplit_original.length);
+
+        if (command.startsWith("editcontinent")) {
+          if (!EditMap.editContinent(commandSplit, testMap)) {
+            System.out.println("Failed to perform certain continent operations");
+          }
+
+        } else if (command.startsWith("editcountry")) {
+          if (!EditMap.editCountry(commandSplit, testMap)) {
+            System.out.println("Failed to perform certain country operations");
+          }
+
+        } else if (command.startsWith("editneighbor")) {
+          if (!EditMap.editNeighbor(commandSplit, testMap)) {
+            System.out.println("Failed to perform certain neighbor country operations");
+          }
+
+        } else {
+          if (command.startsWith("showmap")) {
+            System.out.println(testMap);
+          } else {
+            System.out.println("INVALID COMMAND! TRY AGAIN!");
+            continue;
+          }
+        }
+      }
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }

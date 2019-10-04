@@ -15,6 +15,14 @@ public class Continent {
     this.value = Integer.parseInt(splitContinentLine[1]);
     this.color = splitContinentLine[2];
   }
+  
+  public Continent(String continent,String control_value){
+		counter+=1;
+		this.id=counter;
+		this.name=continent;
+		this.value=Integer.parseInt(control_value);
+		this.color = "BLANK";
+  }
 
   public static int getCounter() {
     return counter;
