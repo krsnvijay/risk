@@ -11,6 +11,13 @@ public class Continent {
 		this.value = value;
   }
 
+  public Continent(String name, int value) {
+    this.color = "BLANK";
+    this.name = name;
+    this.value = value;
+  }
+
+
   public String getColor() {
     return color;
   }
