@@ -81,7 +81,7 @@ public class GameMap {
     System.out.println(mapByContinents);
   }
 
-  public String toMapFileFormat() {
+  public String serializeMap() {
     ArrayList<String> continentsOrder =
             this.continents.keySet().stream().sorted().collect(Collectors.toCollection(ArrayList::new));
     ArrayList<String> countriesOrder =
