@@ -15,6 +15,14 @@ public class Country {
     this.y = 0;
   }
 
+  public Country(String name, String continent, int x, int y) {
+    super();
+    this.name = name;
+    this.continent = continent;
+    this.x = x;
+    this.y = y;
+  }
+
   public String getContinent() {
     return this.continent;
   }

@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import models.Continent;
 import models.GameMap;
 
 /** @author v_valla */
@@ -47,7 +49,36 @@ public class MapParser {
   }
 
   public static void saveMap(GameMap gameMap, String fileName) throws IOException {
-    Files.write(Paths.get(fileName), gameMap.serializeMap().getBytes());
+    Files.write(Paths.get(fileName), serializeMap(gameMap).getBytes());
+  }
+
+  public static String serializeMap(GameMap gameMap) {
+    String files = gameMap.getFileSectionData().stream().collect(Collectors.joining("\n"));
+    ArrayList<String> continentsOrder = gameMap.getContinents().keySet().stream().sorted()
+        .collect(Collectors.toCollection(ArrayList::new));
+    ArrayList<String> countriesOrder = gameMap.getCountries().keySet().stream().sorted()
+        .collect(Collectors.toCollection(ArrayList::new));
+    String continents = continentsOrder.stream().map(str -> gameMap.getContinents().get(str))
+        .map(Continent::toString).collect(Collectors.joining("\n"));
+    String countries =
+        countriesOrder.stream().map(str -> gameMap.getCountries().get(str)).map(country -> {
+          int countryId = countriesOrder.indexOf(country.getName()) + 1;
+          String countryName = country.getName();
+          int continentId = continentsOrder.indexOf(country.getContinent()) + 1;
+          return String.format("%d %s %d %d %d", countryId, countryName, continentId,
+              country.getX(), country.getY());
+        }).collect(Collectors.joining("\n"));
+
+    String borders = countriesOrder.stream().map(countryName -> {
+      int countryId = countriesOrder.indexOf(countryName) + 1;
+      String neighbors =
+          gameMap.getBorders().get(countryName).stream().map(c -> countriesOrder.indexOf(c) + 1)
+              .map(String::valueOf).collect(Collectors.joining(" "));
+      return String.format("%d %s", countryId, neighbors);
+    }).collect(Collectors.joining("\n"));
+    return String.format(
+        "%s\n\n[files]\n%s\n\n[continents]\n%s\n\n[countries]\n%s\n\n[borders]\n%s\n",
+        gameMap.getFileName(), files, continents, countries, borders);
   }
 
   public static void main(String[] args) {
@@ -60,7 +91,7 @@ public class MapParser {
       GameMap testMap = loadMap(args[0]);
       testMap.showMapByContinents();
       System.out.println();
-      System.out.println(testMap.serializeMap());
+      System.out.println(serializeMap(testMap));
       if (args.length == 2)
         saveMap(testMap, args[1]);
       // Scanner keyboard = new Scanner(System.in);
