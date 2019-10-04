@@ -15,6 +15,7 @@ public class MapParser {
    * @return GameMap the parsed GameMap Object
    * @throws IOException when file location/contents are invalid
    * @throws Exception when map file does'nt contain all the required sections
+   *
    */
   public static GameMap loadMap(String fileName) throws IOException, Exception {
     HashMap<String, ArrayList<String>> mapData = new HashMap<>();
@@ -48,40 +49,42 @@ public class MapParser {
       GameMap testMap = loadMap(args[0]);
       testMap.showMapByContinents();
       System.out.println();
-      Scanner keyboard = new Scanner(System.in);
-      while (true) {
-        String command = keyboard.nextLine();
+      System.out.println(testMap.toMapFileFormat());
+      // Scanner keyboard = new Scanner(System.in);
+      // while (true) {
+      //   String command = keyboard.nextLine();
 
-        String[] commandSplit_original = command.split(" -");
-        String[] commandSplit =
-            Arrays.copyOfRange(commandSplit_original, 1, commandSplit_original.length);
+      //   String[] commandSplit_original = command.split(" -");
+      //   String[] commandSplit =
+      //       Arrays.copyOfRange(commandSplit_original, 1, commandSplit_original.length);
 
-        if (command.startsWith("editcontinent")) {
-          if (!EditMap.editContinent(commandSplit, testMap)) {
-            System.out.println("Failed to perform certain continent operations");
-          }
+      //   if (command.startsWith("editcontinent")) {
+      //     if (!EditMap.editContinent(commandSplit, testMap)) {
+      //       System.out.println("Failed to perform certain continent operations");
+      //     }
 
-        } else if (command.startsWith("editcountry")) {
-          if (!EditMap.editCountry(commandSplit, testMap)) {
-            System.out.println("Failed to perform certain country operations");
-          }
+      //   } else if (command.startsWith("editcountry")) {
+      //     if (!EditMap.editCountry(commandSplit, testMap)) {
+      //       System.out.println("Failed to perform certain country operations");
+      //     }
 
-        } else if (command.startsWith("editneighbor")) {
-          if (!EditMap.editNeighbor(commandSplit, testMap)) {
-            System.out.println("Failed to perform certain neighbor country operations");
-          }
+      //   } else if (command.startsWith("editneighbor")) {
+      //     if (!EditMap.editNeighbor(commandSplit, testMap)) {
+      //       System.out.println("Failed to perform certain neighbor country operations");
+      //     }
 
-        } else {
-          if (command.startsWith("showmap")) {
-            System.out.println(testMap);
-          } else {
-            System.out.println("INVALID COMMAND! TRY AGAIN!");
-            continue;
-          }
-        }
-      }
+      //   } else {
+      //     if (command.startsWith("showmap")) {
+      //       System.out.println(testMap);
+      //     } else {
+      //       System.out.println("INVALID COMMAND! TRY AGAIN!");
+      //       continue;
+      //     }
+      //   }
+      // }
     } catch (Exception e) {
       System.out.println(e.getMessage());
+		e.printStackTrace();
     }
   }
 }
