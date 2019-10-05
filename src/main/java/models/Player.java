@@ -1,6 +1,8 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 /**
  * @author s_anakih
@@ -67,6 +69,24 @@ public class Player {
       break;
     }
   }
-}
 
+  public static ArrayList<Country> populateCountries(ArrayList<Player> players, GameMap gameMap) {
+    ArrayList<Country> countries =
+        gameMap.getCountries().values().stream().collect(Collectors.toCollection(ArrayList::new));
+    Collections.shuffle(countries);
+    int countrySize = countries.size();
+    int playerCount = players.size();
+    for (int i = 0; i <= countrySize; i++) {
+      countries.get(i).setOwnerName(players.get(i % playerCount).getPlayername());
+    }
+    return countries;
+  }
+
+  public static ArrayList<Country> getCountriesByOwnership(String playername, GameMap gameMap) {
+    ArrayList<Country> countries =
+        gameMap.getCountries().values().stream().filter(c -> c.getOwnerName().equals(playername))
+            .collect(Collectors.toCollection(ArrayList::new));
+    return countries;
+  }
+}
 

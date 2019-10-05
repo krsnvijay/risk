@@ -5,6 +5,7 @@ public class Country {
   private String name;
   private int x;
   private int y;
+  private String ownerName;
 
 
   public Country(String name, String continent) {
@@ -45,6 +46,14 @@ public class Country {
 
   public int getY() {
     return this.y;
+  }
+
+  public void setOwnerName(String ownerName) {
+    this.ownerName = ownerName;
+  }
+
+  public String getOwnerName() {
+    return this.ownerName;
   }
 
   @Override
