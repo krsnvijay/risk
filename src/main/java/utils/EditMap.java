@@ -2,7 +2,6 @@ package utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -12,15 +11,14 @@ import models.Country;
 import models.GameMap;
 
 public class EditMap extends MapParser {
-  public EditMap(String fileName, HashMap<String, ArrayList<String>> mapData) {
-    super(fileName, mapData);
+  public EditMap() {
+    super();
   }
 
-  public static boolean editContinent(String[] opCmds, GameMap map) {
+  public boolean editContinent(String[] opCmds, GameMap map) {
     Map<String, Continent> copyOfContinents = map.getContinents();
     Map<String, Country> copyOfCountries = map.getCountries();
     Map<String, Set<String>> copyOfBorders = map.getBorders();
-
     Arrays.asList(opCmds).stream().forEach(opcmd -> {
       String[] split_opcmd = opcmd.split(" ");
       String continent = split_opcmd[1];
@@ -61,7 +59,7 @@ public class EditMap extends MapParser {
     return true;
   }
 
-  public static boolean editCountry(String[] opCmds, GameMap map) {
+  public boolean editCountry(String[] opCmds, GameMap map) {
     Map<String, Country> copyOfCountries = map.getCountries();
     Map<String, Set<String>> copyOfBorders = map.getBorders();
     Arrays.asList(opCmds).stream().forEach(opcmd -> {
@@ -93,7 +91,7 @@ public class EditMap extends MapParser {
     return true;
   }
 
-  public static boolean editNeighbor(String[] opCmds, GameMap map) {
+  public boolean editNeighbor(String[] opCmds, GameMap map) {
     Map<String, Set<String>> copyOfBorders = map.getBorders();
     Map<String, Country> copyOfCountries = map.getCountries();
     Arrays.asList(opCmds).stream().forEach(opcmd -> {
