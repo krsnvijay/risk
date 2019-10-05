@@ -9,7 +9,6 @@ import utils.EditMap;
 public class Runner {
 
   private static void beginEditor(EditMap editMap, GameMap gameMap) {
-    System.out.println("BeginEditor begins!");
     while (true) {
       CLI cli = CLI.getInstance();
       String userInput = CLI.input.nextLine();
@@ -46,7 +45,6 @@ public class Runner {
 
   public static void main(String[] args) throws IOException, Exception {
     CLI cli = CLI.getInstance();
-    System.out.println("Hey soul sister");
     cli.setCurrentContext(CLI.Context.MAIN_MENU);
     while (true) {
       String userCommand = CLI.input.nextLine();

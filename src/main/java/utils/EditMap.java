@@ -16,12 +16,12 @@ public class EditMap extends MapParser {
   }
 
   public boolean editContinent(String[] opCmds, GameMap map) {
-    Map<String, Continent> copyOfContinents = map.getContinents();
-    Map<String, Country> copyOfCountries = map.getCountries();
-    Map<String, Set<String>> copyOfBorders = map.getBorders();
     Arrays.asList(opCmds).stream().forEach(opcmd -> {
       String[] split_opcmd = opcmd.split(" ");
       String continent = split_opcmd[1];
+      Map<String, Continent> copyOfContinents = map.getContinents();
+      Map<String, Country> copyOfCountries = map.getCountries();
+      Map<String, Set<String>> copyOfBorders = map.getBorders();
       if (split_opcmd[0].equals("add")) {
         String continent_cntrl_val = split_opcmd[2];
         Continent to_insert = new Continent(continent, Integer.parseInt(continent_cntrl_val));
@@ -60,9 +60,9 @@ public class EditMap extends MapParser {
   }
 
   public boolean editCountry(String[] opCmds, GameMap map) {
-    Map<String, Country> copyOfCountries = map.getCountries();
-    Map<String, Set<String>> copyOfBorders = map.getBorders();
     Arrays.asList(opCmds).stream().forEach(opcmd -> {
+      Map<String, Country> copyOfCountries = map.getCountries();
+      Map<String, Set<String>> copyOfBorders = map.getBorders();
       String[] split_opcmd = opcmd.split(" ");
       String country = split_opcmd[1];
       if (split_opcmd[0].equals("add")) {
@@ -92,9 +92,9 @@ public class EditMap extends MapParser {
   }
 
   public boolean editNeighbor(String[] opCmds, GameMap map) {
-    Map<String, Set<String>> copyOfBorders = map.getBorders();
-    Map<String, Country> copyOfCountries = map.getCountries();
     Arrays.asList(opCmds).stream().forEach(opcmd -> {
+      Map<String, Set<String>> copyOfBorders = map.getBorders();
+      Map<String, Country> copyOfCountries = map.getCountries();
       String[] split_opcmd = opcmd.split(" ");
       String country = split_opcmd[1];
       String neighbor_country = split_opcmd[2];
