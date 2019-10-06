@@ -1,8 +1,6 @@
 package models;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +11,7 @@ import java.util.stream.Collectors;
  *
  */
 public class GameMap {
+
   /**
    * Contains the information in the [File] section.
    */
@@ -24,12 +23,12 @@ public class GameMap {
   private Map<String, Set<String>> borders;
 
   /**
-   * Stores an adjacency list of all continents.
+   * Stores a map of all continents.
    */
   private Map<String, Continent> continents;
 
   /**
-   * Stores an adjacency list of all countries.
+   * Stores a map of all countries.
    */
   private Map<String, Country> countries;
 
@@ -42,73 +41,20 @@ public class GameMap {
    * This is the constructor for the GameMap class. It takes a hashmap with the file data and parses
    * the different sections using streams.
    * 
-   * After that, the required sections are stored in the instance variables in the class.
-   * 
-   * @param fileName the name of the file.
-   * @param mapData the entire gamemap.
+   * @param fileSectionData Contains the information in the [File] section.
+   * @param borders Stores an adjacency list of all borders.
+   * @param continents Stores a map of all continents.
+   * @param countries Stores a map of all countries.
+   * @param fileName contains map name
    */
-  public GameMap(String fileName, HashMap<String, ArrayList<String>> mapData) {
+  public GameMap(ArrayList<String> fileSectionData, Map<String, Set<String>> borders,
+      Map<String, Continent> continents, Map<String, Country> countries, String fileName) {
+    super();
+    this.fileSectionData = fileSectionData;
+    this.borders = borders;
+    this.continents = continents;
+    this.countries = countries;
     this.fileName = fileName;
-    this.fileSectionData = mapData.get("[files]");
-    ArrayList<String> continentsInOrder = mapData.get("[continents]").stream()
-        .map(line -> line.split(" ")[0]).collect(Collectors.toCollection(ArrayList::new));
-    ArrayList<String> countriesInOrder = mapData.get("[countries]").stream()
-        .map(line -> line.split(" ")[1]).collect(Collectors.toCollection(ArrayList::new));
-    this.continents = mapData.get("[continents]").stream().map(GameMap::mapContinent)
-        .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
-    this.countries =
-        mapData.get("[countries]").stream().map(line -> GameMap.mapCountry(line, continentsInOrder))
-            .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
-    this.borders =
-        mapData.get("[borders]").stream().map(line -> GameMap.mapBorders(line, countriesInOrder))
-            .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
-  }
-
-  /**
-   * This maps the country from the file into a Country object.
-   * 
-   * @param countryLine the raw line from the file.
-   * @param continentNames the names of all continents
-   * @return A Pair object, key is the name and the value is the Country object
-   */
-  public static Pair<String, Country> mapCountry(String countryLine,
-      ArrayList<String> continentNames) {
-    String[] splitCountryLine = countryLine.split(" ");
-    String name = splitCountryLine[1];
-    String continent = continentNames.get(Integer.parseInt(splitCountryLine[2]) - 1);
-    int x = Integer.parseInt(splitCountryLine[3]);
-    int y = Integer.parseInt(splitCountryLine[4]);
-    return new Pair<>(name, new Country(name, continent, x, y));
-  }
-
-  /**
-   * This maps the continent from the file into a Continent object.
-   * 
-   * @param continentLine the raw line from the file.
-   * @return A Pair object, key is the name and the value is the Continent object
-   */
-  public static Pair<String, Continent> mapContinent(String continentLine) {
-    String[] splitContinentLine = continentLine.split(" ");
-    String name = splitContinentLine[0];
-    int value = Integer.parseInt(splitContinentLine[1]);
-    String color = splitContinentLine[2];
-    return new Pair<>(name, new Continent(color, name, value));
-  }
-
-  /**
-   * This maps the borders from the file into a Border object.
-   * 
-   * @param borderLine the raw line from the file.
-   * @param countryNames A list of country names.
-   * @return A Pair object, key is the name and the value is a Set of borders.
-   */
-  public static Pair<String, Set<String>> mapBorders(String borderLine,
-      ArrayList<String> countryNames) {
-    String[] splitBorderLine = borderLine.split(" ");
-    String key = countryNames.get(Integer.parseInt(splitBorderLine[0]) - 1);
-    Set<String> value = Arrays.stream(splitBorderLine, 1, splitBorderLine.length)
-        .map(str -> countryNames.get(Integer.parseInt(str) - 1)).collect(Collectors.toSet());
-    return new Pair<>(key, value);
   }
 
   /**
@@ -143,10 +89,11 @@ public class GameMap {
   @Override
   public String toString() {
     return String.format("[continents]\n%s\n\n[countries]\n%s\n\n[borders]\n%s\n",
-        this.continents.values().stream().map(Continent::toString)
+        this.continents.values().stream().map(Continent::toString).sorted()
             .collect(Collectors.joining("\n")),
-        this.countries.values().stream().map(Country::toString).collect(Collectors.joining("\n")),
-        this.borders.entrySet().stream().map(GameMap::showBorders)
+        this.countries.values().stream().map(Country::toString).sorted()
+            .collect(Collectors.joining("\n")),
+        this.borders.entrySet().stream().map(GameMap::showBorders).sorted()
             .collect(Collectors.joining("\n")));
   }
 
