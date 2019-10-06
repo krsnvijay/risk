@@ -20,15 +20,21 @@ public class Runner {
    * 
    * @param editMap An instance of EditMap.
    * @param gameMap An instance of the whole GameMap.
+   * @throws Exception when there's an invalid command.
    */
-  private static void beginEditor(EditMap editMap, GameMap gameMap) {
+  private static void beginEditor(EditMap editMap, GameMap gameMap) throws Exception {
     while (true) {
       CLI cli = CLI.getInstance();
       String userInput = CLI.input.nextLine();
       String userCommand = userInput.split(" ")[0];
       String[] opCommands = null;
 
-      if (userInput.startsWith("edit")) {
+      if (userInput.startsWith("save")) {
+        opCommands = userInput.split(" ");
+        if (opCommands.length != 2) {
+          throw new Exception("Invalid Command");
+        }
+      } else if (userInput.startsWith("edit")) {
         String[] originalSplit = userInput.split(" -");
         opCommands = Arrays.copyOfRange(originalSplit, 1, originalSplit.length);
       }
@@ -44,11 +50,17 @@ public class Runner {
           case "editneighbor":
             editMap.editNeighbor(opCommands, gameMap);
             break;
+          case "savemap":
+            if (editMap.validateMap(gameMap))
+              editMap.saveMap(gameMap, opCommands[1]);
+            else
+              throw new Exception("Invalid map!");
+            break;
           case "validatemap":
             if (editMap.validateMap(gameMap))
-              System.out.println("VALID MAP!");
+              System.out.println("Valid Map!");
             else
-              System.out.println("INVALID MAP!");
+              throw new Exception("Invalid map!");
             break;
           case "showmap":
             System.out.println(gameMap);
@@ -71,23 +83,27 @@ public class Runner {
     CLI cli = CLI.getInstance();
     cli.setCurrentContext(CLI.Context.MAIN_MENU);
     while (true) {
-      String userCommand = CLI.input.nextLine();
-      if (cli.validate(userCommand)) {
-        switch (userCommand.split(" ")[0]) {
-          case "editmap":
-            cli.setCurrentContext(CLI.Context.EDITOR);
-            EditMap editMap = new EditMap();
-            String fileName = userCommand.split(" ")[1];
-            GameMap gameMap = editMap.loadMap(fileName);
-            System.out.println(gameMap);
-            beginEditor(editMap, gameMap);
-            break;
-          case "loadmap":
-            cli.setCurrentContext(CLI.Context.GAME_SETUP);
-            break;
+      try {
+        String userCommand = CLI.input.nextLine();
+        if (cli.validate(userCommand)) {
+          switch (userCommand.split(" ")[0]) {
+            case "editmap":
+              cli.setCurrentContext(CLI.Context.EDITOR);
+              EditMap editMap = new EditMap();
+              String fileName = userCommand.split(" ")[1];
+              GameMap gameMap = editMap.loadMap(fileName);
+              System.out.println(gameMap);
+              beginEditor(editMap, gameMap);
+              break;
+            case "loadmap":
+              cli.setCurrentContext(CLI.Context.GAME_SETUP);
+              break;
+          }
+        } else {
+          System.out.println("Invalid command.");
         }
-      } else {
-        System.out.println("Invalid command.");
+      } catch (Exception e) {
+        System.out.println(e.getMessage());
       }
     }
   }

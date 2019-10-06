@@ -7,8 +7,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * GameMap stores map data i.e borders, countries, files, continents
+ * 
  * @author Vijay
- *
  */
 public class GameMap {
 
@@ -38,8 +39,7 @@ public class GameMap {
   private String fileName;
 
   /**
-   * This is the constructor for the GameMap class. It takes a hashmap with the file data and parses
-   * the different sections using streams.
+   * This is the constructor for the GameMap class.
    * 
    * @param fileSectionData Contains the information in the [File] section.
    * @param borders Stores an adjacency list of all borders.
