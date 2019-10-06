@@ -32,7 +32,10 @@ public class Runner {
             editMap.editNeighbor(opCommands, gameMap);
             break;
           case "validatemap":
-            // TODO
+            if (editMap.validateMap(gameMap))
+              System.out.println("VALID MAP!");
+            else
+              System.out.println("INVALID MAP!");
             break;
           case "showmap":
             System.out.println(gameMap);

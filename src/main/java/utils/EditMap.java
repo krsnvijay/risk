@@ -3,6 +3,7 @@ package utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -116,6 +117,57 @@ public class EditMap extends MapParser {
         map.setBorders(copyOfBorders);
       }
     });
+    return true;
+  }
+
+  private static HashSet<Country> DFSUtilContinents(List<Country> map, HashSet<Country> visited,
+      Country start, GameMap completeMap) {
+    Map<String, Set<String>> copyOfBorders = completeMap.getBorders();
+    Map<String, Country> copyOfCountries = completeMap.getCountries();
+    visited.add(start);
+    for (String neighbor : copyOfBorders.get(start.getName())) {
+      if (map.contains(copyOfCountries.get(neighbor))
+          && !visited.contains(copyOfCountries.get(neighbor))) {
+        Country neighborCountry = copyOfCountries.get(neighbor);
+        DFSUtilContinents(map, visited, neighborCountry, completeMap);
+      }
+    }
+    return visited;
+  }
+
+  private static HashSet<String> DFSUtilWholeMap(HashSet<String> visited, String start,
+      GameMap completeMap) {
+    visited.add(start);
+    for (String neighbor : completeMap.getBorders().get(start)) {
+      if (!visited.contains(neighbor)) {
+        DFSUtilWholeMap(visited, neighbor, completeMap);
+      }
+    }
+    return visited;
+  }
+
+  public boolean validateMap(GameMap map) {
+    Map<String, Set<String>> copyOfBorders = map.getBorders();
+    Map<String, Country> copyOfCountries = map.getCountries();
+    Map<String, List<Country>> groupedByCountries =
+        copyOfCountries.values().stream().collect(Collectors.groupingBy(Country::getContinent));
+
+    // RUN DFS ON CONTINENTS
+    for (String continent : groupedByCountries.keySet()) {
+      List<Country> countriesInContinent = groupedByCountries.get(continent);
+      HashSet<Country> visited = new HashSet<>();
+      visited = DFSUtilContinents(countriesInContinent, visited, countriesInContinent.get(0), map);
+      if (visited.size() != countriesInContinent.size()) {
+        return false;
+      }
+    }
+    // RUN DFS ON WHOLE MAP
+    HashSet<String> visited = new HashSet<>();
+    String startCountry = copyOfCountries.keySet().stream().findFirst().orElse(null);
+    if (startCountry != null)
+      visited = DFSUtilWholeMap(visited, startCountry, map);
+    if (visited.size() != copyOfBorders.keySet().size())
+      return false;
     return true;
   }
 
