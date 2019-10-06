@@ -6,8 +6,21 @@ import models.GameMap;
 import utils.CLI;
 import utils.EditMap;
 
+/**
+ * Runs the project and handles the initial commands.
+ * 
+ * @author Siddhant Bansal
+ *
+ */
 public class Runner {
 
+  /**
+   * The CLI Map Editor. Handles map editing commands for addition and removal of continents,
+   * countries, and neighbours. Also handles validation and displaying the map.
+   * 
+   * @param editMap An instance of EditMap.
+   * @param gameMap An instance of the whole GameMap.
+   */
   private static void beginEditor(EditMap editMap, GameMap gameMap) {
     while (true) {
       CLI cli = CLI.getInstance();
@@ -43,6 +56,14 @@ public class Runner {
     }
   }
 
+  /**
+   * The main method which runs the whole project. It parses user commands and initiates the game or
+   * editor.
+   * 
+   * @param args The command line arguments as a String array.
+   * @throws IOException TODO: will handle the exception.
+   * @throws Exception TODO: will handle the exception.
+   */
   public static void main(String[] args) throws IOException, Exception {
     CLI cli = CLI.getInstance();
     cli.setCurrentContext(CLI.Context.MAIN_MENU);
