@@ -31,7 +31,7 @@ public class MapParser {
    * @throws IOException when file location/contents are invalid
    * @throws Exception when map file doesn't contain all the required sections
    */
-  public GameMap loadMap(String fileName) throws IOException, Exception {
+  public static GameMap loadMap(String fileName) throws IOException, Exception {
     ArrayList<String> fileSectionData = null;
     Map<String, Set<String>> borders = null;
     Map<String, Continent> continents = null;

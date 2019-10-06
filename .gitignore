@@ -3,6 +3,7 @@
 *.settings/
 *.iml
 *.metadata/
+*.classpath
 
 # Compiled class file
 *.class

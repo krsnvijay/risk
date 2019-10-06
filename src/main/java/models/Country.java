@@ -36,6 +36,8 @@ public class Country {
    */
   private String ownerName;
 
+  private int numberOfArmies;
+
 
   /**
    * The constructor for the Country class.
@@ -163,5 +165,33 @@ public class Country {
    */
   public void setY(int y) {
     this.y = y;
+  }
+
+  /**
+   * @return
+   */
+  public int getNumberOfArmies() {
+    return numberOfArmies;
+  }
+
+  /**
+   * @param numberOfArmies
+   */
+  public void setNumberOfArmies(int numberOfArmies) {
+    this.numberOfArmies = numberOfArmies;
+  }
+
+  /**
+   * @param count
+   */
+  public void addArmies(int count) {
+    this.numberOfArmies += count;
+  }
+
+  /**
+   * @param count
+   */
+  public void removeArmies(int count) {
+    this.numberOfArmies -= count;
   }
 }

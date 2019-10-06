@@ -1,10 +1,13 @@
 package views;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import controllers.GameRunner;
 import models.GameMap;
 import utils.CLI;
 import utils.EditMap;
+import utils.MapParser;
 
 /**
  * Runs the project and handles the initial commands.
@@ -65,6 +68,43 @@ public class Runner {
           case "showmap":
             System.out.println(gameMap);
             break;
+          case "exiteditor":
+            return;
+        }
+      } else
+        return;
+    }
+  }
+
+  /**
+   * @param editMap
+   * @param gameMap
+   */
+  private static void beginGame(GameMap gameMap) {
+    while (true) {
+      CLI cli = CLI.getInstance();
+      String userInput = CLI.input.nextLine();
+      String userCommand = userInput.split(" ")[0];
+      String[] opCommands = null;
+
+      if (userInput.startsWith("edit")) {
+        String[] originalSplit = userInput.split(" -");
+        opCommands = Arrays.copyOfRange(originalSplit, 1, originalSplit.length);
+      }
+
+      if (cli.validate(userCommand)) {
+        switch (userCommand) {
+          case "editcontinent":
+            break;
+          case "editcountry":
+            break;
+          case "editneighbor":
+            break;
+          case "validatemap":
+            break;
+          case "showmap":
+            System.out.println(gameMap);
+            break;
         }
       } else
         return;
@@ -89,18 +129,22 @@ public class Runner {
           switch (userCommand.split(" ")[0]) {
             case "editmap":
               cli.setCurrentContext(CLI.Context.EDITOR);
-              EditMap editMap = new EditMap();
               String fileName = userCommand.split(" ")[1];
-              GameMap gameMap = editMap.loadMap(fileName);
+              GameMap gameMap = EditMap.loadMap(fileName);
               System.out.println(gameMap);
-              beginEditor(editMap, gameMap);
+              beginEditor(new EditMap(), gameMap);
               break;
             case "loadmap":
-              cli.setCurrentContext(CLI.Context.GAME_SETUP);
+              GameMap loadedMap = MapParser.loadMap(userCommand.split(" ")[1]);
+              GameRunner gameRunner = new GameRunner(loadedMap);
+              gameRunner.gameSetup();
+              break;
+            case "gameplayer":
+              String[] commandSplit = userCommand.split(" -");
+              String[] optionsArray = Arrays.copyOfRange(commandSplit, 1, commandSplit.length);
+              GameRunner.gamePlayer((ArrayList<String>) Arrays.asList(optionsArray));
               break;
           }
-        } else {
-          System.out.println("Invalid command.");
         }
       } catch (Exception e) {
         System.out.println(e.getMessage());
