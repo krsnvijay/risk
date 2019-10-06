@@ -203,9 +203,20 @@ public class EditMap extends MapParser {
   public boolean validateMap(GameMap map) {
     Map<String, Set<String>> copyOfBorders = map.getBorders();
     Map<String, Country> copyOfCountries = map.getCountries();
+    Map<String, Continent> copyOfContinents = map.getContinents();
     Map<String, List<Country>> groupedByCountries =
         copyOfCountries.values().stream().collect(Collectors.groupingBy(Country::getContinent));
-
+    // PRELIMINARY CHECKS
+    if (copyOfContinents.keySet().size() != groupedByCountries.keySet().size())
+      return false; // CASE - No countries in continent OR countries in Continent that doesn't exist
+    if (copyOfBorders.keySet().size() != copyOfCountries.keySet().size())
+      return false; // CASE - No borderList entry for country OR borderList entry without
+                    // countryList entry
+    for (String country : copyOfBorders.keySet()) {
+      if (copyOfBorders.get(country).size() == 0)
+        return false; // CASE - Country has no borders
+    }
+    // CHECK CONNECTEDNESS OF SUBGRAPHS & WHOLE GRAPH
     // RUN DFS ON CONTINENTS
     for (String continent : groupedByCountries.keySet()) {
       List<Country> countriesInContinent = groupedByCountries.get(continent);
