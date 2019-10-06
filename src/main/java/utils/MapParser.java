@@ -13,14 +13,20 @@ import models.Continent;
 import models.Country;
 import models.GameMap;
 
-/** @author v_valla */
+/**
+ * The Map Parser utility parses the whole map file from disk.
+ * 
+ * @author v_valla
+ */
 public class MapParser {
 
   /**
+   * Loads the map file and parses it.
+   * 
    * @param fileName the location of the map file to be parsed
    * @return GameMap the parsed GameMap Object
    * @throws IOException when file location/contents are invalid
-   * @throws Exception when map file does'nt contain all the required sections
+   * @throws Exception when map file doesn't contain all the required sections
    */
   public GameMap loadMap(String fileName) throws IOException, Exception {
     HashMap<String, ArrayList<String>> mapData = new HashMap<>();
@@ -51,10 +57,23 @@ public class MapParser {
     return new GameMap(mapName, mapData);
   }
 
+  /**
+   * Saves the map into a file.
+   * 
+   * @param gameMap The GameMap object to save.
+   * @param fileName The name of the file.
+   * @throws IOException TODO: will handle this.
+   */
   public void saveMap(GameMap gameMap, String fileName) throws IOException {
     Files.write(Paths.get(fileName), serializeMap(gameMap).getBytes());
   }
 
+  /**
+   * Serializes a GameMap object into a string (file data).
+   * 
+   * @param gameMap The GameMap object to serialize.
+   * @return The file as a string.
+   */
   public String serializeMap(GameMap gameMap) {
     String files = gameMap.getFileSectionData().stream().collect(Collectors.joining("\n"));
     ArrayList<String> continentsOrder = gameMap.getContinents().keySet().stream().sorted()

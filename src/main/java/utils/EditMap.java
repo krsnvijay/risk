@@ -11,108 +11,139 @@ import models.Continent;
 import models.Country;
 import models.GameMap;
 
+/**
+ * The Edit Map utility processes the editing commands.
+ * 
+ * @author Warren White
+ *
+ */
 public class EditMap extends MapParser {
+
+  /**
+   * The constructor for EditMap. Calls the MapParser constructor.
+   */
   public EditMap() {
     super();
   }
 
+  /**
+   * Processes the edit continent command.
+   * 
+   * @param opCmds The options entered in the command.
+   * @param map The GameMap object to modify.
+   * @return A boolean with success or failure for the command.
+   */
   public boolean editContinent(String[] opCmds, GameMap map) {
     Arrays.asList(opCmds).stream().forEach(opcmd -> {
-      String[] split_opcmd = opcmd.split(" ");
-      String continent = split_opcmd[1];
+      String[] splitOpCmd = opcmd.split(" ");
+      String continent = splitOpCmd[1];
       Map<String, Continent> copyOfContinents = map.getContinents();
       Map<String, Country> copyOfCountries = map.getCountries();
       Map<String, Set<String>> copyOfBorders = map.getBorders();
-      if (split_opcmd[0].equals("add")) {
-        String continent_cntrl_val = split_opcmd[2];
-        Continent to_insert = new Continent(continent, Integer.parseInt(continent_cntrl_val));
-        copyOfContinents.put(continent, to_insert);
+      if (splitOpCmd[0].equals("add")) {
+        String continentControlValue = splitOpCmd[2];
+        Continent toInsert = new Continent(continent, Integer.parseInt(continentControlValue));
+        copyOfContinents.put(continent, toInsert);
         map.setContinents(copyOfContinents);
-      } else if (split_opcmd[0].equals("remove")) {
+      } else if (splitOpCmd[0].equals("remove")) {
         // perform remove continent
-        ArrayList<String> country_black_list = new ArrayList<>();
+        ArrayList<String> countryBlackList = new ArrayList<>();
         map.setContinents(copyOfContinents.entrySet().stream()
-            .filter(continent_loc -> !continent_loc.getKey().equals(continent)).collect(Collectors
-                .toMap(entry_loc -> entry_loc.getKey(), entry_loc -> entry_loc.getValue())));
+            .filter(continentLoc -> !continentLoc.getKey().equals(continent)).collect(
+                Collectors.toMap(entryLoc -> entryLoc.getKey(), entryLoc -> entryLoc.getValue())));
         // update countries list
         map.setCountries(copyOfCountries.entrySet().stream().filter(country -> {
           if (country.getValue().getContinent().equals(continent)) {
-            country_black_list.add(country.getKey());
+            countryBlackList.add(country.getKey());
             return false;
           }
           return true;
         }).collect(
-            Collectors.toMap(entry_loc -> entry_loc.getKey(), entry_loc -> entry_loc.getValue())));
+            Collectors.toMap(entryLoc -> entryLoc.getKey(), entryLoc -> entryLoc.getValue())));
         // update borders list
         map.setBorders(copyOfBorders.entrySet().stream().filter(border -> {
-          if (country_black_list.contains(border.getKey())) {
+          if (countryBlackList.contains(border.getKey())) {
             return false;
           }
           border.setValue(
-              border.getValue().stream().filter(neighbor -> !country_black_list.contains(neighbor))
+              border.getValue().stream().filter(neighbor -> !countryBlackList.contains(neighbor))
                   .collect(Collectors.toSet()));
           return true;
         }).collect(
-            Collectors.toMap(entry_loc -> entry_loc.getKey(), entry_loc -> entry_loc.getValue())));
+            Collectors.toMap(entryLoc -> entryLoc.getKey(), entryLoc -> entryLoc.getValue())));
 
       }
     });
     return true;
   }
 
+  /**
+   * Processes the edit country command.
+   * 
+   * @param opCmds The command options
+   * @param map The GameMap object to modify
+   * @return A boolean result for success or failure.
+   */
   public boolean editCountry(String[] opCmds, GameMap map) {
     Arrays.asList(opCmds).stream().forEach(opcmd -> {
       Map<String, Country> copyOfCountries = map.getCountries();
       Map<String, Set<String>> copyOfBorders = map.getBorders();
-      String[] split_opcmd = opcmd.split(" ");
-      String country = split_opcmd[1];
-      if (split_opcmd[0].equals("add")) {
-        String continent_string = split_opcmd[2];
-        Country to_insert = new Country(country, continent_string);
-        copyOfCountries.put(country, to_insert);
+      String[] splitOpCmd = opcmd.split(" ");
+      String country = splitOpCmd[1];
+      if (splitOpCmd[0].equals("add")) {
+        String continentString = splitOpCmd[2];
+        Country toInsert = new Country(country, continentString);
+        copyOfCountries.put(country, toInsert);
         map.setCountries(copyOfCountries);
         // perform add country
-      } else if (split_opcmd[0].equals("remove")) {
+      } else if (splitOpCmd[0].equals("remove")) {
         // perform remove country
         // update country list
         copyOfCountries.remove(country);
         map.setCountries(copyOfCountries);
         // update border list
-        map.setBorders(copyOfBorders.entrySet().stream().filter(border_loc -> {
-          if (border_loc.getKey().equals(country)) {
+        map.setBorders(copyOfBorders.entrySet().stream().filter(borderLoc -> {
+          if (borderLoc.getKey().equals(country)) {
             return false;
           }
-          border_loc.setValue(border_loc.getValue().stream()
+          borderLoc.setValue(borderLoc.getValue().stream()
               .filter(neighbor -> !neighbor.equals(country)).collect(Collectors.toSet()));
           return true;
         }).collect(
-            Collectors.toMap(entry_loc -> entry_loc.getKey(), entry_loc -> entry_loc.getValue())));
+            Collectors.toMap(entryLoc -> entryLoc.getKey(), entryLoc -> entryLoc.getValue())));
       }
     });
     return true;
   }
 
+  /**
+   * Processes the edit neighbour command.
+   * 
+   * @param opCmds The command options.
+   * @param map The GameMap object to modify.
+   * @return A boolean with success or failure.
+   */
   public boolean editNeighbor(String[] opCmds, GameMap map) {
     Arrays.asList(opCmds).stream().forEach(opcmd -> {
       Map<String, Set<String>> copyOfBorders = map.getBorders();
       Map<String, Country> copyOfCountries = map.getCountries();
-      String[] split_opcmd = opcmd.split(" ");
-      String country = split_opcmd[1];
-      String neighbor_country = split_opcmd[2];
-      if (split_opcmd[0].equals("add")) {
-        // perform add country neighbor_country
-        if (country.equals(neighbor_country))
+      String[] splitOpCmd = opcmd.split(" ");
+      String country = splitOpCmd[1];
+      String neighborCountry = splitOpCmd[2];
+      if (splitOpCmd[0].equals("add")) {
+        // perform add country neighborCountry
+        if (country.equals(neighborCountry))
           return;
-        if (!copyOfBorders.containsKey(country) && copyOfCountries.containsKey(neighbor_country)) {
+        if (!copyOfBorders.containsKey(country) && copyOfCountries.containsKey(neighborCountry)) {
           copyOfBorders.put(country, new HashSet<>());
           map.setBorders(copyOfBorders);
         }
-        copyOfBorders.get(country).add(neighbor_country);
+        copyOfBorders.get(country).add(neighborCountry);
         map.setBorders(copyOfBorders);
-      } else if (split_opcmd[0].equals("remove")) {
-        // perform remove country neighbor_country
+      } else if (splitOpCmd[0].equals("remove")) {
+        // perform remove country neighborCountry
         if (copyOfBorders.containsKey(country)) {
-          copyOfBorders.get(country).remove(neighbor_country);
+          copyOfBorders.get(country).remove(neighborCountry);
         }
         map.setBorders(copyOfBorders);
       }
@@ -120,6 +151,15 @@ public class EditMap extends MapParser {
     return true;
   }
 
+  /**
+   * Performs a DFS on every continent, works using recursion.
+   * 
+   * @param map A List of all countries.
+   * @param visited A HashMap of visited countries.
+   * @param start The Country to start from.
+   * @param completeMap The entire GameMap to look through.
+   * @return
+   */
   private static HashSet<Country> DFSUtilContinents(List<Country> map, HashSet<Country> visited,
       Country start, GameMap completeMap) {
     Map<String, Set<String>> copyOfBorders = completeMap.getBorders();
@@ -135,6 +175,14 @@ public class EditMap extends MapParser {
     return visited;
   }
 
+  /**
+   * Performs a DFS on the whole game map, works using recursion.
+   * 
+   * @param visited A HashMap of visited countries.
+   * @param start The name of the Country to start with.
+   * @param completeMap The entire GameMap to look through.
+   * @return
+   */
   private static HashSet<String> DFSUtilWholeMap(HashSet<String> visited, String start,
       GameMap completeMap) {
     visited.add(start);
@@ -146,6 +194,12 @@ public class EditMap extends MapParser {
     return visited;
   }
 
+  /**
+   * Checks whether the current game map is a valid map or not.
+   * 
+   * @param map The entire GameMap
+   * @return A boolean with success or failure.
+   */
   public boolean validateMap(GameMap map) {
     Map<String, Set<String>> copyOfBorders = map.getBorders();
     Map<String, Country> copyOfCountries = map.getCountries();
