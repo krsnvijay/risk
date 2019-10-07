@@ -6,10 +6,6 @@ package models;
  * @author Vijay
  *
  */
-/**
- * @author bansa
- *
- */
 public class Country {
   /**
    * The name of the continent the Country belongs to.
@@ -168,28 +164,36 @@ public class Country {
   }
 
   /**
-   * @return
+   * Returns the number of armies
+   *
+   * @return An integer with the number of armies
    */
   public int getNumberOfArmies() {
     return numberOfArmies;
   }
 
   /**
-   * @param numberOfArmies
+   *  Sets the number of armies
+   *
+   * @param numberOfArmies number of armies
    */
   public void setNumberOfArmies(int numberOfArmies) {
     this.numberOfArmies = numberOfArmies;
   }
 
   /**
-   * @param count
+   * Adds armies to the country
+   *
+   * @param count an Integer to add to the current armies of a country
    */
   public void addArmies(int count) {
     this.numberOfArmies += count;
   }
 
   /**
-   * @param count
+   * Removes armies from a country
+   *
+   * @param count an Integer to remove from the current armies of a country
    */
   public void removeArmies(int count) {
     this.numberOfArmies -= count;

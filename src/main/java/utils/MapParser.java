@@ -38,8 +38,8 @@ public class MapParser {
     Map<String, Country> countries = null;
     String mapName = null;
     Scanner scanner = new Scanner(new File(fileName));
-    ArrayList<String> continentsInOrder = new ArrayList<String>();
-    ArrayList<String> countriesInOrder = new ArrayList<String>();
+    ArrayList<String> continentsInOrder = new ArrayList<>();
+    ArrayList<String> countriesInOrder = new ArrayList<>();
     Function<Scanner, ArrayList<String>> readSectionData = sc -> {
       ArrayList<String> sectionData = new ArrayList<>();
       while (sc.hasNext()) {
@@ -110,7 +110,7 @@ public class MapParser {
    * @return The file as a string.
    */
   public String serializeMap(GameMap gameMap) {
-    String files = gameMap.getFileSectionData().stream().collect(Collectors.joining("\n"));
+    String files = String.join("\n", gameMap.getFileSectionData());
     ArrayList<String> continentsOrder = gameMap.getContinents().keySet().stream().sorted()
         .collect(Collectors.toCollection(ArrayList::new));
     ArrayList<String> countriesOrder = gameMap.getCountries().keySet().stream().sorted()

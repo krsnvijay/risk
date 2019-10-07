@@ -21,7 +21,7 @@ public class CLI {
    * @author Siddhant Bansal
    *
    */
-  public static enum Context {
+  public enum Context {
     MAIN_MENU, GAME_SETUP, GAME_REINFORCE, GAME_ATTACK, GAME_FORTIFY, EDITOR
   }
 
@@ -53,30 +53,30 @@ public class CLI {
     input = new Scanner(System.in);
 
     // Main Menu commands
-    ArrayList<String> mainMenuCommands = new ArrayList<String>();
+    ArrayList<String> mainMenuCommands = new ArrayList<>();
     mainMenuCommands.addAll(Arrays.asList("loadmap", "editmap"));
     validCommands.put(Context.MAIN_MENU, mainMenuCommands);
 
     // Editor commands
-    ArrayList<String> editorCommands = new ArrayList<String>();
+    ArrayList<String> editorCommands = new ArrayList<>();
     editorCommands.addAll(Arrays.asList("savemap", "validatemap", "editcountry", "editcontinent",
         "editneighbor", "showmap"));
     validCommands.put(Context.EDITOR, editorCommands);
 
     // Setup commands
-    ArrayList<String> setupCommands = new ArrayList<String>();
+    ArrayList<String> setupCommands = new ArrayList<>();
     setupCommands.addAll(Arrays.asList("placearmy", "placeall", "gameplayer", "populatecountry"));
     validCommands.put(Context.GAME_SETUP, setupCommands);
 
     // Reinforcement commands
-    ArrayList<String> reinforcementCommands = new ArrayList<String>();
+    ArrayList<String> reinforcementCommands = new ArrayList<>();
     reinforcementCommands.addAll(Arrays.asList("reinforce"));
     validCommands.put(Context.GAME_REINFORCE, reinforcementCommands);
 
     // Attack commands
 
     // Fortification commands
-    ArrayList<String> fortificationCommands = new ArrayList<String>();
+    ArrayList<String> fortificationCommands = new ArrayList<>();
     fortificationCommands.addAll(Arrays.asList("fortify"));
     validCommands.put(Context.GAME_FORTIFY, fortificationCommands);
 
@@ -101,10 +101,7 @@ public class CLI {
    * @return A boolean based on whether the command is valid or not (in the current phase).
    */
   public boolean validate(String command) {
-    if (validCommands.get(currentContext).contains(command.split(" ")[0]))
-      return true;
-    else
-      return false;
+    return validCommands.get(currentContext).contains(command.split(" ")[0]);
   }
 
   /**

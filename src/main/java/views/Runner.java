@@ -77,8 +77,7 @@ public class Runner {
   }
 
   /**
-   * @param editMap
-   * @param gameMap
+   * @param gameMap stores map data i.e borders, countries, files, continents
    */
   private static void beginGame(GameMap gameMap) {
     while (true) {
@@ -148,6 +147,7 @@ public class Runner {
         }
       } catch (Exception e) {
         System.out.println(e.getMessage());
+        continue;
       }
     }
   }

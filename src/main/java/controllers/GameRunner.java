@@ -26,7 +26,7 @@ public class GameRunner {
   private boolean isGameStarted = false;
 
   /**
-   * @param gameMap
+   * @param gameMap GameMap object that stores map data i.e borders, countries, files, continents
    */
   public GameRunner(GameMap gameMap) {
     this.gameMap = gameMap;
@@ -84,8 +84,10 @@ public class GameRunner {
   }
 
   /**
-   * @param countryName
-   * @return
+   * This method places an army in a country that the player owns
+   *
+   * @param countryName name of the country to place an army
+   * @return A boolean with success or failure.
    */
   private boolean placeArmy(String countryName) {
     Player currentPlayer = playersList.get(currentPlayerIndex);
@@ -114,7 +116,7 @@ public class GameRunner {
    * 
    * @param playerNames a list of names of every player
    * @param countriesSize the size of the countries list.
-   * @return
+   * @return A boolean with success or failure.
    */
   public static boolean validatePlayerCount(ArrayList<String> playerNames, int countriesSize) {
     if (playerNames.size() <= 1) {
@@ -130,7 +132,6 @@ public class GameRunner {
    * This processes the addplayer command.
    * 
    * @param commands an arraylist of options
-   * @param playersList the list of players
    * 
    * @author sabari
    */
@@ -161,10 +162,8 @@ public class GameRunner {
 
   /**
    * This method randomly populates all the countries on the map.
-   * 
-   * @param playersList a list of players
-   * @param gameMap the entire map graph
-   * @return a list of countries with ownership
+   *
+   * @return a map of countries with ownership
    * 
    * @author sabari
    */
@@ -176,6 +175,6 @@ public class GameRunner {
     for (int i = 0; i <= countrySize; i++) {
       countries.get(i).setOwnerName(playersList.get(i % playerCount).getPlayerName());
     }
-    return countries.stream().collect(Collectors.toMap(c -> c.getName(), c -> c));
+    return countries.stream().collect(Collectors.toMap(Country::getName, c -> c));
   }
 }

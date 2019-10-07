@@ -1,10 +1,10 @@
 # IDE Specific Files
-*.idea/
-*.settings/
+.idea/
+.settings/
 *.iml
 *.metadata/
 *.classpath
-
+*.project
 # Compiled class file
 *.class
 
