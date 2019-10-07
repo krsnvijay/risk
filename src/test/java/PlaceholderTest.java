@@ -25,10 +25,11 @@ public class PlaceholderTest {
     Map<String, Continent> testContinent = new HashMap<String, Continent>();
     Map<String, Country> testCountry = new HashMap<String, Country>();
     String testFile = "C:\\Users\\Siddharth Singh\\Desktop";
-    Continent tContinent = new Continent("Asia", 3);
+    Continent tContinent = new Continent("Orange", "Asia", 3);
     Country tCountry = new Country("India", "Asia");
-    testSection.add("dssd");
-    testBorder.put("India", Arrays.asList("2", "3").stream().collect(Collectors.toSet()));
+    testSection.add("1 siberia 1 329 152\r\n" + "2 worrick 1 308 199\r\n"
+        + "3 yazteck 1 284 260\r\n" + "4 kongrolo 1 278 295");
+    testBorder.put("1", Arrays.asList("2", "3").stream().collect(Collectors.toSet()));
     testContinent.put("Asia", tContinent);
     testCountry.put("India", tCountry);
     testMap = new GameMap(testSection, testBorder, testContinent, testCountry, testFile);
@@ -40,7 +41,7 @@ public class PlaceholderTest {
 
   @Test
   public void test() throws Exception {
-    assertEquals(testMap, MapParser.loadMap("C:\\Users\\Siddharth Singh\\Desktop\\ameroki.map"));
+    assertEquals(testMap, MapParser.loadMap("C:\\Users\\Siddharth Singh\\Desktop\\test.map"));
     fail("Not yet implemented");
   }
 }

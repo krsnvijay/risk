@@ -86,6 +86,7 @@ public class MapParser {
     if (countries == null || continents == null || borders == null || fileSectionData == null
         || mapName == null)
       throw new Exception("Map file is invalid");
+
     return new GameMap(fileSectionData, borders, continents, countries, mapName);
   }
 
