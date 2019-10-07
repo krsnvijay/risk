@@ -34,7 +34,7 @@ public class EditMap extends MapParser {
    * @return A boolean with success or failure for the command.
    */
   public boolean editContinent(String[] opCmds, GameMap map) {
-    Arrays.asList(opCmds).stream().forEach(opcmd -> {
+    Arrays.stream(opCmds).forEach(opcmd -> {
       String[] splitOpCmd = opcmd.split(" ");
       String continent = splitOpCmd[1];
       Map<String, Continent> copyOfContinents = map.getContinents();
@@ -50,7 +50,7 @@ public class EditMap extends MapParser {
         ArrayList<String> countryBlackList = new ArrayList<>();
         map.setContinents(copyOfContinents.entrySet().stream()
             .filter(continentLoc -> !continentLoc.getKey().equals(continent)).collect(
-                Collectors.toMap(entryLoc -> entryLoc.getKey(), entryLoc -> entryLoc.getValue())));
+                Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
         // update countries list
         map.setCountries(copyOfCountries.entrySet().stream().filter(country -> {
           if (country.getValue().getContinent().equals(continent)) {
@@ -59,7 +59,7 @@ public class EditMap extends MapParser {
           }
           return true;
         }).collect(
-            Collectors.toMap(entryLoc -> entryLoc.getKey(), entryLoc -> entryLoc.getValue())));
+            Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
         // update borders list
         map.setBorders(copyOfBorders.entrySet().stream().filter(border -> {
           if (countryBlackList.contains(border.getKey())) {
@@ -70,7 +70,7 @@ public class EditMap extends MapParser {
                   .collect(Collectors.toSet()));
           return true;
         }).collect(
-            Collectors.toMap(entryLoc -> entryLoc.getKey(), entryLoc -> entryLoc.getValue())));
+            Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
 
       }
     });
@@ -85,7 +85,7 @@ public class EditMap extends MapParser {
    * @return A boolean result for success or failure.
    */
   public boolean editCountry(String[] opCmds, GameMap map) {
-    Arrays.asList(opCmds).stream().forEach(opcmd -> {
+    Arrays.asList(opCmds).forEach(opcmd -> {
       Map<String, Country> copyOfCountries = map.getCountries();
       Map<String, Set<String>> copyOfBorders = map.getBorders();
       String[] splitOpCmd = opcmd.split(" ");
@@ -110,7 +110,7 @@ public class EditMap extends MapParser {
               .filter(neighbor -> !neighbor.equals(country)).collect(Collectors.toSet()));
           return true;
         }).collect(
-            Collectors.toMap(entryLoc -> entryLoc.getKey(), entryLoc -> entryLoc.getValue())));
+            Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
       }
     });
     return true;
@@ -124,7 +124,7 @@ public class EditMap extends MapParser {
    * @return A boolean with success or failure.
    */
   public boolean editNeighbor(String[] opCmds, GameMap map) {
-    Arrays.asList(opCmds).stream().forEach(opcmd -> {
+    Arrays.asList(opCmds).forEach(opcmd -> {
       Map<String, Set<String>> copyOfBorders = map.getBorders();
       Map<String, Country> copyOfCountries = map.getCountries();
       String[] splitOpCmd = opcmd.split(" ");
@@ -158,7 +158,7 @@ public class EditMap extends MapParser {
    * @param visited A HashMap of visited countries.
    * @param start The Country to start from.
    * @param completeMap The entire GameMap to look through.
-   * @return
+   * @return visited countries of a continent
    */
   private static HashSet<Country> DFSUtilContinents(List<Country> map, HashSet<Country> visited,
       Country start, GameMap completeMap) {
@@ -181,7 +181,7 @@ public class EditMap extends MapParser {
    * @param visited A HashMap of visited countries.
    * @param start The name of the Country to start with.
    * @param completeMap The entire GameMap to look through.
-   * @return
+   * @return visited countries of the whole map
    */
   private static HashSet<String> DFSUtilWholeMap(HashSet<String> visited, String start,
       GameMap completeMap) {
@@ -231,9 +231,7 @@ public class EditMap extends MapParser {
     String startCountry = copyOfCountries.keySet().stream().findFirst().orElse(null);
     if (startCountry != null)
       visited = DFSUtilWholeMap(visited, startCountry, map);
-    if (visited.size() != copyOfBorders.keySet().size())
-      return false;
-    return true;
+    return visited.size() == copyOfBorders.keySet().size();
   }
 
 }

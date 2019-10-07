@@ -127,7 +127,7 @@ public class GameMap {
   /**
    * This method sets the continents object for the GameMap class.
    * 
-   * @param continents
+   * @param continents A Map object, mapping the name with the Continent object.
    */
   public void setContinents(Map<String, Continent> continents) {
     this.continents = continents;

@@ -3,7 +3,19 @@
   <groupId>com.soen.project</groupId>
   <artifactId>risk-game</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>Risk</name>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <name>Risk</name>
   <description>An implementation of the board game Risk/Domination to fulfil the project requirement of SOEN6441</description>
   <dependencies>
   	<!-- https://mvnrepository.com/artifact/junit/junit -->

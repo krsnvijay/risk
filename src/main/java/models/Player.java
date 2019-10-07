@@ -21,7 +21,7 @@ public class Player {
   /**
    * This constructor initializes the class.
    * 
-   * @param playerName
+   * @param playerName name of the player
    */
   public Player(String playerName) {
     super();
@@ -77,14 +77,18 @@ public class Player {
   }
 
   /**
-   * @param count
+   * This method gives armies to the player
+   *
+   * @param count armies to add to the player
    */
   public void giveArmies(int count) {
     this.numberOfArmies += count;
   }
 
   /**
-   * @param count
+   * This method removes armies from the player
+   *
+   * @param count armies to subtract from the player
    */
   public void subtractArmies(int count) {
     this.numberOfArmies -= count;
