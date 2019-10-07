@@ -89,6 +89,7 @@ public class MapParser {
     return new GameMap(fileSectionData, borders, continents, countries, mapName);
   }
 
+
   /**
    * Saves the map into a file.
    * 
@@ -98,7 +99,7 @@ public class MapParser {
    */
   public void saveMap(GameMap gameMap, String fileName) throws IOException {
     Files.write(Paths.get(fileName), serializeMap(gameMap).getBytes());
-    System.out.println("Saved map to "+fileName + " successfully");
+    System.out.println("Saved map to " + fileName + " successfully");
   }
 
   /**
