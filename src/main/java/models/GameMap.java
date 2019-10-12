@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -86,6 +87,7 @@ public class GameMap {
 
   /**
    * Get all countries in a continent
+   *
    * @param continentName name of the continent
    * @return set of countrynames that are part of continent
    */
@@ -94,6 +96,131 @@ public class GameMap {
         .filter(c -> c.getContinent().equals(continentName))
         .map(Country::getName)
         .collect(Collectors.toSet());
+  }
+
+  /**
+   * Add a continent to the gameMap
+   *
+   * @param continentName continent to add
+   * @param value control value of continent
+   */
+  public void addContinent(String continentName, int value) {
+    Continent continent = new Continent(continentName, value);
+    this.continents.put(continentName, continent);
+    System.out.println("Added continent: " + continentName);
+  }
+
+  /**
+   * Removes a continent and all its countries from the gameMap
+   *
+   * @param continentName continent to remove
+   */
+  public void removeContinent(String continentName) {
+    if (!this.continents.containsKey(continentName)) {
+      System.out.println("Error: The continent " + continentName + " does not exist");
+      return;
+    }
+    getCountriesByContinent(continentName).forEach(this::removeCountry);
+    this.continents.remove(continentName);
+    System.out.println("Removed continent: " + continentName);
+  }
+
+  /**
+   * Adds a country to the game map
+   *
+   * @param countryName country to add
+   * @param continentName continent the country belongs to
+   */
+  public void addCountry(String countryName, String continentName) {
+    if (!this.continents.containsKey(continentName)) {
+      System.out.println("Error: The continent " + continentName + " does not exist");
+      return;
+    }
+    Country country = new Country(countryName, continentName);
+    this.countries.put(countryName, country);
+    this.borders.put(countryName, new HashSet<>());
+    System.out.println("Added country: " + countryName + " to " + continentName);
+  }
+
+  /**
+   * Removes a country from the game map
+   *
+   * @param countryName country to remove
+   */
+  public void removeCountry(String countryName) {
+    if (!this.countries.containsKey(countryName)) {
+      System.out.println("Error: The country " + countryName + " does not exist");
+      return;
+    }
+    removeCountryBorders(countryName);
+    this.countries.remove(countryName);
+    System.out.println("Removed country: " + countryName);
+  }
+
+  /**
+   * Adds a border between two countries making them neighbors
+   *
+   * @param country1 neighboring country 1
+   * @param country2 neighboring country 2
+   */
+  public void addBorder(String country1, String country2) {
+    if (country1.equals(country2)) {
+      System.out.println("Error: The countries " + country1 + " and " + country2 + " are the same");
+      return;
+    }
+    if (!this.countries.containsKey(country1)) {
+      System.out.println("Error: The country " + country1 + " does not exist");
+      return;
+    }
+    if (!this.countries.containsKey(country2)) {
+      System.out.println("Error: The country " + country2 + " does not exist");
+      return;
+    }
+    this.borders.get(country1).add(country2);
+    this.borders.get(country2).add(country1);
+    System.out.println("Added border: " + country1 + " - " + country2);
+  }
+
+  /**
+   * Removes a border between two countries
+   *
+   * @param country1 neighboring country 1
+   * @param country2 neighboring country 2
+   */
+  public void removeBorder(String country1, String country2) {
+    if (country1.equals(country2)) {
+      System.out.println("Error: The countries" + country1 + " and " + country2 + " are the same");
+      return;
+    }
+    if (!this.countries.containsKey(country1)) {
+      System.out.println("Error: The country " + country1 + " does not exist");
+      return;
+    }
+    if (!this.countries.containsKey(country2)) {
+      System.out.println("Error: The country " + country2 + " does not exist");
+      return;
+    }
+    this.borders.get(country1).remove(country2);
+    this.borders.get(country2).remove(country1);
+    System.out.println("Removed border: " + country1 + " - " + country2);
+  }
+
+  /**
+   * Removes all borders that a country is part of
+   *
+   * @param countryName country whose borders are to be removed
+   */
+  public void removeCountryBorders(String countryName) {
+    if (!this.borders.containsKey(countryName)) {
+      System.out.println("Error: The country " + countryName + " does not exist");
+      return;
+    }
+    Set<String> neighbors = this.borders.get(countryName);
+    for (String neighbor : neighbors) {
+      this.borders.get(neighbor).remove(countryName);
+      System.out.println("Removed border: " + neighbor + " - " + countryName);
+    }
+    this.borders.remove(countryName);
   }
 
   /** Pretty prints the game map. */

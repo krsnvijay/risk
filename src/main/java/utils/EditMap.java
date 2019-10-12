@@ -84,9 +84,9 @@ public class EditMap extends MapParser {
       String continentName = splitOpCmd[1];
       if (commandType.equals("add")) {
         int continentControlValue = Integer.parseInt(splitOpCmd[2]);
-        addContinent(continentName, continentControlValue, map);
+        map.addContinent(continentName, continentControlValue);
       } else if (commandType.equals("remove")) {
-        removeContinent(continentName, map);
+        map.removeContinent(continentName);
       }
     }
     return true;
@@ -111,9 +111,9 @@ public class EditMap extends MapParser {
       String countryName = splitOpCmd[1];
       if (commandType.equals("add")) {
         String continentString = splitOpCmd[2];
-        addCountry(countryName, continentString, map);
+        map.addCountry(countryName, continentString);
       } else if (commandType.equals("remove")) {
-        removeCountry(countryName, map);
+        map.removeCountry(countryName);
       }
     }
     return true;
@@ -138,141 +138,12 @@ public class EditMap extends MapParser {
       String country1 = splitOpCmd[1];
       String country2 = splitOpCmd[2];
       if (commandType.equals("add")) {
-        addBorder(country1, country2, map);
+        map.addBorder(country1, country2);
       } else if (commandType.equals("remove")) {
-        removeBorder(country1, country2, map);
+        map.removeBorder(country1, country2);
       }
     }
     return true;
-  }
-
-  /**
-   * Add a continent to the gameMap
-   *
-   * @param continentName continent to add
-   * @param value control value of continent
-   * @param gameMap contains map data
-   */
-  public void addContinent(String continentName, int value, GameMap gameMap) {
-    Continent continent = new Continent(continentName, value);
-    gameMap.getContinents().put(continentName, continent);
-    System.out.println("Added continent: " + continentName);
-  }
-
-  /**
-   * Removes a continent and all its countries from the gameMap
-   *
-   * @param continentName continent to remove
-   * @param gameMap contains map data
-   */
-  public void removeContinent(String continentName, GameMap gameMap) {
-    if (!gameMap.getContinents().containsKey(continentName)) {
-      System.out.println("Error: The continent " + continentName + " does not exist");
-      return;
-    }
-    gameMap.getContinents().remove(continentName);
-    gameMap
-        .getCountriesByContinent(continentName)
-        .forEach(country -> removeCountry(country, gameMap));
-    System.out.println("Removed continent: " + continentName);
-  }
-
-  /**
-   * Adds a country to the game map
-   *
-   * @param countryName country to add
-   * @param continentName continent the country belongs to
-   * @param gameMap contains map data
-   */
-  public void addCountry(String countryName, String continentName, GameMap gameMap) {
-    if (!gameMap.getContinents().containsKey(continentName)) {
-      System.out.println("Error: The continent " + continentName + " does not exist");
-      return;
-    }
-    Country country = new Country(countryName, continentName);
-    gameMap.getCountries().put(countryName, country);
-    gameMap.getBorders().put(countryName, new HashSet<>());
-    System.out.println("Added country: " + countryName + " to " + continentName);
-  }
-
-  /**
-   * Removes a country from the game map
-   *
-   * @param countryName country to remove
-   * @param gameMap contains map data
-   */
-  public void removeCountry(String countryName, GameMap gameMap) {
-    if (!gameMap.getCountries().containsKey(countryName)) {
-      System.out.println("Error: The country " + countryName + " does not exist");
-      return;
-    }
-    gameMap.getCountries().remove(countryName);
-    removeCountryBorders(countryName, gameMap);
-    System.out.println("Removed country: " + countryName);
-  }
-
-  /**
-   * Adds a border between two countries making them neighbors
-   *
-   * @param country1 neighboring country 1
-   * @param country2 neighboring country 2
-   * @param gameMap contains map data
-   */
-  public void addBorder(String country1, String country2, GameMap gameMap) {
-    if (country1.equals(country2)) {
-      System.out.println("Error: The countries " + country1 + " and " + country2 + " are the same");
-      return;
-    }
-    Map<String, Set<String>> borders = gameMap.getBorders();
-    borders.get(country1).add(country2);
-    borders.get(country2).add(country1);
-    System.out.println("Added border: " + country1 + " - " + country2);
-  }
-
-  /**
-   * Removes a border between two countries
-   *
-   * @param country1 neighboring country 1
-   * @param country2 neighboring country 2
-   * @param gameMap contains map data
-   */
-  public void removeBorder(String country1, String country2, GameMap gameMap) {
-    if (country1.equals(country2)) {
-      System.out.println("Error: The countries" + country1 + " and " + country2 + " are the same");
-      return;
-    }
-    if (!gameMap.getCountries().containsKey(country1)) {
-      System.out.println("Error: The country " + country1 + " does not exist");
-      return;
-    }
-    if (!gameMap.getCountries().containsKey(country2)) {
-      System.out.println("Error: The country " + country2 + " does not exist");
-      return;
-    }
-    Map<String, Set<String>> borders = gameMap.getBorders();
-    borders.get(country1).remove(country2);
-    borders.get(country2).remove(country1);
-    System.out.println("Removed border: " + country1 + " - " + country2);
-  }
-
-  /**
-   * Removes all borders that a country is part of
-   *
-   * @param countryName country whose borders are to be removed
-   * @param gameMap contains map data
-   */
-  public void removeCountryBorders(String countryName, GameMap gameMap) {
-    if (!gameMap.getBorders().containsKey(countryName)) {
-      System.out.println("Error: The country " + countryName + " does not exist");
-      return;
-    }
-    Map<String, Set<String>> borders = gameMap.getBorders();
-    Set<String> neighbors = borders.get(countryName);
-    for (String neighbor : neighbors) {
-      borders.get(neighbor).remove(countryName);
-      System.out.println("Removed border: " + neighbor + " - " + countryName);
-    }
-    borders.remove(countryName);
   }
 
   /**
