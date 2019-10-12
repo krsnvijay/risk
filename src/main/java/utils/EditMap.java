@@ -1,11 +1,7 @@
 package utils;
 
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -77,56 +73,22 @@ public class EditMap extends MapParser {
    * @return A boolean with success or failure for the command.
    */
   public boolean editContinent(String[] opCmds, GameMap map) {
-    Arrays.stream(opCmds)
-        .forEach(
-            opcmd -> {
-              String[] splitOpCmd = opcmd.split(" ");
-              String continent = splitOpCmd[1];
-              Map<String, Continent> copyOfContinents = map.getContinents();
-              Map<String, Country> copyOfCountries = map.getCountries();
-              Map<String, Set<String>> copyOfBorders = map.getBorders();
-              if (splitOpCmd[0].equals("add")) {
-                String continentControlValue = splitOpCmd[2];
-                Continent toInsert =
-                    new Continent(continent, Integer.parseInt(continentControlValue));
-                copyOfContinents.put(continent, toInsert);
-                map.setContinents(copyOfContinents);
-              } else if (splitOpCmd[0].equals("remove")) {
-                // perform remove continent
-                ArrayList<String> countryBlackList = new ArrayList<>();
-                map.setContinents(
-                    copyOfContinents.entrySet().stream()
-                        .filter(continentLoc -> !continentLoc.getKey().equals(continent))
-                        .collect(toMap(Map.Entry::getKey, Map.Entry::getValue)));
-                // update countries list
-                map.setCountries(
-                    copyOfCountries.entrySet().stream()
-                        .filter(
-                            country -> {
-                              if (country.getValue().getContinent().equals(continent)) {
-                                countryBlackList.add(country.getKey());
-                                return false;
-                              }
-                              return true;
-                            })
-                        .collect(toMap(Map.Entry::getKey, Map.Entry::getValue)));
-                // update borders list
-                map.setBorders(
-                    copyOfBorders.entrySet().stream()
-                        .filter(
-                            border -> {
-                              if (countryBlackList.contains(border.getKey())) {
-                                return false;
-                              }
-                              border.setValue(
-                                  border.getValue().stream()
-                                      .filter(neighbor -> !countryBlackList.contains(neighbor))
-                                      .collect(toSet()));
-                              return true;
-                            })
-                        .collect(toMap(Map.Entry::getKey, Map.Entry::getValue)));
-              }
-            });
+    for (String opCmd : opCmds) {
+      String[] splitOpCmd = opCmd.split(" ");
+      if (splitOpCmd.length < 2 || splitOpCmd.length > 3) {
+        System.out.println(
+            "Invalid syntax: usage editcontinent -add <continentName> <controlValue> -remove <continentName>");
+        continue;
+      }
+      String commandType = splitOpCmd[0];
+      String continentName = splitOpCmd[1];
+      if (commandType.equals("add")) {
+        int continentControlValue = Integer.parseInt(splitOpCmd[2]);
+        addContinent(continentName, continentControlValue, map);
+      } else if (commandType.equals("remove")) {
+        removeContinent(continentName, map);
+      }
+    }
     return true;
   }
 
@@ -138,41 +100,22 @@ public class EditMap extends MapParser {
    * @return A boolean result for success or failure.
    */
   public boolean editCountry(String[] opCmds, GameMap map) {
-    Arrays.asList(opCmds)
-        .forEach(
-            opcmd -> {
-              Map<String, Country> copyOfCountries = map.getCountries();
-              Map<String, Set<String>> copyOfBorders = map.getBorders();
-              String[] splitOpCmd = opcmd.split(" ");
-              String country = splitOpCmd[1];
-              if (splitOpCmd[0].equals("add")) {
-                String continentString = splitOpCmd[2];
-                Country toInsert = new Country(country, continentString);
-                copyOfCountries.put(country, toInsert);
-                map.setCountries(copyOfCountries);
-                // perform add country
-              } else if (splitOpCmd[0].equals("remove")) {
-                // perform remove country
-                // update country list
-                copyOfCountries.remove(country);
-                map.setCountries(copyOfCountries);
-                // update border list
-                map.setBorders(
-                    copyOfBorders.entrySet().stream()
-                        .filter(
-                            borderLoc -> {
-                              if (borderLoc.getKey().equals(country)) {
-                                return false;
-                              }
-                              borderLoc.setValue(
-                                  borderLoc.getValue().stream()
-                                      .filter(neighbor -> !neighbor.equals(country))
-                                      .collect(toSet()));
-                              return true;
-                            })
-                        .collect(toMap(Map.Entry::getKey, Map.Entry::getValue)));
-              }
-            });
+    for (String opCmd : opCmds) {
+      String[] splitOpCmd = opCmd.split(" ");
+      if (splitOpCmd.length < 2 || splitOpCmd.length > 3) {
+        System.out.println(
+            "Invalid syntax: usage editcountry -add <countryName> <continentName> -remove <countryName>");
+        continue;
+      }
+      String commandType = splitOpCmd[0];
+      String countryName = splitOpCmd[1];
+      if (commandType.equals("add")) {
+        String continentString = splitOpCmd[2];
+        addCountry(countryName, continentString, map);
+      } else if (commandType.equals("remove")) {
+        removeCountry(countryName, map);
+      }
+    }
     return true;
   }
 
@@ -184,33 +127,152 @@ public class EditMap extends MapParser {
    * @return A boolean with success or failure.
    */
   public boolean editNeighbor(String[] opCmds, GameMap map) {
-    Arrays.asList(opCmds)
-        .forEach(
-            opcmd -> {
-              Map<String, Set<String>> copyOfBorders = map.getBorders();
-              Map<String, Country> copyOfCountries = map.getCountries();
-              String[] splitOpCmd = opcmd.split(" ");
-              String country = splitOpCmd[1];
-              String neighborCountry = splitOpCmd[2];
-              if (splitOpCmd[0].equals("add")) {
-                // perform add country neighborCountry
-                if (country.equals(neighborCountry)) return;
-                if (!copyOfBorders.containsKey(country)
-                    && copyOfCountries.containsKey(neighborCountry)) {
-                  copyOfBorders.put(country, new HashSet<>());
-                  map.setBorders(copyOfBorders);
-                }
-                copyOfBorders.get(country).add(neighborCountry);
-                map.setBorders(copyOfBorders);
-              } else if (splitOpCmd[0].equals("remove")) {
-                // perform remove country neighborCountry
-                if (copyOfBorders.containsKey(country)) {
-                  copyOfBorders.get(country).remove(neighborCountry);
-                }
-                map.setBorders(copyOfBorders);
-              }
-            });
+    for (String opCmd : opCmds) {
+      String[] splitOpCmd = opCmd.split(" ");
+      if (splitOpCmd.length != 3) {
+        System.out.println(
+            "Invalid syntax: usage editneighbor -add <country1> <country2> -remove <country1> <country2>");
+        continue;
+      }
+      String commandType = splitOpCmd[0];
+      String country1 = splitOpCmd[1];
+      String country2 = splitOpCmd[2];
+      if (commandType.equals("add")) {
+        addBorder(country1, country2, map);
+      } else if (commandType.equals("remove")) {
+        removeBorder(country1, country2, map);
+      }
+    }
     return true;
+  }
+
+  /**
+   * Add a continent to the gameMap
+   *
+   * @param continentName continent to add
+   * @param value control value of continent
+   * @param gameMap contains map data
+   */
+  public void addContinent(String continentName, int value, GameMap gameMap) {
+    Continent continent = new Continent(continentName, value);
+    gameMap.getContinents().put(continentName, continent);
+    System.out.println("Added continent: " + continentName);
+  }
+
+  /**
+   * Removes a continent and all its countries from the gameMap
+   *
+   * @param continentName continent to remove
+   * @param gameMap contains map data
+   */
+  public void removeContinent(String continentName, GameMap gameMap) {
+    if (!gameMap.getContinents().containsKey(continentName)) {
+      System.out.println("Error: The continent " + continentName + " does not exist");
+      return;
+    }
+    gameMap.getContinents().remove(continentName);
+    gameMap
+        .getCountriesByContinent(continentName)
+        .forEach(country -> removeCountry(country, gameMap));
+    System.out.println("Removed continent: " + continentName);
+  }
+
+  /**
+   * Adds a country to the game map
+   *
+   * @param countryName country to add
+   * @param continentName continent the country belongs to
+   * @param gameMap contains map data
+   */
+  public void addCountry(String countryName, String continentName, GameMap gameMap) {
+    if (!gameMap.getContinents().containsKey(continentName)) {
+      System.out.println("Error: The continent " + continentName + " does not exist");
+      return;
+    }
+    Country country = new Country(countryName, continentName);
+    gameMap.getCountries().put(countryName, country);
+    gameMap.getBorders().put(countryName, new HashSet<>());
+    System.out.println("Added country: " + countryName + " to " + continentName);
+  }
+
+  /**
+   * Removes a country from the game map
+   *
+   * @param countryName country to remove
+   * @param gameMap contains map data
+   */
+  public void removeCountry(String countryName, GameMap gameMap) {
+    if (!gameMap.getCountries().containsKey(countryName)) {
+      System.out.println("Error: The country " + countryName + " does not exist");
+      return;
+    }
+    gameMap.getCountries().remove(countryName);
+    removeCountryBorders(countryName, gameMap);
+    System.out.println("Removed country: " + countryName);
+  }
+
+  /**
+   * Adds a border between two countries making them neighbors
+   *
+   * @param country1 neighboring country 1
+   * @param country2 neighboring country 2
+   * @param gameMap contains map data
+   */
+  public void addBorder(String country1, String country2, GameMap gameMap) {
+    if (country1.equals(country2)) {
+      System.out.println("Error: The countries " + country1 + " and " + country2 + " are the same");
+      return;
+    }
+    Map<String, Set<String>> borders = gameMap.getBorders();
+    borders.get(country1).add(country2);
+    borders.get(country2).add(country1);
+    System.out.println("Added border: " + country1 + " - " + country2);
+  }
+
+  /**
+   * Removes a border between two countries
+   *
+   * @param country1 neighboring country 1
+   * @param country2 neighboring country 2
+   * @param gameMap contains map data
+   */
+  public void removeBorder(String country1, String country2, GameMap gameMap) {
+    if (country1.equals(country2)) {
+      System.out.println("Error: The countries" + country1 + " and " + country2 + " are the same");
+      return;
+    }
+    if (!gameMap.getCountries().containsKey(country1)) {
+      System.out.println("Error: The country " + country1 + " does not exist");
+      return;
+    }
+    if (!gameMap.getCountries().containsKey(country2)) {
+      System.out.println("Error: The country " + country2 + " does not exist");
+      return;
+    }
+    Map<String, Set<String>> borders = gameMap.getBorders();
+    borders.get(country1).remove(country2);
+    borders.get(country2).remove(country1);
+    System.out.println("Removed border: " + country1 + " - " + country2);
+  }
+
+  /**
+   * Removes all borders that a country is part of
+   *
+   * @param countryName country whose borders are to be removed
+   * @param gameMap contains map data
+   */
+  public void removeCountryBorders(String countryName, GameMap gameMap) {
+    if (!gameMap.getBorders().containsKey(countryName)) {
+      System.out.println("Error: The country " + countryName + " does not exist");
+      return;
+    }
+    Map<String, Set<String>> borders = gameMap.getBorders();
+    Set<String> neighbors = borders.get(countryName);
+    for (String neighbor : neighbors) {
+      borders.get(neighbor).remove(countryName);
+      System.out.println("Removed border: " + neighbor + " - " + countryName);
+    }
+    borders.remove(countryName);
   }
 
   /**

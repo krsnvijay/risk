@@ -30,15 +30,11 @@ public class Runner {
       String userInput = CLI.input.nextLine();
       String userCommand = userInput.split(" ")[0];
       String[] opCommands = null;
-
-      if (userInput.startsWith("save")) {
-        opCommands = userInput.split(" ");
-        if (opCommands.length != 2) {
-          throw new Exception("Invalid Command");
-        }
-      } else if (userInput.startsWith("edit")) {
+      if (userInput.startsWith("edit")) {
         String[] originalSplit = userInput.split(" -");
-        opCommands = Arrays.copyOfRange(originalSplit, 1, originalSplit.length);
+        if (originalSplit.length > 1)
+          opCommands = Arrays.copyOfRange(originalSplit, 1, originalSplit.length);
+
       }
 
       if (cli.validate(userCommand)) {
@@ -53,6 +49,7 @@ public class Runner {
             editMap.editNeighbor(opCommands, gameMap);
             break;
           case "savemap":
+            opCommands = userInput.split(" ");
             if (editMap.validateMap(gameMap)) editMap.saveMap(gameMap, opCommands[1]);
             else throw new Exception("Invalid map!");
             break;

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * GameMap stores map data i.e borders, countries, files, continents
@@ -81,6 +82,18 @@ public class GameMap {
                 })
             .collect(joining("\n"));
     System.out.println(mapByContinents);
+  }
+
+  /**
+   * Get all countries in a continent
+   * @param continentName name of the continent
+   * @return set of countrynames that are part of continent
+   */
+  public Set<String> getCountriesByContinent(String continentName) {
+    return this.countries.values().stream()
+        .filter(c -> c.getContinent().equals(continentName))
+        .map(Country::getName)
+        .collect(Collectors.toSet());
   }
 
   /** Pretty prints the game map. */
