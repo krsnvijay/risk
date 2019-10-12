@@ -6,9 +6,7 @@ package models;
  * @author Vijay
  */
 public class Country {
-  /**
-   * The name of the continent the Country belongs to.
-   */
+  /** The name of the continent the Country belongs to. */
   private String continent;
 
   /** The name of the Country. */

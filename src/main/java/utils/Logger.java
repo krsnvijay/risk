@@ -5,5 +5,4 @@ package utils;
  *
  * @author Siddhant Bansal
  */
-public class Logger {
-}
+public class Logger {}

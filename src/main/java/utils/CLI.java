@@ -1,6 +1,10 @@
 package utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 /**
  * This singleton utility class handles all the text commands for the game.
@@ -9,19 +13,13 @@ import java.util.*;
  */
 public class CLI {
 
-  /**
-   * The scanner object for reading input from the console.
-   */
+  /** The scanner object for reading input from the console. */
   public static Scanner input;
-  /**
-   * The singleton instance of the CLI class.
-   */
+  /** The singleton instance of the CLI class. */
   private static CLI cli = null;
   /** The current context for the game. */
   public Context currentContext;
-  /**
-   * A Map of all the valid commands for a specific Context.
-   */
+  /** A Map of all the valid commands for a specific Context. */
   Map<Context, ArrayList<String>> validCommands = new HashMap<>();
 
   /**
@@ -37,19 +35,19 @@ public class CLI {
 
     // Editor commands
     ArrayList<String> editorCommands =
-            new ArrayList<>(
-                    Arrays.asList(
-                            "savemap",
-                            "validatemap",
-                            "editcountry",
-                            "editcontinent",
-                            "editneighbor",
+        new ArrayList<>(
+            Arrays.asList(
+                "savemap",
+                "validatemap",
+                "editcountry",
+                "editcontinent",
+                "editneighbor",
                 "showmap"));
     validCommands.put(Context.EDITOR, editorCommands);
 
     // Setup commands
     ArrayList<String> setupCommands =
-            new ArrayList<>(Arrays.asList("placearmy", "placeall", "gameplayer", "populatecountry"));
+        new ArrayList<>(Arrays.asList("placearmy", "placeall", "gameplayer", "populatecountry"));
     validCommands.put(Context.GAME_SETUP, setupCommands);
 
     // Reinforcement commands

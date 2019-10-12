@@ -1,8 +1,8 @@
 package models;
 
-import java.util.ArrayList;
-
 import static java.util.stream.Collectors.toCollection;
+
+import java.util.ArrayList;
 
 /**
  * This is the Player class which handles every player.
@@ -11,9 +11,7 @@ import static java.util.stream.Collectors.toCollection;
  */
 public class Player {
 
-  /**
-   * This instance variable holds the name of the player.
-   */
+  /** This instance variable holds the name of the player. */
   private String playerName;
 
   private int numberOfArmies = 0;
@@ -32,13 +30,13 @@ public class Player {
    * This method returns all countries owned by a player.
    *
    * @param playerName The name of the player.
-   * @param gameMap    the entire map graph
+   * @param gameMap the entire map graph
    * @return a list of countries owned by this player.
    */
   public static ArrayList<Country> getCountriesByOwnership(String playerName, GameMap gameMap) {
     return gameMap.getCountries().values().stream()
-            .filter(c -> c.getOwnerName().equals(playerName))
-            .collect(toCollection(ArrayList::new));
+        .filter(c -> c.getOwnerName().equals(playerName))
+        .collect(toCollection(ArrayList::new));
   }
 
   /**

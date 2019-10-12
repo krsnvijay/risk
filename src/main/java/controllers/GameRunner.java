@@ -1,17 +1,16 @@
 package controllers;
 
-import models.Country;
-import models.GameMap;
-import models.Player;
-import utils.CLI;
-import utils.CLI.Context;
+import static java.util.stream.Collectors.toMap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
-
-import static java.util.stream.Collectors.toMap;
+import models.Country;
+import models.GameMap;
+import models.Player;
+import utils.CLI;
+import utils.CLI.Context;
 
 /**
  * Controls the Game Loop.
@@ -82,9 +81,7 @@ public class GameRunner {
     }
   }
 
-  /**
-   *
-   */
+  /** */
   public void gameSetup() {
     int[] totalArmyCounts = {40, 35, 30, 25};
     int armiesPerPlayer = totalArmyCounts[playersList.size() - 2];
@@ -107,9 +104,9 @@ public class GameRunner {
             } else {
               if (placeArmy(userCommand.split(" ")[1])) {
                 System.out.println(
-                        "Player "
-                                + playersList.get(currentPlayerIndex).getPlayerName()
-                                + " placed the army.");
+                    "Player "
+                        + playersList.get(currentPlayerIndex).getPlayerName()
+                        + " placed the army.");
                 currentPlayerIndex = (currentPlayerIndex + 1) % playersList.size();
               } else {
                 System.out.println("Unable to place army!");

@@ -1,9 +1,7 @@
 package models;
 
 public class Continent {
-  /**
-   * The colour of the continent (serialization).
-   */
+  /** The colour of the continent (serialization). */
   private String color;
 
   /** The name of the continent. */

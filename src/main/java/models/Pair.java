@@ -8,9 +8,7 @@ package models;
  * @param <V> The value of the pair
  */
 public class Pair<K, V> {
-  /**
-   * This instance variable stores the key, i.e. the generic object K.
-   */
+  /** This instance variable stores the key, i.e. the generic object K. */
   private K key;
   /** This instance variable stores the value, i.e. the generic object V. */
   private V value;

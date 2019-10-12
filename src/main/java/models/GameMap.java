@@ -1,12 +1,12 @@
 package models;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.joining;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.joining;
 
 /**
  * GameMap stores map data i.e borders, countries, files, continents
@@ -15,9 +15,7 @@ import static java.util.stream.Collectors.joining;
  */
 public class GameMap {
 
-  /**
-   * Contains the information in the [File] section.
-   */
+  /** Contains the information in the [File] section. */
   private ArrayList<String> fileSectionData;
 
   /** Stores an adjacency list of all borders. */
@@ -42,11 +40,11 @@ public class GameMap {
    * @param fileName contains map name
    */
   public GameMap(
-          ArrayList<String> fileSectionData,
-          Map<String, Set<String>> borders,
-          Map<String, Continent> continents,
-          Map<String, Country> countries,
-          String fileName) {
+      ArrayList<String> fileSectionData,
+      Map<String, Set<String>> borders,
+      Map<String, Continent> continents,
+      Map<String, Country> countries,
+      String fileName) {
     super();
     this.fileSectionData = fileSectionData;
     this.borders = borders;
@@ -68,20 +66,20 @@ public class GameMap {
   /** Displays the map grouped by continents. */
   public void showMapByContinents() {
     Map<String, List<Country>> groupedCountries =
-            this.countries.values().stream().collect(groupingBy(Country::getContinent));
+        this.countries.values().stream().collect(groupingBy(Country::getContinent));
     String mapByContinents =
-            groupedCountries.entrySet().stream()
-                    .map(
-                            entry -> {
-                              String sectionHeader = entry.getKey();
-                              String sectionData =
-                                      entry.getValue().stream()
-                                              .map(Country::getName)
-                                              .sorted()
-                                              .collect(joining("\n"));
-                              return String.format("[%s]\n%s\n", sectionHeader, sectionData);
-                            })
-                    .collect(joining("\n"));
+        groupedCountries.entrySet().stream()
+            .map(
+                entry -> {
+                  String sectionHeader = entry.getKey();
+                  String sectionData =
+                      entry.getValue().stream()
+                          .map(Country::getName)
+                          .sorted()
+                          .collect(joining("\n"));
+                  return String.format("[%s]\n%s\n", sectionHeader, sectionData);
+                })
+            .collect(joining("\n"));
     System.out.println(mapByContinents);
   }
 
@@ -89,10 +87,10 @@ public class GameMap {
   @Override
   public String toString() {
     return String.format(
-            "[continents]\n%s\n\n[countries]\n%s\n\n[borders]\n%s\n",
-            this.continents.values().stream().map(Continent::toString).sorted().collect(joining("\n")),
-            this.countries.values().stream().map(Country::toString).sorted().collect(joining("\n")),
-            this.borders.entrySet().stream().map(GameMap::showBorders).sorted().collect(joining("\n")));
+        "[continents]\n%s\n\n[countries]\n%s\n\n[borders]\n%s\n",
+        this.continents.values().stream().map(Continent::toString).sorted().collect(joining("\n")),
+        this.countries.values().stream().map(Country::toString).sorted().collect(joining("\n")),
+        this.borders.entrySet().stream().map(GameMap::showBorders).sorted().collect(joining("\n")));
   }
 
   /**

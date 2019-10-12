@@ -1,17 +1,24 @@
 package utils;
 
-import models.Continent;
-import models.Country;
-import models.GameMap;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
 import java.util.function.Function;
-
-import static java.util.stream.Collectors.*;
+import models.Continent;
+import models.Country;
+import models.GameMap;
 
 /**
  * The Map Parser utility parses the whole map file from disk.
@@ -38,16 +45,16 @@ public class MapParser {
     ArrayList<String> continentsInOrder = new ArrayList<>();
     ArrayList<String> countriesInOrder = new ArrayList<>();
     Function<Scanner, ArrayList<String>> readSectionData =
-            sc -> {
-              ArrayList<String> sectionData = new ArrayList<>();
-              while (sc.hasNext()) {
-                String sectionLine = sc.nextLine();
+        sc -> {
+          ArrayList<String> sectionData = new ArrayList<>();
+          while (sc.hasNext()) {
+            String sectionLine = sc.nextLine();
 
-                if (sectionLine.trim().isEmpty()) break;
-                sectionData.add(sectionLine);
-              }
-              return sectionData;
-            };
+            if (sectionLine.trim().isEmpty()) break;
+            sectionData.add(sectionLine);
+          }
+          return sectionData;
+        };
     while (scanner.hasNext()) {
       String line = scanner.nextLine();
       if (line.startsWith("name")) {
@@ -62,39 +69,39 @@ public class MapParser {
             break;
           case "[continents]":
             continentsInOrder.addAll(
-                    sectionData.stream()
-                            .map(ln -> ln.split(" ")[0])
-                            .collect(toCollection(ArrayList::new)));
+                sectionData.stream()
+                    .map(ln -> ln.split(" ")[0])
+                    .collect(toCollection(ArrayList::new)));
             continents =
-                    sectionData.stream()
-                            .map(MapParser::deserializeContinent)
-                            .collect(toMap(Continent::getName, Function.identity()));
+                sectionData.stream()
+                    .map(MapParser::deserializeContinent)
+                    .collect(toMap(Continent::getName, Function.identity()));
             break;
           case "[countries]":
             countriesInOrder.addAll(
-                    sectionData.stream()
-                            .map(ln -> ln.split(" ")[1])
-                            .collect(toCollection(ArrayList::new)));
+                sectionData.stream()
+                    .map(ln -> ln.split(" ")[1])
+                    .collect(toCollection(ArrayList::new)));
             countries =
-                    sectionData.stream()
-                            .map(ln -> deserializeCountry(ln, continentsInOrder))
-                            .collect(toMap(Country::getName, Function.identity()));
+                sectionData.stream()
+                    .map(ln -> deserializeCountry(ln, continentsInOrder))
+                    .collect(toMap(Country::getName, Function.identity()));
             break;
           case "[borders]":
             borders =
-                    sectionData.stream()
-                            .map(ln -> deserializeBorder(ln, countriesInOrder))
-                            .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+                sectionData.stream()
+                    .map(ln -> deserializeBorder(ln, countriesInOrder))
+                    .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
             break;
         }
       }
     }
     scanner.close();
     if (countries == null
-            || continents == null
-            || borders == null
-            || fileSectionData == null
-            || mapName == null) throw new Exception("Map file is invalid");
+        || continents == null
+        || borders == null
+        || fileSectionData == null
+        || mapName == null) throw new Exception("Map file is invalid");
 
     return new GameMap(fileSectionData, borders, continents, countries, mapName);
   }
@@ -137,13 +144,13 @@ public class MapParser {
    * @return An entry object, key is the name and the value is a Set of borders.
    */
   private static Map.Entry<String, Set<String>> deserializeBorder(
-          String borderLine, ArrayList<String> countryNames) {
+      String borderLine, ArrayList<String> countryNames) {
     String[] splitBorderLine = borderLine.split(" ");
     String key = countryNames.get(Integer.parseInt(splitBorderLine[0]) - 1);
     Set<String> value =
-            Arrays.stream(splitBorderLine, 1, splitBorderLine.length)
-                    .map(str -> countryNames.get(Integer.parseInt(str) - 1))
-                    .collect(toSet());
+        Arrays.stream(splitBorderLine, 1, splitBorderLine.length)
+            .map(str -> countryNames.get(Integer.parseInt(str) - 1))
+            .collect(toSet());
     return new AbstractMap.SimpleEntry<>(key, value);
   }
 
@@ -155,51 +162,51 @@ public class MapParser {
    */
   private static String serializeContinent(Continent continent) {
     return String.format(
-            "%s %d %s", continent.getName(), continent.getValue(), continent.getColor());
+        "%s %d %s", continent.getName(), continent.getValue(), continent.getColor());
   }
 
   /**
    * Serialize a Country
    *
-   * @param country         country object to serialize
-   * @param countriesOrder  ordered countries list to build indexes
+   * @param country country object to serialize
+   * @param countriesOrder ordered countries list to build indexes
    * @param continentsOrder ordered continent list to build indexes
    * @return formatted country line
    */
   private static String serializeCountry(
-          Country country, ArrayList<String> countriesOrder, ArrayList<String> continentsOrder) {
+      Country country, ArrayList<String> countriesOrder, ArrayList<String> continentsOrder) {
     int countryId = countriesOrder.indexOf(country.getName()) + 1;
     String countryName = country.getName();
     int continentId = continentsOrder.indexOf(country.getContinent()) + 1;
     return String.format(
-            "%d %s %d %d %d", countryId, countryName, continentId, country.getX(), country.getY());
+        "%d %s %d %d %d", countryId, countryName, continentId, country.getX(), country.getY());
   }
 
   /**
    * Serialize a Border
    *
-   * @param countryName    name of country
+   * @param countryName name of country
    * @param countriesOrder ordered countries list to build indexes
-   * @param gameBorders    map of borders
+   * @param gameBorders map of borders
    * @return formatted border line
    */
   private static String serializeBorder(
-          String countryName, ArrayList<String> countriesOrder, Map<String, Set<String>> gameBorders) {
+      String countryName, ArrayList<String> countriesOrder, Map<String, Set<String>> gameBorders) {
     int countryId = countriesOrder.indexOf(countryName) + 1;
     String neighbors =
-            gameBorders.get(countryName).stream()
-                    .map(countriesOrder::indexOf)
-                    .map(i -> i + 1)
-                    .sorted()
-                    .map(String::valueOf)
-                    .collect(joining(" "));
+        gameBorders.get(countryName).stream()
+            .map(countriesOrder::indexOf)
+            .map(i -> i + 1)
+            .sorted()
+            .map(String::valueOf)
+            .collect(joining(" "));
     return String.format("%d %s", countryId, neighbors);
   }
 
   /**
    * Saves the map into a file.
    *
-   * @param gameMap  The GameMap object to save.
+   * @param gameMap The GameMap object to save.
    * @param fileName The name of the file.
    * @throws IOException TODO: will handle this.
    */
@@ -223,33 +230,33 @@ public class MapParser {
 
     // Get sorted string keys to build integer indexes
     ArrayList<String> continentsOrder =
-            gameContinents.keySet().stream().sorted().collect(toCollection(ArrayList::new));
+        gameContinents.keySet().stream().sorted().collect(toCollection(ArrayList::new));
     ArrayList<String> countriesOrder =
-            gameCountries.keySet().stream().sorted().collect(toCollection(ArrayList::new));
+        gameCountries.keySet().stream().sorted().collect(toCollection(ArrayList::new));
 
     // collect serialized continents
     String continents =
-            continentsOrder.stream()
-                    .map(gameContinents::get)
-                    .map(MapParser::serializeContinent)
-                    .collect(joining("\n"));
+        continentsOrder.stream()
+            .map(gameContinents::get)
+            .map(MapParser::serializeContinent)
+            .collect(joining("\n"));
 
     // collect serialized countries
     String countries =
-            countriesOrder.stream()
-                    .map(gameCountries::get)
-                    .map(c -> serializeCountry(c, countriesOrder, continentsOrder))
-                    .collect(joining("\n"));
+        countriesOrder.stream()
+            .map(gameCountries::get)
+            .map(c -> serializeCountry(c, countriesOrder, continentsOrder))
+            .collect(joining("\n"));
 
     // collect serialized borders
     String borders =
-            countriesOrder.stream()
-                    .map(c -> serializeBorder(c, countriesOrder, gameBorders))
-                    .collect(joining("\n"));
+        countriesOrder.stream()
+            .map(c -> serializeBorder(c, countriesOrder, gameBorders))
+            .collect(joining("\n"));
 
     // serialize gameMap to Risk Map format
     return String.format(
-            "%s\n\n[files]\n%s\n\n[continents]\n%s\n\n[countries]\n%s\n\n[borders]\n%s\n",
-            gameMap.getFileName(), files, continents, countries, borders);
+        "%s\n\n[files]\n%s\n\n[continents]\n%s\n\n[countries]\n%s\n\n[borders]\n%s\n",
+        gameMap.getFileName(), files, continents, countries, borders);
   }
 }

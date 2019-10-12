@@ -5,5 +5,4 @@ package views;
  *
  * @author Siddhant Bansal
  */
-public class MainMenu {
-}
+public class MainMenu {}

@@ -1,14 +1,13 @@
 package views;
 
 import controllers.GameRunner;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import models.GameMap;
 import utils.CLI;
 import utils.EditMap;
 import utils.MapParser;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Runs the project and handles the initial commands.
@@ -71,9 +70,7 @@ public class Runner {
     }
   }
 
-  /**
-   * @param gameMap stores map data i.e borders, countries, files, continents
-   */
+  /** @param gameMap stores map data i.e borders, countries, files, continents */
   private static void beginGame(GameMap gameMap) {
     while (true) {
       CLI cli = CLI.getInstance();
@@ -141,7 +138,6 @@ public class Runner {
         }
       } catch (Exception e) {
         System.out.println(e.getMessage());
-        continue;
       }
     }
   }
