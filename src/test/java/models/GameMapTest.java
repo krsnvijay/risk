@@ -1,11 +1,13 @@
 package models;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static java.util.stream.Collectors.toSet;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 import utils.MapParser;
@@ -15,124 +17,128 @@ public class GameMapTest {
 
   @Before
   public void setUp() throws Exception {
+    // Load Risk map from resource folder
     File riskMap = new File(this.getClass().getResource("/risk.map").getFile());
     gameMap = MapParser.loadMap(riskMap.getPath());
   }
 
   @Test
   public void addContinent() {
+    // Arrange
     String continentName = "Atlanta";
     int controlValue = 2;
     Continent continent = new Continent(continentName, controlValue);
-
+    // Act
     gameMap.addContinent(continentName, controlValue);
-
-    assertEquals(gameMap.getContinents().get(continentName), continent);
+    // Assert
+    Collection<Continent> continents = gameMap.getContinents().values();
+    assertThat(continents, hasItem(continent));
   }
 
   @Test
   public void removeContinent() {
+    // Arrange
     String continentName = "Asia";
-
+    // Act
     gameMap.removeContinent(continentName);
+    // Assert
+    Set<String> keySetOfContinentNames = gameMap.getContinents().keySet();
+    assertThat(keySetOfContinentNames, not(hasItem(continentName)));
 
-    boolean isContinentRemovedInGameMap = !gameMap.getContinents().containsKey(continentName);
-    assertTrue(isContinentRemovedInGameMap);
+    Set<String> setOfContinentNamesInAllCountries =
+        gameMap.getCountries().values().stream().map(Country::getContinent).collect(toSet());
+    assertThat(setOfContinentNamesInAllCountries, not(hasItem(continentName)));
 
-    boolean isContinentRemovedInCountries =
-        gameMap.getCountries().values().stream()
-            .map(Country::getContinent)
-            .distinct()
-            .noneMatch(continent -> continent.equals(continentName));
-    assertTrue(isContinentRemovedInCountries);
-
-    boolean isContinentRemovedInBorders =
+    Set<String> setOfContinentNamesInAllBorders =
         gameMap.getBorders().values().stream()
             .flatMap(Collection::stream)
             .map(gameMap.getCountries()::get)
             .map(Country::getContinent)
-            .distinct()
-            .noneMatch(continent -> continent.equals(continentName));
-    assertTrue(isContinentRemovedInBorders);
+            .collect(toSet());
+    assertThat(setOfContinentNamesInAllBorders, not(hasItem(continentName)));
   }
 
   @Test
   public void addCountry() {
+    // Arrange
     String countryName = "Pandora";
     String continentName = "Asia";
     Country country = new Country(countryName, continentName);
-
+    // Act
     gameMap.addCountry(countryName, continentName);
-
-    assertEquals(gameMap.getCountries().get(countryName), country);
+    // Assert
+    Collection<Country> countries = gameMap.getCountries().values();
+    assertThat(countries, hasItem(country));
   }
 
   @Test
   public void removeCountry() {
+    // Arrange
     String countryName = "India";
-
+    // Act
     gameMap.removeCountry(countryName);
+    // Assert
+    Set<String> keySetOfCountryNames = gameMap.getCountries().keySet();
+    assertThat(keySetOfCountryNames, not(hasItem(countryName)));
 
-    boolean isCountryRemovedInGameMap = !gameMap.getCountries().containsKey(countryName);
-    assertTrue(isCountryRemovedInGameMap);
+    Set<String> keySetOfBorderCountryNames = gameMap.getBorders().keySet();
+    assertThat(keySetOfBorderCountryNames, not(hasItem(countryName)));
 
-    boolean isCountryRemovedInBorders = !gameMap.getBorders().containsKey(countryName);
-    assertTrue(isCountryRemovedInBorders);
-
-    boolean isCountryNotANeighbor =
+    Set<String> setOfAllBorderCountryNames =
         gameMap.getBorders().values().stream()
             .flatMap(Collection::stream)
             .map(gameMap.getCountries()::get)
             .map(Country::getName)
-            .distinct()
-            .noneMatch(country -> country.equals(countryName));
-    assertTrue(isCountryNotANeighbor);
+            .collect(toSet());
+    assertThat(setOfAllBorderCountryNames, not(hasItem(countryName)));
   }
 
   @Test
   public void addBorder() {
-    String country1 = "India";
-    String country2 = "China";
+    // Arrange
+    String countryName1 = "India";
+    String countryName2 = "China";
+    // Act
+    gameMap.addBorder(countryName1, countryName2);
+    // Assert
+    Set<String> setOfCountry1NeighborNames = gameMap.getBorders().get(countryName1);
+    assertThat(setOfCountry1NeighborNames, hasItem(countryName2));
 
-    gameMap.addBorder(country1, country2);
-
-    boolean isCountry2NeighborOfCountry1 = gameMap.getBorders().get(country1).contains(country2);
-    assertTrue(isCountry2NeighborOfCountry1);
-
-    boolean isCountry1NeighborOfCountry2 = gameMap.getBorders().get(country2).contains(country1);
-    assertTrue(isCountry1NeighborOfCountry2);
+    Set<String> setOfCountry2NeighborNames = gameMap.getBorders().get(countryName2);
+    assertThat(setOfCountry2NeighborNames, hasItem(countryName1));
   }
 
   @Test
   public void removeBorder() {
-    String country1 = "India";
-    String country2 = "China";
+    // Arrange
+    String countryName1 = "India";
+    String countryName2 = "China";
+    // Act
+    gameMap.removeBorder(countryName1, countryName2);
+    // Assert
+    Set<String> setOfCountry1NeighborNames = gameMap.getBorders().get(countryName1);
+    assertThat(setOfCountry1NeighborNames, not(hasItem(countryName2)));
 
-    gameMap.removeBorder(country1, country2);
-
-    boolean isCountry2NeighborOfCountry1 = gameMap.getBorders().get(country1).contains(country2);
-    assertFalse(isCountry2NeighborOfCountry1);
-
-    boolean isCountry1NeighborOfCountry2 = gameMap.getBorders().get(country2).contains(country1);
-    assertFalse(isCountry1NeighborOfCountry2);
+    Set<String> setOfCountry2NeighborNames = gameMap.getBorders().get(countryName2);
+    assertThat(setOfCountry2NeighborNames, not(hasItem(countryName1)));
   }
 
   @Test
   public void removeCountryBorders() {
+    // Arrange
     String countryName = "India";
-
+    // Act
     gameMap.removeCountryBorders(countryName);
+    // Assert
+    Set<String> keySetOfBorderCountryNames = gameMap.getBorders().keySet();
+    assertThat(keySetOfBorderCountryNames, not(hasItem(countryName)));
 
-    boolean isCountryRemovedInBorders = !gameMap.getBorders().containsKey(countryName);
-    assertTrue(isCountryRemovedInBorders);
-
-    boolean isCountryNotANeighbor =
+    Set<String> setOfNeighborCountryNames =
         gameMap.getBorders().values().stream()
             .flatMap(Collection::stream)
             .map(gameMap.getCountries()::get)
             .map(Country::getName)
-            .distinct()
-            .noneMatch(country -> country.equals(countryName));
-    assertTrue(isCountryNotANeighbor);
+            .collect(toSet());
+    assertThat(setOfNeighborCountryNames, not(hasItem(countryName)));
   }
 }
