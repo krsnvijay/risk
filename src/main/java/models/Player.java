@@ -3,6 +3,7 @@ package models;
 import static java.util.stream.Collectors.toCollection;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * This is the Player class which handles every player.
@@ -87,5 +88,23 @@ public class Player {
    */
   public void subtractArmies(int count) {
     this.numberOfArmies -= count;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Player player = (Player) o;
+    return numberOfArmies == player.numberOfArmies &&
+        playerName.equals(player.playerName);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(playerName, numberOfArmies);
   }
 }

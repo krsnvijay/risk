@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -321,5 +322,26 @@ public class GameMap {
    */
   public void setCountries(Map<String, Country> countries) {
     this.countries = countries;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    GameMap gameMap = (GameMap) o;
+    return fileSectionData.equals(gameMap.fileSectionData) &&
+        borders.equals(gameMap.borders) &&
+        continents.equals(gameMap.continents) &&
+        countries.equals(gameMap.countries) &&
+        fileName.equals(gameMap.fileName);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(fileSectionData, borders, continents, countries, fileName);
   }
 }

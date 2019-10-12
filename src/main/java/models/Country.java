@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Objects;
+
 /**
  * This class maintains the information for a Country.
  *
@@ -183,5 +185,27 @@ public class Country {
    */
   public void removeArmies(int count) {
     this.numberOfArmies -= count;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Country country = (Country) o;
+    return x == country.x &&
+        y == country.y &&
+        numberOfArmies == country.numberOfArmies &&
+        continent.equals(country.continent) &&
+        name.equals(country.name) &&
+        Objects.equals(ownerName, country.ownerName);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(continent, name, x, y, ownerName, numberOfArmies);
   }
 }

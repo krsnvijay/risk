@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Objects;
+
 public class Continent {
   /** The colour of the continent (serialization). */
   private String color;
@@ -93,5 +95,24 @@ public class Continent {
   @Override
   public String toString() {
     return String.format("%s %d %s", this.name, this.value, this.color);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Continent continent = (Continent) o;
+    return value == continent.value &&
+        color.equals(continent.color) &&
+        name.equals(continent.name);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(color, name, value);
   }
 }
