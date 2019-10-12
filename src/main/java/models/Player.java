@@ -1,13 +1,13 @@
 package models;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toCollection;
 
 /**
  * This is the Player class which handles every player.
- * 
- * @author s_anakih
  *
+ * @author s_anakih
  */
 public class Player {
 
@@ -20,7 +20,7 @@ public class Player {
 
   /**
    * This constructor initializes the class.
-   * 
+   *
    * @param playerName name of the player
    */
   public Player(String playerName) {
@@ -29,8 +29,21 @@ public class Player {
   }
 
   /**
+   * This method returns all countries owned by a player.
+   *
+   * @param playerName The name of the player.
+   * @param gameMap    the entire map graph
+   * @return a list of countries owned by this player.
+   */
+  public static ArrayList<Country> getCountriesByOwnership(String playerName, GameMap gameMap) {
+    return gameMap.getCountries().values().stream()
+            .filter(c -> c.getOwnerName().equals(playerName))
+            .collect(toCollection(ArrayList::new));
+  }
+
+  /**
    * This method returns the name of the player.
-   * 
+   *
    * @return playerName the name of the player.
    */
   public String getPlayerName() {
@@ -39,33 +52,17 @@ public class Player {
 
   /**
    * This method sets the name of the player.
-   * 
+   *
    * @param playername the name of the player.
    */
   public void setPlayerName(String playername) {
     this.playerName = playername;
   }
 
-  /**
-   * This is an override for pretty printing the name.
-   */
+  /** This is an override for pretty printing the name. */
   @Override
   public String toString() {
     return String.format("%s", this.playerName);
-  }
-
-  /**
-   * This method returns all countries owned by a player.
-   * 
-   * @param playerName The name of the player.
-   * @param gameMap the entire map graph
-   * @return a list of countries owned by this player.
-   */
-  public static ArrayList<Country> getCountriesByOwnership(String playerName, GameMap gameMap) {
-    ArrayList<Country> countries =
-        gameMap.getCountries().values().stream().filter(c -> c.getOwnerName().equals(playerName))
-            .collect(Collectors.toCollection(ArrayList::new));
-    return countries;
   }
 
   public int getNumberOfArmies() {
@@ -94,4 +91,3 @@ public class Player {
     this.numberOfArmies -= count;
   }
 }
-

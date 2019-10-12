@@ -1,21 +1,22 @@
 package controllers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-import java.util.stream.Collectors;
 import models.Country;
 import models.GameMap;
 import models.Player;
 import utils.CLI;
 import utils.CLI.Context;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+
+import static java.util.stream.Collectors.toMap;
+
 /**
  * Controls the Game Loop.
- * 
- * @author Siddhant Bansal
  *
+ * @author Siddhant Bansal
  */
 public class GameRunner {
 
@@ -34,7 +35,55 @@ public class GameRunner {
   }
 
   /**
-   * 
+   * Validates the count of players in the game.
+   *
+   * @param playerNames a list of names of every player
+   * @param countriesSize the size of the countries list.
+   * @return A boolean with success or failure.
+   */
+  public static boolean validatePlayerCount(ArrayList<String> playerNames, int countriesSize) {
+    if (playerNames.size() <= 1) {
+      System.out.println("There should be at least two players to play.");
+      return true;
+    } else if (playerNames.size() > countriesSize) {
+      System.out.println("The player count exceeds the number of countries in the map.");
+    }
+    return false;
+  }
+
+  /**
+   * This processes the addplayer command.
+   *
+   * @param commands an arraylist of options
+   * @author sabari
+   */
+  public static void gamePlayer(ArrayList<String> commands) {
+    for (String command : commands) {
+      String[] commandSplit = command.split(" ");
+      Player p = new Player(commandSplit[1]);
+      switch (commandSplit[0]) {
+        case "add":
+          if (!playersList.contains(p)) {
+            playersList.add(p);
+            System.out.println("Added " + p.getPlayerName());
+          } else {
+            System.out.println(commandSplit[1] + " Player already exists");
+          }
+          break;
+        case "remove":
+          if (playersList.contains(p)) {
+            playersList.remove(p);
+            System.out.println("Removed" + p.getPlayerName());
+          } else {
+            System.out.println(commandSplit[1] + " Player does not exist");
+          }
+          break;
+      }
+    }
+  }
+
+  /**
+   *
    */
   public void gameSetup() {
     int[] totalArmyCounts = {40, 35, 30, 25};
@@ -57,8 +106,10 @@ public class GameRunner {
               System.out.println("Start the game first -- populatecountries.");
             } else {
               if (placeArmy(userCommand.split(" ")[1])) {
-                System.out.println("Player " + playersList.get(currentPlayerIndex).getPlayerName()
-                    + " placed the army.");
+                System.out.println(
+                        "Player "
+                                + playersList.get(currentPlayerIndex).getPlayerName()
+                                + " placed the army.");
                 currentPlayerIndex = (currentPlayerIndex + 1) % playersList.size();
               } else {
                 System.out.println("Unable to place army!");
@@ -66,8 +117,7 @@ public class GameRunner {
             }
             break;
           case "placeall":
-            if (!isGameStarted)
-              System.out.println("Start the game first -- populatecountries.");
+            if (!isGameStarted) System.out.println("Start the game first -- populatecountries.");
             break;
           case "gameplayer":
             if (isGameStarted) {
@@ -102,9 +152,7 @@ public class GameRunner {
     return false;
   }
 
-  /**
-   * 
-   */
+  /** */
   public void gameLoop() {
     while (true) {
       // run turns here...
@@ -112,59 +160,9 @@ public class GameRunner {
   }
 
   /**
-   * Validates the count of players in the game.
-   * 
-   * @param playerNames a list of names of every player
-   * @param countriesSize the size of the countries list.
-   * @return A boolean with success or failure.
-   */
-  public static boolean validatePlayerCount(ArrayList<String> playerNames, int countriesSize) {
-    if (playerNames.size() <= 1) {
-      System.out.println("There should be at least two players to play.");
-      return true;
-    } else if (playerNames.size() > countriesSize) {
-      System.out.println("The player count exceeds the number of countries in the map.");
-    }
-    return false;
-  }
-
-  /**
-   * This processes the addplayer command.
-   * 
-   * @param commands an arraylist of options
-   * 
-   * @author sabari
-   */
-  public static void gamePlayer(ArrayList<String> commands) {
-    for (String command : commands) {
-      String[] commandSplit = command.split(" ");
-      Player p = new Player(commandSplit[1]);
-      switch (commandSplit[0]) {
-        case "add":
-          if (!playersList.contains(p)) {
-            playersList.add(p);
-            System.out.println("Added " + p.getPlayerName());
-          } else {
-            System.out.println(commandSplit[1] + " Player already exists");
-          }
-          break;
-        case "remove":
-          if (playersList.contains(p)) {
-            playersList.remove(p);
-            System.out.println("Removed" + p.getPlayerName());
-          } else {
-            System.out.println(commandSplit[1] + " Player does not exist");
-          }
-          break;
-      }
-    }
-  }
-
-  /**
    * This method randomly populates all the countries on the map.
    *
    * @return a map of countries with ownership
-   * 
    * @author sabari
    */
   public Map<String, Country> populateCountries() {
@@ -175,6 +173,6 @@ public class GameRunner {
     for (int i = 0; i <= countrySize; i++) {
       countries.get(i).setOwnerName(playersList.get(i % playerCount).getPlayerName());
     }
-    return countries.stream().collect(Collectors.toMap(Country::getName, c -> c));
+    return countries.stream().collect(toMap(Country::getName, c -> c));
   }
 }

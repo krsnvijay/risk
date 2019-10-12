@@ -2,9 +2,8 @@ package models;
 
 /**
  * This class maintains the information for a Country.
- * 
- * @author Vijay
  *
+ * @author Vijay
  */
 public class Country {
   /**
@@ -12,32 +11,23 @@ public class Country {
    */
   private String continent;
 
-  /**
-   * The name of the Country.
-   */
+  /** The name of the Country. */
   private String name;
 
-  /**
-   * The x coordinate for the Country (serialization).
-   */
+  /** The x coordinate for the Country (serialization). */
   private int x;
 
-  /**
-   * The y coordinate for the Country (serialization).
-   */
+  /** The y coordinate for the Country (serialization). */
   private int y;
 
-  /**
-   * The name of the Player who owns the Country.
-   */
+  /** The name of the Player who owns the Country. */
   private String ownerName;
 
   private int numberOfArmies;
 
-
   /**
    * The constructor for the Country class.
-   * 
+   *
    * @param name The name of the Country.
    * @param continent The name of the Continent it belongs to.
    */
@@ -51,7 +41,7 @@ public class Country {
 
   /**
    * The constructor for the Country class.
-   * 
+   *
    * @param name The name of the Country.
    * @param continent The name of the Continent it belongs to.
    * @param x The x coordinate of the country.
@@ -67,7 +57,7 @@ public class Country {
 
   /**
    * Returns the name of the continent.
-   * 
+   *
    * @return String with the name.
    */
   public String getContinent() {
@@ -75,17 +65,8 @@ public class Country {
   }
 
   /**
-   * Returns the name of the country.
-   * 
-   * @return String with the name.
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
    * Sets the name of the continent
-   * 
+   *
    * @param continent String with the name.
    */
   public void setContinent(String continent) {
@@ -93,8 +74,17 @@ public class Country {
   }
 
   /**
+   * Returns the name of the country.
+   *
+   * @return String with the name.
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
    * Sets the name of the country.
-   * 
+   *
    * @param name String with the name.
    */
   public void setName(String name) {
@@ -103,7 +93,7 @@ public class Country {
 
   /**
    * Gets the x coordinate.
-   * 
+   *
    * @return Integer with the x coordinate.
    */
   public int getX() {
@@ -111,43 +101,8 @@ public class Country {
   }
 
   /**
-   * Gets the y coordinate.
-   * 
-   * @return Integer with the y coordinate.
-   */
-  public int getY() {
-    return this.y;
-  }
-
-  /**
-   * Sets the name of the owner of the country.
-   * 
-   * @param ownerName String with the name.
-   */
-  public void setOwnerName(String ownerName) {
-    this.ownerName = ownerName;
-  }
-
-  /**
-   * Returns the name of the owner.
-   * 
-   * @return A String with the name.
-   */
-  public String getOwnerName() {
-    return this.ownerName;
-  }
-
-  /**
-   * Pretty prints the Country object.
-   */
-  @Override
-  public String toString() {
-    return String.format("%s %s", this.name, this.continent);
-  }
-
-  /**
    * Sets the x coordinate.
-   * 
+   *
    * @param x An integer with the x coordinate.
    */
   public void setX(int x) {
@@ -155,12 +110,45 @@ public class Country {
   }
 
   /**
+   * Gets the y coordinate.
+   *
+   * @return Integer with the y coordinate.
+   */
+  public int getY() {
+    return this.y;
+  }
+
+  /**
    * Sets the y coordinate.
-   * 
+   *
    * @param y An integer with the y coordinate.
    */
   public void setY(int y) {
     this.y = y;
+  }
+
+  /**
+   * Returns the name of the owner.
+   *
+   * @return A String with the name.
+   */
+  public String getOwnerName() {
+    return this.ownerName;
+  }
+
+  /**
+   * Sets the name of the owner of the country.
+   *
+   * @param ownerName String with the name.
+   */
+  public void setOwnerName(String ownerName) {
+    this.ownerName = ownerName;
+  }
+
+  /** Pretty prints the Country object. */
+  @Override
+  public String toString() {
+    return String.format("%s %s", this.name, this.continent);
   }
 
   /**
@@ -173,7 +161,7 @@ public class Country {
   }
 
   /**
-   *  Sets the number of armies
+   * Sets the number of armies
    *
    * @param numberOfArmies number of armies
    */
