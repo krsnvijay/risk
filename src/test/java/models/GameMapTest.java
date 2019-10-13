@@ -19,7 +19,7 @@ public class GameMapTest {
   @Before
   public void setUp() throws Exception {
     // Load Risk map from resource folder
-    File riskMap = new File(this.getClass().getResource("/risk.map").getFile());
+    File riskMap = new File("src/test/resources/risk.map");
     gameMap = MapParser.loadMap(riskMap.getPath());
     reason = "";
   }
