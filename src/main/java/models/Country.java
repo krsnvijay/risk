@@ -151,6 +151,9 @@ public class Country {
     return String.format("%s %s", this.name, this.continent);
   }
 
+  public String showCountryByOwnership() {
+    return String.format("%s:%s:%s:%d", this.name, this.continent, this.ownerName, this.numberOfArmies);
+  }
   /**
    * Returns the number of armies
    *

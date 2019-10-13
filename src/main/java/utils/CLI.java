@@ -1,10 +1,6 @@
 package utils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * This singleton utility class handles all the text commands for the game.
@@ -47,7 +43,7 @@ public class CLI {
 
     // Setup commands
     ArrayList<String> setupCommands =
-        new ArrayList<>(Arrays.asList("placearmy", "placeall", "gameplayer", "populatecountry"));
+        new ArrayList<>(Arrays.asList("placearmy", "placeall", "gameplayer", "populatecountries"));
     validCommands.put(Context.GAME_SETUP, setupCommands);
 
     // Reinforcement commands

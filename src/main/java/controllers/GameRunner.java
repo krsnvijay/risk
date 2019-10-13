@@ -1,16 +1,14 @@
 package controllers;
 
-import static java.util.stream.Collectors.toMap;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
 import models.Country;
 import models.GameMap;
 import models.Player;
 import utils.CLI;
 import utils.CLI.Context;
+
+import java.util.*;
+
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Controls the Game Loop.
@@ -50,6 +48,14 @@ public class GameRunner {
     return false;
   }
 
+  public static void updatePlayerIndex() {
+    currentPlayerIndex = (currentPlayerIndex + 1) % playersList.size();
+  }
+
+  public static Player getCurrentPlayer() {
+    return playersList.get(currentPlayerIndex);
+  }
+
   /**
    * This processes the addplayer command.
    *
@@ -83,20 +89,20 @@ public class GameRunner {
 
   /** */
   public void gameSetup() {
-    int[] totalArmyCounts = {40, 35, 30, 25};
-    int armiesPerPlayer = totalArmyCounts[playersList.size() - 2];
-    for (Player p : playersList) {
-      p.setNumberOfArmies(armiesPerPlayer);
-    }
+    int[] totalArmyCounts = {40, 35, 30, 25, 20};
+    int armiesPerPlayer;
     int placedArmies = 0;
     while (true) {
       String userCommand = CLI.input.nextLine();
       if (cli.validate(userCommand)) {
         switch (userCommand.split(" ")[0]) {
           case "populatecountries":
+            armiesPerPlayer = totalArmyCounts[playersList.size() - 2];
+            for (Player p : playersList) {
+              p.setNumberOfArmies(armiesPerPlayer);
+            }
             isGameStarted = true;
             gameMap.setCountries(populateCountries());
-            gameLoop();
             break;
           case "placearmy":
             if (!isGameStarted) {
@@ -107,7 +113,10 @@ public class GameRunner {
                     "Player "
                         + playersList.get(currentPlayerIndex).getPlayerName()
                         + " placed the army.");
-                currentPlayerIndex = (currentPlayerIndex + 1) % playersList.size();
+                if (checkGameReady()) {
+                  gameLoop();
+                  return;
+                } else updatePlayerIndex();
               } else {
                 System.out.println("Unable to place army!");
               }
@@ -115,6 +124,20 @@ public class GameRunner {
             break;
           case "placeall":
             if (!isGameStarted) System.out.println("Start the game first -- populatecountries.");
+            else {
+              for (int turn = 0; turn < playersList.size(); turn++) {
+                ArrayList<Country> countriesForPlayer =
+                    Player.getCountriesByOwnership(getCurrentPlayer().getPlayerName(), gameMap);
+                Random randomGen = new Random();
+                while (getCurrentPlayer().getNumberOfArmies() > 0) {
+                  int randomIndexCountry = randomGen.nextInt(countriesForPlayer.size());
+                  placeArmy(countriesForPlayer.get(randomIndexCountry).getName());
+                }
+                if (turn != playersList.size() - 1) updatePlayerIndex();
+              }
+              gameLoop();
+              return;
+            }
             break;
           case "gameplayer":
             if (isGameStarted) {
@@ -122,12 +145,24 @@ public class GameRunner {
             } else {
               String[] commandSplit = userCommand.split(" -");
               String[] optionsArray = Arrays.copyOfRange(commandSplit, 1, commandSplit.length);
-              gamePlayer((ArrayList<String>) Arrays.asList(optionsArray));
+              gamePlayer(new ArrayList<>(Arrays.asList(optionsArray)));
               break;
             }
+            break;
+          default:
+            System.out.println("Invalid Commands");
         }
       }
     }
+  }
+
+  /**
+   * Checks if the setup is complete and the game is ready to begin
+   *
+   * @return true if numberOfArmies for each player is 0 ; else returns false
+   */
+  private boolean checkGameReady() {
+    return playersList.stream().mapToInt(Player::getNumberOfArmies).allMatch(count -> count == 0);
   }
 
   /**
@@ -151,9 +186,10 @@ public class GameRunner {
 
   /** */
   public void gameLoop() {
-    while (true) {
-      // run turns here...
-    }
+    System.out.println(gameMap.showMapByOwnership());
+//    while (true) {
+//      // run turns here...
+//    }
   }
 
   /**
@@ -163,11 +199,11 @@ public class GameRunner {
    * @author sabari
    */
   public Map<String, Country> populateCountries() {
-    ArrayList<Country> countries = (ArrayList<Country>) gameMap.getCountries().values();
+    ArrayList<Country> countries = new ArrayList<>(gameMap.getCountries().values());
     Collections.shuffle(countries);
     int countrySize = countries.size();
     int playerCount = playersList.size();
-    for (int i = 0; i <= countrySize; i++) {
+    for (int i = 0; i < countrySize; i++) {
       countries.get(i).setOwnerName(playersList.get(i % playerCount).getPlayerName());
     }
     return countries.stream().collect(toMap(Country::getName, c -> c));

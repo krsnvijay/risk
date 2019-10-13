@@ -1,15 +1,10 @@
 package models;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * GameMap stores map data i.e borders, countries, files, continents
@@ -65,6 +60,22 @@ public class GameMap {
   public static String showBorders(Map.Entry<String, Set<String>> border) {
     return String.format("%s %s", border.getKey(), String.join(" ", border.getValue()));
   }
+
+  /**
+   * Displays all the borders of the game map by ownership
+   *
+   * @param border The adjacency list of each border
+   * @return returns a pretty string of borders.
+   */
+  public String showBorderByOwnerShip(Map.Entry<String, Set<String>> border) {
+    String country = this.countries.get(border.getKey()).showCountryByOwnership();
+    String neighbors = border.getValue().stream().map(this.countries::get).map(Country::showCountryByOwnership).collect(joining(" "));
+
+
+    return String.format("%s -> %s", country, neighbors);
+  }
+
+
 
   /** Displays the map grouped by continents. */
   public void showMapByContinents() {
@@ -234,6 +245,14 @@ public class GameMap {
         this.borders.entrySet().stream().map(GameMap::showBorders).sorted().collect(joining("\n")));
   }
 
+  public String showMapByOwnership() {
+    return String.format(
+        "[continents]\n%s\n\n[countries]\n%s\n\n[borders]\n%s\n",
+        this.continents.values().stream().map(Continent::toString).sorted().collect(joining("\n")),
+        this.countries.values().stream().map(Country::showCountryByOwnership).sorted().collect(joining("\n")),
+        this.borders.entrySet().stream().map(this::showBorderByOwnerShip).sorted().collect(joining("\n"))
+    );
+  }
   /**
    * This method returns all the borders.
    *
