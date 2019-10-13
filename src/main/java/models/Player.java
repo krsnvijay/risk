@@ -1,9 +1,8 @@
 package models;
 
-import static java.util.stream.Collectors.toCollection;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import static java.util.stream.Collectors.*;
 
 /**
  * This is the Player class which handles every player.
@@ -38,6 +37,47 @@ public class Player {
     return gameMap.getCountries().values().stream()
         .filter(c -> c.getOwnerName().equals(playerName))
         .collect(toCollection(ArrayList::new));
+  }
+
+  /**
+   * Calculates bonus armies if a player owns a continent
+   *
+   * @param playerName current player name
+   * @param gameMap    contains map state
+   * @return bonus armies
+   */
+  public static int getBonusArmiesIfPlayerOwnsContinents(String playerName, GameMap gameMap) {
+    int bonusArmies = 0;
+    Map<String, List<Country>> mapByContinents = gameMap.getCountries().values().stream().collect(groupingBy(Country::getContinent));
+    Map<String, List<Country>> mapByPlayersOwnership = gameMap.getCountries().values().stream().filter(c -> c.getOwnerName().equals(playerName)).collect(groupingBy(Country::getContinent));
+    Map<String, Integer> continentsSize = mapByContinents.entrySet().stream().map(e -> new AbstractMap.SimpleEntry<String, Integer>(e.getKey(), e.getValue().size())).collect(toMap(e -> e.getKey(), e -> e.getValue()));
+    Map<String, Integer> continentsOwnership = mapByPlayersOwnership.entrySet().stream().map(e -> new AbstractMap.SimpleEntry<String, Integer>(e.getKey(), e.getValue().size())).collect(toMap(e -> e.getKey(), e -> e.getValue()));
+    for (Map.Entry<String, Integer> entry : continentsOwnership.entrySet()) {
+      int fullOwnerShip = continentsSize.get(entry.getKey());
+      int currentOwnerShip = entry.getValue();
+      if (fullOwnerShip == currentOwnerShip) {
+        int controlValue = gameMap.getContinents().get(entry.getKey()).getValue();
+        bonusArmies += controlValue;
+      }
+
+    }
+    return bonusArmies;
+  }
+
+  /**
+   * Calculate armies for reinforcement phase
+   *
+   * @param gameMap contains map state
+   * @return armies count
+   */
+  public int calculateReinforcements(GameMap gameMap) {
+    int ownedCountries = getCountriesByOwnership(this.playerName, gameMap).size();
+    int allReinforcementArmies = getBonusArmiesIfPlayerOwnsContinents(playerName, gameMap);
+
+    if (ownedCountries < 9)
+      allReinforcementArmies += 3;
+    allReinforcementArmies += ownedCountries / 3;
+    return allReinforcementArmies;
   }
 
   /**

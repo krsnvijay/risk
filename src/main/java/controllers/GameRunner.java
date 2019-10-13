@@ -184,12 +184,84 @@ public class GameRunner {
     return false;
   }
 
+  /**
+   * This method places an army in a country that the player owns
+   *
+   * @param countryName name of the country to place an army
+   * @param numArmies   armies to place
+   * @return A boolean with success or failure.
+   */
+  private boolean placeArmy(String countryName, int numArmies) {
+    Player currentPlayer = playersList.get(currentPlayerIndex);
+    String currentPlayerName = currentPlayer.getPlayerName();
+    Country currentCountry = gameMap.getCountries().get(countryName);
+    if (currentCountry.getOwnerName().equals(currentPlayerName)
+        && currentPlayer.getNumberOfArmies() > 0) {
+      currentCountry.addArmies(numArmies);
+      currentPlayer.subtractArmies(numArmies);
+      return true;
+    }
+    return false;
+  }
+
   /** */
   public void gameLoop() {
-    System.out.println(gameMap.showMapByOwnership());
+
+    while (true) {
+      Player currentPlayer = getCurrentPlayer();
+      System.out.println(gameMap.showMapByOwnership());
+      System.out.println(currentPlayer.getPlayerName() + "'s turn:");
+      CLI cli = CLI.getInstance();
+      for (Phases phase : Phases.values()) {
+        switch (phase) {
+          case REINFORCE:
+            cli.setCurrentContext(Context.GAME_REINFORCE);
+            System.out.println("[Reinforce Phase]");
+            currentPlayer.setNumberOfArmies(currentPlayer.calculateReinforcements(gameMap));
+            while (currentPlayer.getNumberOfArmies() > 0) {
+              System.out.println(currentPlayer.getPlayerName() + " has " + currentPlayer.getNumberOfArmies() + " army(s) to reinforce");
+              String userCommand = CLI.input.nextLine();
+              if (userCommand.trim().equals("showmap"))
+                System.out.println(gameMap.showMapByOwnership());
+              else {
+                String[] opCmds = userCommand.split(" ");
+                if (opCmds.length != 3) {
+                  System.out.println("Invalid command: Usage reinforce <countryName> <armyCount>");
+                  continue;
+                }
+                String countryToPlace = opCmds[1];
+                int armiesToPlace = Integer.parseInt(opCmds[2]);
+                placeArmy(countryToPlace, armiesToPlace);
+                System.out.println("Reinforced " + countryToPlace + " with " + armiesToPlace + " armies");
+              }
+
+
+            }
+            break;
+          case ATTACK:
+            cli.setCurrentContext(Context.GAME_ATTACK);
+            System.out.println("[Attack Phase]");
+            System.out.println("You can't attack, Yet");
+            break;
+          case FORTIFY:
+            cli.setCurrentContext(Context.GAME_FORTIFY);
+            System.out.println("[Fortify Phase]");
+            break;
+
+        }
+
+      }
+      updatePlayerIndex();
+    }
 //    while (true) {
 //      // run turns here...
 //    }
+  }
+
+  enum Phases {
+    REINFORCE,
+    ATTACK,
+    FORTIFY
   }
 
   /**

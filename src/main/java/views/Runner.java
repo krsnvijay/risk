@@ -126,11 +126,11 @@ public class Runner {
               GameMap loadedMap = MapParser.loadMap(userCommand.split(" ")[1]);
               GameRunner gameRunner = new GameRunner(loadedMap);
               gameRunner.gameSetup();
-              break;
+              return;
             case "gameplayer":
               String[] commandSplit = userCommand.split(" -");
               String[] optionsArray = Arrays.copyOfRange(commandSplit, 1, commandSplit.length);
-              GameRunner.gamePlayer((ArrayList<String>) Arrays.asList(optionsArray));
+              GameRunner.gamePlayer(new ArrayList<String>(Arrays.asList(optionsArray)));
               break;
           }
         }

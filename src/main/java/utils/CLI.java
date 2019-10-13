@@ -26,7 +26,7 @@ public class CLI {
     input = new Scanner(System.in);
 
     // Main Menu commands
-    ArrayList<String> mainMenuCommands = new ArrayList<>(Arrays.asList("loadmap", "editmap"));
+    ArrayList<String> mainMenuCommands = new ArrayList<>(Arrays.asList("loadmap", "editmap", "gameplayer"));
     validCommands.put(Context.MAIN_MENU, mainMenuCommands);
 
     // Editor commands
