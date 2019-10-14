@@ -42,8 +42,8 @@ public class GameRunner {
     if (playerNames.size() <= 1) {
       System.out.println("There should be at least two players to play.");
       return true;
-    } else if (playerNames.size() > countriesSize) {
-      System.out.println("The player count exceeds the number of countries in the map.");
+    } else if (playerNames.size() > 6) {
+      System.out.println("Too many players! Limit is 6 players!");
     }
     return false;
   }
@@ -96,6 +96,10 @@ public class GameRunner {
       String userCommand = CLI.input.nextLine();
       if (cli.validate(userCommand)) {
         switch (userCommand.split(" ")[0]) {
+          case "showmap":
+            if (isGameStarted) System.out.println(gameMap.showMapByOwnership());
+            else System.out.println(gameMap);
+            break;
           case "populatecountries":
             armiesPerPlayer = totalArmyCounts[playersList.size() - 2];
             for (Player p : playersList) {
@@ -188,7 +192,7 @@ public class GameRunner {
    * This method places an army in a country that the player owns
    *
    * @param countryName name of the country to place an army
-   * @param numArmies   armies to place
+   * @param numArmies armies to place
    * @return A boolean with success or failure.
    */
   private boolean placeArmy(String countryName, int numArmies) {
@@ -213,13 +217,19 @@ public class GameRunner {
       System.out.println(currentPlayer.getPlayerName() + "'s turn:");
       CLI cli = CLI.getInstance();
       for (Phases phase : Phases.values()) {
+        // TODO On "showmap" DO NOT UPDATE PLAYERINDEX as well as Phase
         switch (phase) {
           case REINFORCE:
             cli.setCurrentContext(Context.GAME_REINFORCE);
             System.out.println("[Reinforce Phase]");
             currentPlayer.setNumberOfArmies(currentPlayer.calculateReinforcements(gameMap));
+
             while (currentPlayer.getNumberOfArmies() > 0) {
-              System.out.println(currentPlayer.getPlayerName() + " has " + currentPlayer.getNumberOfArmies() + " army(s) to reinforce");
+              System.out.println(
+                  currentPlayer.getPlayerName()
+                      + " has "
+                      + currentPlayer.getNumberOfArmies()
+                      + " army(s) to reinforce");
               String userCommand = CLI.input.nextLine();
               if (userCommand.trim().equals("showmap"))
                 System.out.println(gameMap.showMapByOwnership());
@@ -230,12 +240,17 @@ public class GameRunner {
                   continue;
                 }
                 String countryToPlace = opCmds[1];
+                if (Player.getCountriesByOwnership(currentPlayer.getPlayerName(), gameMap).stream()
+                    .noneMatch(c -> c.getName().equals(countryToPlace))) {
+                  System.out.println(
+                      "Error player doesnt own the country or it does not exist in map");
+                  continue;
+                }
                 int armiesToPlace = Integer.parseInt(opCmds[2]);
                 placeArmy(countryToPlace, armiesToPlace);
-                System.out.println("Reinforced " + countryToPlace + " with " + armiesToPlace + " armies");
+                System.out.println(
+                    "Reinforced " + countryToPlace + " with " + armiesToPlace + " armies");
               }
-
-
             }
             break;
           case ATTACK:
@@ -245,17 +260,71 @@ public class GameRunner {
             break;
           case FORTIFY:
             cli.setCurrentContext(Context.GAME_FORTIFY);
-            System.out.println("[Fortify Phase]");
+            while (true) {
+              System.out.println("[Fortify Phase]");
+              String userCommand = CLI.input.nextLine();
+              if (userCommand.trim().equals("showmap"))
+                System.out.println(gameMap.showMapByOwnership());
+              else {
+                String[] opCmds = userCommand.split(" ");
+                if (opCmds.length == 2) {
+                  if (opCmds[0].equals("fortify") && opCmds[1].equals("none")) {
+                    System.out.println(currentPlayer.getPlayerName() + " chose not to fortify!");
+                    break;
+                  }
+                } else if (opCmds.length == 4) {
+                  if (opCmds[0].equals("fortify")) {
+                    String fromCountry = opCmds[1];
+                    String toCountry = opCmds[2];
+                    int armyToMove = Integer.parseInt(opCmds[3]);
+                    boolean isOwnershipValid =
+                        Player.getCountriesByOwnership(currentPlayer.getPlayerName(), gameMap)
+                            .stream()
+                            .anyMatch(c -> c.getName().equals(fromCountry))
+                            && Player.getCountriesByOwnership(
+                            currentPlayer.getPlayerName(), gameMap)
+                            .stream()
+                            .anyMatch(c -> c.getName().equals(toCountry));
+                    if (isOwnershipValid) {
+                      boolean isAdjacent =
+                          gameMap.getBorders().get(fromCountry).contains(toCountry);
+                      if (isAdjacent) {
+                        boolean isArmyRemoved =
+                            gameMap.getCountries().get(fromCountry).removeArmies(armyToMove);
+                        if (isArmyRemoved && armyToMove > 0) {
+                          gameMap.getCountries().get(toCountry).addArmies(armyToMove);
+                          break;
+                        } else {
+                          System.out.println("Error number of army(s) is not valid");
+                        }
+                      } else {
+                        System.out.println("Error fromCountry and toCountry are not adjacent");
+                      }
+                    } else {
+                      System.out.println(
+                          "Error player doesnt own the country or it does not exist in map");
+                    }
+                  }
+                } else {
+                  System.out.println(
+                      "Invalid command: Usage fortify <fromCountry> <toCountry> <numOfArmies> OR fortify none");
+                  continue;
+                }
+              }
+            } // while loop ends
             break;
-
         }
-
+      }
+      if (!Player.checkPlayerOwnsAtleastOneCountry(currentPlayer.getPlayerName(), gameMap)) {
+        System.out.println(currentPlayer.getPlayerName() + " owns no countries and was REMOVED");
+        playersList.remove(currentPlayer);
+      }
+      if (playersList.size() == 1) {
+        System.out.println(playersList.get(0) + " HAS WON THE GAME!");
+        System.exit(0);
       }
       updatePlayerIndex();
     }
-//    while (true) {
-//      // run turns here...
-//    }
   }
 
   enum Phases {

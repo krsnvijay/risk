@@ -152,7 +152,8 @@ public class Country {
   }
 
   public String showCountryByOwnership() {
-    return String.format("%s:%s:%s:%d", this.name, this.continent, this.ownerName, this.numberOfArmies);
+    return String.format(
+        "%s:%s:%s:%d", this.name, this.continent, this.ownerName, this.numberOfArmies);
   }
   /**
    * Returns the number of armies
@@ -176,18 +177,28 @@ public class Country {
    * Adds armies to the country
    *
    * @param count an Integer to add to the current armies of a country
+   * @return true if armies can be added
    */
-  public void addArmies(int count) {
-    this.numberOfArmies += count;
+  public boolean addArmies(int count) {
+    if (numberOfArmies + count > 0) {
+      this.numberOfArmies += count;
+      return true;
+    }
+    return false;
   }
 
   /**
    * Removes armies from a country
    *
    * @param count an Integer to remove from the current armies of a country
+   * @return true if armies can be removed
    */
-  public void removeArmies(int count) {
-    this.numberOfArmies -= count;
+  public boolean removeArmies(int count) {
+    if (numberOfArmies - count > 0) {
+      this.numberOfArmies -= count;
+      return true;
+    }
+    return false;
   }
 
   @Override
@@ -199,12 +210,12 @@ public class Country {
       return false;
     }
     Country country = (Country) o;
-    return x == country.x &&
-        y == country.y &&
-        numberOfArmies == country.numberOfArmies &&
-        continent.equals(country.continent) &&
-        name.equals(country.name) &&
-        Objects.equals(ownerName, country.ownerName);
+    return x == country.x
+        && y == country.y
+        && numberOfArmies == country.numberOfArmies
+        && continent.equals(country.continent)
+        && name.equals(country.name)
+        && Objects.equals(ownerName, country.ownerName);
   }
 
   @Override

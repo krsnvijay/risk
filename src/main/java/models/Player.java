@@ -39,6 +39,9 @@ public class Player {
         .collect(toCollection(ArrayList::new));
   }
 
+  public static boolean checkPlayerOwnsAtleastOneCountry(String playerName, GameMap gameMap) {
+    return getCountriesByOwnership(playerName, gameMap).size() > 0;
+  }
   /**
    * Calculates bonus armies if a player owns a continent
    *

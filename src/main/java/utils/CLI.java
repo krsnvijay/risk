@@ -26,7 +26,8 @@ public class CLI {
     input = new Scanner(System.in);
 
     // Main Menu commands
-    ArrayList<String> mainMenuCommands = new ArrayList<>(Arrays.asList("loadmap", "editmap", "gameplayer"));
+    ArrayList<String> mainMenuCommands =
+        new ArrayList<>(Arrays.asList("loadmap", "editmap", "gameplayer"));
     validCommands.put(Context.MAIN_MENU, mainMenuCommands);
 
     // Editor commands
@@ -43,17 +44,19 @@ public class CLI {
 
     // Setup commands
     ArrayList<String> setupCommands =
-        new ArrayList<>(Arrays.asList("placearmy", "placeall", "gameplayer", "populatecountries"));
+        new ArrayList<>(
+            Arrays.asList("showmap", "placearmy", "placeall", "gameplayer", "populatecountries"));
     validCommands.put(Context.GAME_SETUP, setupCommands);
 
     // Reinforcement commands
-    ArrayList<String> reinforcementCommands = new ArrayList<>(Arrays.asList("reinforce"));
+    ArrayList<String> reinforcementCommands =
+        new ArrayList<>(Arrays.asList("showmap", "reinforce"));
     validCommands.put(Context.GAME_REINFORCE, reinforcementCommands);
 
     // Attack commands
 
     // Fortification commands
-    ArrayList<String> fortificationCommands = new ArrayList<>(Arrays.asList("fortify"));
+    ArrayList<String> fortificationCommands = new ArrayList<>(Arrays.asList("showmap", "fortify"));
     validCommands.put(Context.GAME_FORTIFY, fortificationCommands);
   }
 
