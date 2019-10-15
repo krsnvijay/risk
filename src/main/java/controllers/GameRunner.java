@@ -20,7 +20,7 @@ public class GameRunner {
 	/**
 	 * This maintains a list of players currently in the game.
 	 */
-	private static ArrayList<Player> playersList = new ArrayList<>();
+  public static ArrayList<Player> playersList = new ArrayList<>();
 	
 	/**
 	 * Maintains whose turn it is (index).
@@ -55,17 +55,18 @@ public class GameRunner {
 	 * Validates the count of players in the game.
 	 *
 	 * @param playerNames a list of names of every player
-	 * @param countriesSize the size of the countries list.
 	 * @return A boolean with success or failure.
 	 */
-	public static boolean validatePlayerCount(ArrayList<String> playerNames, int countriesSize) {
+  public static boolean validatePlayerCount(ArrayList<String> playerNames) {
 		if (playerNames.size() <= 1) {
-			System.out.println("There should be at least two players to play.");
-			return true;
-		} else if (playerNames.size() > 6) {
-			System.out.println("Too many players! Limit is 6 players!");
-		}
-		return false;
+      System.out.println("There should be at least two players to play. Please add more players before loading map & starting game.");
+      return false;
+    }
+    if (playerNames.size() > 6) {
+      System.out.println("Too many players! Limit is 6 players! Please remove players before loading map & starting game");
+      return false;
+    }
+    return true;
 	}
 
 	/**

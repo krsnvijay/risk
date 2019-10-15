@@ -2,6 +2,7 @@ package views;
 
 import controllers.GameRunner;
 import models.GameMap;
+import models.Player;
 import utils.CLI;
 import utils.EditMap;
 import utils.MapParser;
@@ -9,6 +10,7 @@ import utils.MapParser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * Runs the project and handles the initial commands.
@@ -123,10 +125,16 @@ public class Runner {
               beginEditor(new EditMap(), gameMap);
               break;
             case "loadmap":
-              GameMap loadedMap = MapParser.loadMap(userCommand.split(" ")[1]);
-              GameRunner gameRunner = new GameRunner(loadedMap);
-              gameRunner.gameSetup();
-              return;
+              ArrayList<String> playerNames = GameRunner.playersList.stream()
+                  .map(Player::getPlayerName)
+                  .collect(Collectors.toCollection(ArrayList::new));
+              if (GameRunner.validatePlayerCount(playerNames)) {
+                GameMap loadedMap = MapParser.loadMap(userCommand.split(" ")[1]);
+                GameRunner gameRunner = new GameRunner(loadedMap);
+                gameRunner.gameSetup();
+                return;
+              }
+              break;
             case "gameplayer":
               String[] commandSplit = userCommand.split(" -");
               String[] optionsArray = Arrays.copyOfRange(commandSplit, 1, commandSplit.length);
