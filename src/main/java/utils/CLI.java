@@ -11,10 +11,13 @@ public class CLI {
 
   /** The scanner object for reading input from the console. */
   public static Scanner input;
+
   /** The singleton instance of the CLI class. */
   private static CLI cli = null;
+
   /** The current context for the game. */
   public Context currentContext;
+
   /** A Map of all the valid commands for a specific Context. */
   Map<Context, ArrayList<String>> validCommands = new HashMap<>();
 
