@@ -7,8 +7,12 @@ import org.junit.Test;
 public class GameRunnerTest {
 
   @Test
-  public void validatePlayerCount() {}
+  public void validatePlayerCount() {
+	  
+  }
 
   @Test
-  public void populateCountries() {}
+  public void populateCountries() {
+	  
+  }
 }

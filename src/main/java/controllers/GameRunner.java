@@ -137,7 +137,7 @@ public class GameRunner {
 						p.setNumberOfArmies(armiesPerPlayer);
 					}
 					isGameStarted = true;
-					gameMap.setCountries(populateCountries());
+					gameMap.setCountries(populateCountries(playersList));
 					break;
 				case "placearmy":
 					if (!isGameStarted) {
@@ -376,13 +376,13 @@ public class GameRunner {
 	 * @return a map of countries with ownership
 	 * @author sabari
 	 */
-	public Map<String, Country> populateCountries() {
+	public Map<String, Country> populateCountries(ArrayList<Player> playerList) {
 		ArrayList<Country> countries = new ArrayList<>(gameMap.getCountries().values());
 		Collections.shuffle(countries);
 		int countrySize = countries.size();
-		int playerCount = playersList.size();
+		int playerCount = playerList.size();
 		for (int i = 0; i < countrySize; i++) {
-			countries.get(i).setOwnerName(playersList.get(i % playerCount).getPlayerName());
+			countries.get(i).setOwnerName(playerList.get(i % playerCount).getPlayerName());
 		}
 		return countries.stream().collect(toMap(Country::getName, c -> c));
 	}
