@@ -53,7 +53,7 @@ public class Runner {
             break;
           case "savemap":
             opCommands = userInput.split(" ");
-            if (editMap.validateMap(gameMap)) editMap.saveMap(gameMap, opCommands[1]);
+            if (editMap.validateMap(gameMap)) MapParser.saveMap(gameMap, opCommands[1]);
             else throw new Exception("Invalid map!");
             break;
           case "validatemap":

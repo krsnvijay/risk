@@ -1,15 +1,56 @@
 package utils;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import java.lang.Object;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import models.GameMap;
+
 public class MapParserTest {
+	private GameMap gameMap;
+    private String reason;
+    
+  @Before
+  public void setUp() throws Exception{
+	// Load Risk map from resource folder
+      File riskMap = new File("src/test/resources/risk.map");
+      gameMap = MapParser.loadMap(riskMap.getPath());
+      reason = "";
+  }
+  @Test
+  public void loadMap() throws Exception{
+	  GameMap gameMapInvalid;
+	  File testMap = new File("src/test/resources/mapparserinvalid.map");
+	  gameMapInvalid = MapParser.loadMap(testMap.getPath());
+	  Scanner scan = new Scanner(testMap);
+	  StringBuilder sb = new StringBuilder();
+	  String temp="",str= "";
+	  while(scan.hasNext()) {
+		  sb.append(scan.nextLine());
+	  }
+	 
+	  assertThat(sb.toString(),either(containsString("name")).or(containsString("[file]")).or(containsString("[countries]")).or(containsString("[continents]")).or(containsString("[borders]")));
+	  scan.close();
+  }
 
   @Test
-  public void loadMap() {}
+  public void saveMap() throws IOException{
+	  Files.write(Paths.get("src/test/resources/mapparsersavetest.map"), MapParser.serializeMap(gameMap).getBytes());
+	  File saveTestFile = new File("src/test/resources/mapparsersavetest.map");
+	  assertTrue(saveTestFile.exists());
+  }
 
-  @Test
-  public void saveMap() {}
-
-  @Test
+  @Ignore @Test
   public void serializeMap() {}
 }

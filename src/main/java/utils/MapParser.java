@@ -210,7 +210,7 @@ public class MapParser {
    * @param fileName The name of the file.
    * @throws IOException TODO: will handle this.
    */
-  public void saveMap(GameMap gameMap, String fileName) throws IOException {
+  public static void saveMap(GameMap gameMap, String fileName) throws IOException {
     Files.write(Paths.get(fileName), serializeMap(gameMap).getBytes());
     System.out.println("Saved map to " + fileName + " successfully");
   }
@@ -221,7 +221,7 @@ public class MapParser {
    * @param gameMap The GameMap object to serialize.
    * @return The file as a string.
    */
-  public String serializeMap(GameMap gameMap) {
+  public static String serializeMap(GameMap gameMap) {
     // Get required data to serialize
     String files = String.join("\n", gameMap.getFileSectionData());
     Map<String, Country> gameCountries = gameMap.getCountries();

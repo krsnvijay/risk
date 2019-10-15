@@ -1,0 +1,103 @@
+name Risk Map
+
+[files]
+pic risk_pic.png
+map risk_map.gif
+crd risk.cards
+prv risk.jpg
+
+[continents]
+Africa 3 orange
+Asia 7 pink
+Europe 5 blue
+North-America 5 yellow
+Oceania 2 red
+South-America 2 green
+
+[countries]
+1 Afghanistan 2 474 128
+2 Alaska 4 41 55
+3 Alberta 4 83 93
+4 Argentina 6 199 339
+5 Brazil 6 223 285
+6 Central-America 4 118 206
+7 China 2 544 158
+8 Congo 1 360 278
+9 East-Africa 1 394 248
+10 Eastern-Australia 5 647 355
+11 Eastern-United-States 4 157 149
+12 Egypt 1 356 203
+13 Great-Britain 3 280 80
+14 Greenland 4 195 48
+15 Iceland 3 250 58
+16 India 2 493 207
+17 Indonesia 5 575 279
+18 Irkutsk 2 582 77
+19 Japan 2 644 147
+20 Kamchatka 2 624 57
+21 Madagascar 1 423 338
+22 Middle-East 2 421 182
+23 Mongolia 2 581 123
+24 New-Guinea 5 643 278
+25 North-Africa 1 305 217
+26 North-West-Territory 4 97 51
+27 Northern-Europe 3 342 96
+28 Ontario 4 135 100
+29 Peru 6 187 308
+30 Quebec 4 200 106
+31 Scandinavia 3 360 40
+32 Siam 2 547 213
+33 Siberia 2 533 51
+34 South-Africa 1 368 332
+35 Southern-Europe 3 371 122
+36 Ukraine 3 422 76
+37 Ural 2 478 52
+38 Venezuela 6 184 251
+39 Western-Australia 5 591 353
+40 Western-Europe 3 285 139
+41 Western-United-States 4 102 144
+42 Yakutsk 2 580 26
+
+[borders]
+1 7 16 22 36 37
+2 3 20 26
+3 2 26 28 41
+4 5 29
+5 4 25 29 38
+6 11 38 41
+7 1 16 23 32 33 37
+8 9 25 34
+9 8 12 21 22 25 34
+10 24 39
+11 6 28 30 41
+12 9 22 25 35
+13 15 27 40
+14 15 26 28 30
+15 13 14
+16 1 7 22 32
+17 24 32 39
+18 20 23 33 42
+19 20 23
+20 2 18 19 23 42
+21 9 34
+22 1 9 12 16 35 36
+23 7 18 19 20 33
+24 10 17 39
+25 5 8 9 12 35 40
+26 2 3 14 28
+27 13 31 35 36 40
+28 3 11 14 26 30 41
+29 4 5 38
+30 11 14 28
+31 27 36
+32 7 16 17
+33 7 18 23 37 42
+34 8 9 21
+35 12 22 25 27 36 40
+36 1 22 27 31 35 37
+37 1 7 33 36
+38 5 6 29
+39 10 17 24
+40 13 25 27 35
+41 3 6 11 28
+42 18 20 33
