@@ -1,14 +1,15 @@
 package utils;
 
-import static java.util.stream.Collectors.groupingBy;
+import models.Continent;
+import models.Country;
+import models.GameMap;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import models.Continent;
-import models.Country;
-import models.GameMap;
+
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * The Edit Map utility processes the editing commands.
@@ -169,6 +170,19 @@ public class EditMap extends MapParser {
     }
     // CHECK CONNECTEDNESS OF SUBGRAPHS & WHOLE GRAPH
     // RUN DFS ON CONTINENTS
+    if (!DFSCheckOnContinent(map))
+      return false;
+    // RUN DFS ON WHOLE MAP
+    HashSet<String> visited = new HashSet<>();
+    copyOfCountries.keySet().stream()
+        .findFirst()
+        .ifPresent(startCountry -> DFSUtilWholeMap(visited, startCountry, map));
+    return visited.size() == copyOfBorders.keySet().size();
+  }
+
+  public boolean DFSCheckOnContinent(GameMap map) {
+    Map<String, List<Country>> groupedByCountries =
+        map.getCountries().values().stream().collect(groupingBy(Country::getContinent));
     for (String continent : groupedByCountries.keySet()) {
       List<Country> countriesInContinent = groupedByCountries.get(continent);
       HashSet<Country> visited = new HashSet<>();
@@ -177,11 +191,6 @@ public class EditMap extends MapParser {
         return false;
       }
     }
-    // RUN DFS ON WHOLE MAP
-    HashSet<String> visited = new HashSet<>();
-    copyOfCountries.keySet().stream()
-        .findFirst()
-        .ifPresent(startCountry -> DFSUtilWholeMap(visited, startCountry, map));
-    return visited.size() == copyOfBorders.keySet().size();
+    return true;
   }
 }
