@@ -125,6 +125,8 @@ public class GameRunner {
 		int armiesPerPlayer;
 		int placedArmies = 0;
 		while (true) {
+			System.out.println("Available commands \n loadmap <filename> \n gameplayer -add <playername> -remove <playername> \n populatecountries \n placearmy <countryname> \n placeall");
+			System.out.println("[Startup Phase]");
 			String userCommand = CLI.input.nextLine();
 			if (cli.validate(userCommand)) {
 				switch (userCommand.split(" ")[0]) {
@@ -256,6 +258,7 @@ public class GameRunner {
 				switch (phase) {
 				case REINFORCE:
 					cli.setCurrentContext(Context.GAME_REINFORCE);
+					System.out.println("Available commands \n reinforce <countryname> <num>");
 					System.out.println("[Reinforce Phase]");
 					currentPlayer.setNumberOfArmies(currentPlayer.calculateReinforcements(gameMap));
 
@@ -295,6 +298,8 @@ public class GameRunner {
 					break;
 				case FORTIFY:
 					cli.setCurrentContext(Context.GAME_FORTIFY);
+					System.out.println("[Fortification Phase]");
+					System.out.println("Available commands \n fortify <fromcountry> <tocountry> <num> \n fortify none");
 					while (true) {
 						System.out.println("[Fortify Phase]");
 						String userCommand = CLI.input.nextLine();

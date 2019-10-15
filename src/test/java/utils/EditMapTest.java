@@ -21,7 +21,7 @@ public class EditMapTest {
   }
 
   @Test
-  public void validateMap() {
+  public void validateSubgraphConnectivityMap() {
 
     EditMap editMap = new EditMap();
     boolean isMapValid = editMap.validateMap(gameMap);

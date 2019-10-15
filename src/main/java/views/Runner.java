@@ -29,6 +29,7 @@ public class Runner {
    */
   private static void beginEditor(EditMap editMap, GameMap gameMap) throws Exception {
     while (true) {
+    	System.out.println("available commands \n editcontinent -add <continentname> <continentvalue> -remove <continentname> \n editcountry -add <countryname> <continentname> -remove <countryname> \n editneighbor -add <countryname> <neighborcountryname> -remove <countryname> <neighborcountryname> \n validatemap \n showmap");
       CLI cli = CLI.getInstance();
       String userInput = CLI.input.nextLine();
       String userCommand = userInput.split(" ")[0];
@@ -73,6 +74,7 @@ public class Runner {
   /** @param gameMap stores map data i.e borders, countries, files, continents */
   private static void beginGame(GameMap gameMap) {
     while (true) {
+        System.out.println("available commands \n editcontinent -add <continentname> <continentvalue> -remove <continentname> \n editcountry -add <countryname> <continentname> -remove <countryname> \n editneighbor -add <countryname> <neighborcountryname> -remove <countryname> <neighborcountryname> \n validatemap \n showmap");
       CLI cli = CLI.getInstance();
       String userInput = CLI.input.nextLine();
       String userCommand = userInput.split(" ")[0];
@@ -112,8 +114,12 @@ public class Runner {
   public static void main(String[] args) throws IOException, Exception {
     CLI cli = CLI.getInstance();
     cli.setCurrentContext(CLI.Context.MAIN_MENU);
+    System.out.println("Welcome to Risk Game :(");
+
     while (true) {
       try {
+    	    System.out.println("available commands \n editmap <fileName> \n loadmap <fileName> \n gameplayer -add <playerName> -remove <PlayerName>");
+    	    System.out.println(" Add players and Use load map to start the game");
         String userCommand = CLI.input.nextLine();
         if (cli.validate(userCommand)) {
           switch (userCommand.split(" ")[0]) {

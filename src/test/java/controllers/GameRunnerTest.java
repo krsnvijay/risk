@@ -11,7 +11,7 @@ public class GameRunnerTest {
 
   @Test
   public void validatePlayerCount() {
-    String reason, reason2;
+    String reason;
     ArrayList<String> playersList = new ArrayList<>();
     playersList.add("player1");
     boolean result = GameRunner.validatePlayerCount(playersList);
@@ -31,8 +31,8 @@ public class GameRunnerTest {
     assertTrue(result2);
     playersList.add("player7");
     boolean result3 = GameRunner.validatePlayerCount(playersList);
-    reason2 = "Player count should be less than 6";
-    assertFalse(reason2, result3);
+    reason = "Player count should be less than 6";
+    assertFalse(reason, result3);
   }
 
 }
