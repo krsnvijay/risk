@@ -6,8 +6,18 @@ import models.Context;
 import models.GameMap;
 import utils.CLI;
 
+/**
+ * Controller for Game loop and phases
+ */
 public class GameController {
 
+  /**
+   * Processes reinforce command from the cli
+   *
+   * @param gameMap contains game state
+   * @param command cli command from the user
+   * @return true if successfully reinforced
+   */
   public static boolean reinforce(GameMap gameMap, String command) {
     String[] commandSplit = command.split(" ");
     String countryName = commandSplit[1];
@@ -35,6 +45,12 @@ public class GameController {
     return result;
   }
 
+  /**
+   * Processes fortify command from the cli
+   * @param gameMap contains game state
+   * @param command cli command from the user
+   * @return true if successfully fortified
+   */
   public static boolean fortify(GameMap gameMap, String command) {
     String[] commandSplit = command.split(" ");
     String fromCountry = commandSplit[1];
@@ -54,17 +70,33 @@ public class GameController {
     return result;
   }
 
+  /**
+   * Skips fortification for the current player
+   * @param gameMap contains game state
+   * @param command cli command from the user
+   * @return true to indicate status
+   */
   public static boolean fortifyNone(GameMap gameMap, String command) {
     display("player chose not to fortify");
     changeToNextPhase(gameMap);
     return true;
   }
 
+  /**
+   * Shows map connectivity, ownership, army(s)
+   * @param gameMap contains game state
+   * @param command cli command from the user
+   * @return true to indicate status
+   */
   public static boolean showMap(GameMap gameMap, String command) {
     display(gameMap.showMapByOwnership());
-    return false;
+    return true;
   }
 
+  /**
+   * Changes to next phase in the game loop or changes player if in the last phase of current playe
+   * @param gameMap contains game state
+   */
   public static void changeToNextPhase(GameMap gameMap) {
     Context currentContext = CLI.getInstance().getCurrentContext();
     switch (currentContext) {
@@ -83,6 +115,10 @@ public class GameController {
     }
   }
 
+  /**
+   * Starts the game loop
+   * @param gameMap contains game state
+   */
   public static void startPhaseLoop(GameMap gameMap) {
     CLI.getInstance().setCurrentContext(Context.GAME_REINFORCE);
     gameMap
@@ -97,7 +133,14 @@ public class GameController {
             + " army(s) to reinforce");
   }
 
-  public static boolean attackNone(GameMap gameMap, String s) {
+  /**
+   * Skips attack for the current player
+   *
+   * @param gameMap contains game state
+   * @param command cli command from the user
+   * @return true to indicate status
+   */
+  public static boolean attackNone(GameMap gameMap, String command) {
     display("player chose not to attack");
     changeToNextPhase(gameMap);
     return true;

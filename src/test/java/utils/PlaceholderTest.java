@@ -14,6 +14,7 @@ import models.Country;
 import models.GameMap;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class PlaceholderTest {
@@ -43,6 +44,7 @@ public class PlaceholderTest {
   @After
   public void tearDown() throws Exception {}
 
+  @Ignore
   @Test
   public void test() throws Exception {
     assertEquals(testMap, MapParser.loadMap("C:\\Users\\Siddharth Singh\\Desktop\\test.map"));

@@ -40,9 +40,7 @@ public class GameMap {
    * Maintains whose turn it is (index).
    */
   private static int currentPlayerIndex = 0;
-  /**
-   * This maintains a list of players currently in the game.
-   */
+  /** This maintains a list of players currently in the game. */
   public ArrayList<Player> playersList = new ArrayList<>();
 
   /**
@@ -76,9 +74,7 @@ public class GameMap {
     this.fileName = "";
   }
 
-  /**
-   * Updates the current player index (round robin fashion)
-   */
+  /** Updates the current player index (round robin fashion) */
   public void updatePlayerIndex() {
     currentPlayerIndex = (currentPlayerIndex + 1) % playersList.size();
   }
@@ -294,6 +290,12 @@ public class GameMap {
             .collect(joining("\n")));
   }
 
+  /**
+   * Adds a game player to the current state
+   *
+   * @param playerName player to add
+   * @return boolean to indicate status
+   */
   public boolean addGamePlayer(String playerName) {
     Player player = new Player(playerName);
     if (!playersList.contains(player)) {
@@ -303,6 +305,12 @@ public class GameMap {
     return false;
   }
 
+  /**
+   * Removes a game player from the current state
+   *
+   * @param playerName player to add
+   * @return boolean to indicate status
+   */
   public boolean removeGamePlayer(String playerName) {
     Player player = new Player(playerName);
     if (playersList.contains(player)) {
@@ -402,10 +410,20 @@ public class GameMap {
     this.countries = countries;
   }
 
+  /**
+   * Gets current playerlist from the game state
+   *
+   * @return list of players
+   */
   public ArrayList<Player> getPlayersList() {
     return playersList;
   }
 
+  /**
+   * Sets playerList to the game state
+   *
+   * @param playersList list of players
+   */
   public void setPlayersList(ArrayList<Player> playersList) {
     this.playersList = playersList;
   }
@@ -447,6 +465,11 @@ public class GameMap {
     return true;
   }
 
+  /**
+   * Sets up the army count for each payer, populates countries
+   *
+   * @return boolean to indicate status
+   */
   public boolean gameSetup() {
     int[] totalArmyCounts = {40, 35, 30, 25, 20};
     if (!validatePlayerCount()) {
@@ -464,7 +487,7 @@ public class GameMap {
    * This method places an army in a country that the player owns
    *
    * @param countryName name of the country to place an army
-   * @param numArmies   armies to place
+   * @param numArmies armies to place
    * @return A boolean with success or failure.
    */
   public boolean placeArmy(String countryName, int numArmies) {
@@ -489,6 +512,11 @@ public class GameMap {
     return playersList.stream().mapToInt(Player::getNumberOfArmies).allMatch(count -> count == 0);
   }
 
+  /**
+   * Places army one at a time randomly to each player owned countries in round robin fashion
+   *
+   * @return true to indicate status
+   */
   public boolean placeAll() {
     for (int turn = 0; turn < playersList.size(); turn++) {
       ArrayList<Country> countriesForPlayer =
@@ -505,6 +533,13 @@ public class GameMap {
     return true;
   }
 
+  /**
+   * Reinforce a currently owned country with an army
+   *
+   * @param countryToPlace name of country
+   * @param armiesToPlace count of armies to place
+   * @return
+   */
   public boolean reinforce(String countryToPlace, int armiesToPlace) {
     Player currentPlayer = getCurrentPlayer();
     if (Player.getCountriesByOwnership(currentPlayer.getPlayerName(), this).stream()
@@ -515,6 +550,14 @@ public class GameMap {
     return true;
   }
 
+  /**
+   * Moves armies from one adjacent country to the other
+   *
+   * @param fromCountry country name to move from
+   * @param toCountry contry name to move to
+   * @param armyToMove no of armies to move
+   * @return boolean to indicate status
+   */
   public boolean fortify(String fromCountry, String toCountry, int armyToMove) {
     boolean result = false;
     boolean isOwnershipValid =

@@ -179,6 +179,12 @@ public class EditMap extends MapParser {
     return visited.size() == copyOfBorders.keySet().size();
   }
 
+  /**
+   * Performs DFS check on a continent to check its connectivity
+   *
+   * @param map game state
+   * @return boolean to indicate status
+   */
   public static boolean DFSCheckOnContinent(GameMap map) {
     Map<String, List<Country>> groupedByCountries =
         map.getCountries().values().stream().collect(groupingBy(Country::getContinent));

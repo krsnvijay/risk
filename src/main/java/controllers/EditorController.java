@@ -9,6 +9,9 @@ import utils.CLI;
 import utils.EditMap;
 import utils.MapParser;
 
+/**
+ * Controller for Editor Context
+ */
 public class EditorController {
 
   /**
@@ -122,6 +125,14 @@ public class EditorController {
     return result;
   }
 
+  /**
+   * Processes validatemap from the cli Validates a map's connectivity and its subgraph
+   * connectivity
+   *
+   * @param gameMap contains game state
+   * @param command cli command from the user
+   * @return boolean to indicate map validity
+   */
   public static boolean validateMap(GameMap gameMap, String command) {
     boolean result = EditMap.validateMap(gameMap);
     if (result) {
@@ -132,6 +143,13 @@ public class EditorController {
     return result;
   }
 
+  /**
+   * Processes savemap from the cli
+   * Serializes the game state and saves it to a filelocation
+   * @param gameMap contains game state
+   * @param command cli command from the user containing filelocation
+   * @return boolean to indicate the status
+   */
   public static boolean saveMap(GameMap gameMap, String command) {
     String fileLocation = command.split(" ", 2)[1];
     boolean result = MapParser.saveMap(gameMap, fileLocation);

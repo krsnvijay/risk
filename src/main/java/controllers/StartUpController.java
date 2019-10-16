@@ -5,8 +5,18 @@ import static views.ConsoleView.display;
 
 import models.GameMap;
 
+/**
+ * Controller for StartUp context
+ */
 public class StartUpController {
 
+  /**
+   * Processes placearmy command from the cli Adds an army to a country if the user owns it
+   *
+   * @param gameMap contains game state
+   * @param command cli command from the user
+   * @return true if successfully placed an army
+   */
   public static boolean placeArmy(GameMap gameMap, String command) {
     String[] commandSplit = command.split(" ");
     String countryName = commandSplit[1];
@@ -27,13 +37,19 @@ public class StartUpController {
               + countryName
               + " to place armies");
     }
-    return false;
+    return result;
   }
 
+  /**
+   * Processes placeall command from the cli
+   * @param gameMap contains game state
+   * @param command cli command from the user
+   * @return true to indicate status
+   */
   public static boolean placeAll(GameMap gameMap, String command) {
     gameMap.placeAll();
     display("Placed player armies randomly in countries that they own");
     startPhaseLoop(gameMap);
-    return false;
+    return true;
   }
 }
