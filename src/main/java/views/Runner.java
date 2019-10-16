@@ -26,10 +26,10 @@ public class Runner {
    * @throws Exception when there's an invalid command.
    */
   private static void beginEditor(EditMap editMap, GameMap gameMap) throws Exception {
+    System.out.println(
+            "available commands \n editcontinent -add <continentname> <continentvalue> -remove <continentname> \n editcountry -add <countryname> <continentname> -remove <countryname> \n editneighbor -add <countryname> <neighborcountryname> -remove <countryname> <neighborcountryname> \n validatemap \n showmap \n exiteditor");
+    CLI cli = CLI.getInstance();
     while (true) {
-      System.out.println(
-          "available commands \n editcontinent -add <continentname> <continentvalue> -remove <continentname> \n editcountry -add <countryname> <continentname> -remove <countryname> \n editneighbor -add <countryname> <neighborcountryname> -remove <countryname> <neighborcountryname> \n validatemap \n showmap \n exiteditor");
-      CLI cli = CLI.getInstance();
       String userInput = CLI.input.nextLine();
       String userCommand = userInput.split(" ")[0];
       String[] opCommands = null;
@@ -83,11 +83,10 @@ public class Runner {
     CLI cli = CLI.getInstance();
     cli.setCurrentContext(CLI.Context.MAIN_MENU);
     System.out.println("Welcome to The Game of Risk! :)");
-
+    System.out.println(
+            "available commands \n editmap <fileName> \n loadmap <fileName> \n gameplayer -add <playerName> -remove <PlayerName>");
     while (true) {
       try {
-        System.out.println(
-            "available commands \n editmap <fileName> \n loadmap <fileName> \n gameplayer -add <playerName> -remove <PlayerName>");
         String userCommand = CLI.input.nextLine();
         if (cli.validate(userCommand)) {
           switch (userCommand.split(" ")[0]) {

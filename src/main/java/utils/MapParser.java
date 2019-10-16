@@ -94,7 +94,7 @@ public class MapParser {
         || continents == null
         || borders == null
         || fileSectionData == null
-        || mapName == null) throw new Exception("Map file is INVALID!");
+        || mapName == null) System.out.println(("Map file is INVALID!"));
 
     return new GameMap(fileSectionData, borders, continents, countries, mapName);
   }
