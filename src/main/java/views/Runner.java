@@ -27,7 +27,7 @@ public class Runner {
    */
   private static void beginEditor(EditMap editMap, GameMap gameMap) throws Exception {
     System.out.println(
-            "available commands \n editcontinent -add <continentname> <continentvalue> -remove <continentname> \n editcountry -add <countryname> <continentname> -remove <countryname> \n editneighbor -add <countryname> <neighborcountryname> -remove <countryname> <neighborcountryname> \n validatemap \n showmap \n exiteditor");
+        "available commands \n editcontinent -add <continentname> <continentvalue> -remove <continentname> \n editcountry -add <countryname> <continentname> -remove <countryname> \n editneighbor -add <countryname> <neighborcountryname> -remove <countryname> <neighborcountryname> \n validatemap \n showmap \n exiteditor");
     CLI cli = CLI.getInstance();
     while (true) {
       String userInput = CLI.input.nextLine();
@@ -68,8 +68,9 @@ public class Runner {
             return;
         }
       } else {
-        System.out.println("You entered an invalid command. The valid commands are: \n" +
-                "editcontinent, editcountry, editneighbor, savemap, validatemap, showmap, and exiteditor");
+        System.out.println(
+            "You entered an invalid command. The valid commands are: \n"
+                + "editcontinent, editcountry, editneighbor, savemap, validatemap, showmap, and exiteditor");
       }
     }
   }
@@ -86,41 +87,39 @@ public class Runner {
     CLI cli = CLI.getInstance();
     cli.setCurrentContext(CLI.Context.MAIN_MENU);
     System.out.println("Welcome to The Game of Risk! :)");
-    System.out.println(
-            "available commands \n editmap <fileName> \n loadmap <fileName> \n gameplayer -add <playerName> -remove <PlayerName>");
     while (true) {
-      try {
-        String userCommand = CLI.input.nextLine();
-        if (cli.validate(userCommand)) {
-          switch (userCommand.split(" ")[0]) {
-            case "editmap":
-              cli.setCurrentContext(CLI.Context.EDITOR);
+      System.out.println(
+          "available commands \n editmap <fileName> \n loadmap <fileName> \n gameplayer -add <playerName> -remove <PlayerName>");
+      String userCommand = CLI.input.nextLine();
+      if (cli.validate(userCommand)) {
+        switch (userCommand.split(" ")[0]) {
+          case "editmap":
+            try {
               String fileName = userCommand.split(" ")[1];
               GameMap gameMap = EditMap.loadMap(fileName);
+              cli.setCurrentContext(CLI.Context.EDITOR);
               System.out.println(gameMap);
               beginEditor(new EditMap(), gameMap);
-              break;
-            case "loadmap":
-              try {
-                GameMap loadedMap = MapParser.loadMap(userCommand.split(" ")[1]);
-                GameRunner gameRunner = new GameRunner(loadedMap);
-                System.out.println("Map has been LOADED!");
-                gameRunner.gameSetup();
-                return;
-              } catch (Exception e) {
-                System.out.println(e.getMessage());
-              }
-              break;
-            case "gameplayer":
-              String[] commandSplit = userCommand.split(" -");
-              String[] optionsArray = Arrays.copyOfRange(commandSplit, 1, commandSplit.length);
-              GameRunner.gamePlayer(new ArrayList<String>(Arrays.asList(optionsArray)));
-              break;
-          }
+            } catch (Exception e) {
+              System.out.println(e.getMessage());
+            }
+            break;
+          case "loadmap":
+            try {
+              GameMap loadedMap = MapParser.loadMap(userCommand.split(" ")[1]);
+              GameRunner gameRunner = new GameRunner(loadedMap);
+              System.out.println("Map has been LOADED!");
+              gameRunner.gameSetup();
+            } catch (Exception e) {
+              System.out.println(e.getMessage());
+            }
+            break;
+          case "gameplayer":
+            String[] commandSplit = userCommand.split(" -");
+            String[] optionsArray = Arrays.copyOfRange(commandSplit, 1, commandSplit.length);
+            GameRunner.gamePlayer(new ArrayList<String>(Arrays.asList(optionsArray)));
+            break;
         }
-      } catch (Exception e) {
-        System.out.println(e.getMessage());
-        e.printStackTrace();
       }
     }
   }

@@ -23,24 +23,16 @@ public class GameRunner {
    */
   public static ArrayList<Player> playersList = new ArrayList<>();
 
-  /**
-   * Maintains whose turn it is (index).
-   */
+  /** Maintains whose turn it is (index). */
   private static int currentPlayerIndex = 0;
 
-  /**
-   * Keeps a copy of the GameMap to modify and refer.
-   */
+  /** Keeps a copy of the GameMap to modify and refer. */
   private GameMap gameMap;
 
-  /**
-   * Instance of CLI for handling commands.
-   */
+  /** Instance of CLI for handling commands. */
   private CLI cli = CLI.getInstance();
 
-  /**
-   * Checks whether the game has started (for command processing)
-   */
+  /** Checks whether the game has started (for command processing) */
   private boolean isGameStarted = false;
 
   /**
@@ -71,9 +63,7 @@ public class GameRunner {
     return true;
   }
 
-  /**
-   * Updates the current player index (round robin fashion)
-   */
+  /** Updates the current player index (round robin fashion) */
   public static void updatePlayerIndex() {
     currentPlayerIndex = (currentPlayerIndex + 1) % playersList.size();
   }
@@ -156,6 +146,7 @@ public class GameRunner {
               }
               isGameStarted = true;
               gameMap.setCountries(populateCountries(playersList));
+              System.out.println("Players have been assigned countries!");
             }
             break;
           case "placearmy":
@@ -242,7 +233,7 @@ public class GameRunner {
    * This method places an army in a country that the player owns
    *
    * @param countryName name of the country to place an army
-   * @param numArmies   armies to place
+   * @param numArmies armies to place
    * @return A boolean with success or failure.
    */
   private boolean placeArmy(String countryName, int numArmies) {
@@ -266,7 +257,6 @@ public class GameRunner {
 
     while (true) {
       Player currentPlayer = getCurrentPlayer();
-      System.out.println(gameMap.showMapByOwnershipByCurrentPlayer(getCurrentPlayer().getPlayerName()));
       System.out.println(currentPlayer.getPlayerName() + "'s turn:");
       CLI cli = CLI.getInstance();
       for (Phases phase : Phases.values()) {
@@ -286,7 +276,8 @@ public class GameRunner {
                       + " army(s) to reinforce");
               String userCommand = CLI.input.nextLine();
               if (userCommand.trim().equals("showmap"))
-                System.out.println(gameMap.showMapByOwnership());
+                System.out.println(
+                    gameMap.showMapByOwnershipByCurrentPlayer(currentPlayer.getPlayerName()));
               else {
                 String[] opCmds = userCommand.split(" ");
                 if (opCmds.length != 3) {
@@ -321,7 +312,8 @@ public class GameRunner {
               System.out.println("[Fortify Phase]");
               String userCommand = CLI.input.nextLine();
               if (userCommand.trim().equals("showmap"))
-                System.out.println(gameMap.showMapByOwnership());
+                System.out.println(
+                    gameMap.showMapByOwnershipByCurrentPlayer(currentPlayer.getPlayerName()));
               else {
                 String[] opCmds = userCommand.split(" ");
                 if (opCmds.length == 2) {
@@ -350,6 +342,14 @@ public class GameRunner {
                             gameMap.getCountries().get(fromCountry).removeArmies(armyToMove);
                         if (isArmyRemoved && armyToMove > 0) {
                           gameMap.getCountries().get(toCountry).addArmies(armyToMove);
+                          System.out.println(
+                              getCurrentPlayer().getPlayerName()
+                                  + " transferred "
+                                  + armyToMove
+                                  + " army(s) from "
+                                  + fromCountry
+                                  + " to "
+                                  + toCountry);
                           break;
                         } else {
                           System.out.println("Error number of army(s) is not valid");
@@ -402,9 +402,7 @@ public class GameRunner {
     return countries.stream().collect(toMap(Country::getName, c -> c));
   }
 
-  /**
-   * This is an enum that maintains the current phase in the turn.
-   */
+  /** This is an enum that maintains the current phase in the turn. */
   enum Phases {
     REINFORCE,
     ATTACK,
