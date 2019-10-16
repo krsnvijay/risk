@@ -26,10 +26,10 @@ public class Runner {
    * @throws Exception when there's an invalid command.
    */
   private static void beginEditor(EditMap editMap, GameMap gameMap) throws Exception {
-    System.out.println(
-        "available commands \n editcontinent -add <continentname> <continentvalue> -remove <continentname> \n editcountry -add <countryname> <continentname> -remove <countryname> \n editneighbor -add <countryname> <neighborcountryname> -remove <countryname> <neighborcountryname> \n validatemap \n showmap \n exiteditor");
     CLI cli = CLI.getInstance();
     while (true) {
+      System.out.println(
+          "available commands \n editcontinent -add <continentname> <continentvalue> -remove <continentname> \n editcountry -add <countryname> <continentname> -remove <countryname> \n editneighbor -add <countryname> <neighborcountryname> -remove <countryname> <neighborcountryname> \n validatemap \n showmap \n exiteditor");
       String userInput = CLI.input.nextLine();
       String userCommand = userInput.split(" ")[0];
       String[] opCommands = null;
@@ -52,8 +52,13 @@ public class Runner {
             break;
           case "savemap":
             opCommands = userInput.split(" ");
-            if (editMap.validateMap(gameMap)) MapParser.saveMap(gameMap, opCommands[1]);
-            else System.out.println("Invalid Map!");
+            if (editMap.validateMap(gameMap)) {
+              try {
+                MapParser.saveMap(gameMap, opCommands[1]);
+              } catch (Exception e) {
+                System.out.println(e.getMessage());
+              }
+            } else System.out.println("Invalid Map!");
             break;
           case "validatemap":
             if (editMap.validateMap(gameMap)) System.out.println("Valid Map!");
@@ -80,8 +85,8 @@ public class Runner {
    * editor.
    *
    * @param args The command line arguments as a String array.
-   * @throws IOException TODO: will handle the exception.
-   * @throws Exception TODO: will handle the exception.
+   * @throws IOException
+   * @throws Exception
    */
   public static void main(String[] args) throws IOException, Exception {
     CLI cli = CLI.getInstance();
