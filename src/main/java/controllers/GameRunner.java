@@ -217,12 +217,14 @@ public class GameRunner {
   private boolean placeArmy(String countryName) {
     Player currentPlayer = playersList.get(currentPlayerIndex);
     String currentPlayerName = currentPlayer.getPlayerName();
-    Country currentCountry = gameMap.getCountries().get(countryName);
-    if (currentCountry.getOwnerName().equals(currentPlayerName)
-        && currentPlayer.getNumberOfArmies() > 0) {
-      currentCountry.addArmies(1);
-      currentPlayer.subtractArmies(1);
-      return true;
+    if (gameMap.getCountries().containsKey(countryName)) {
+      Country currentCountry = gameMap.getCountries().get(countryName);
+      if (currentCountry.getOwnerName().equals(currentPlayerName)
+          && currentPlayer.getNumberOfArmies() > 0) {
+        currentCountry.addArmies(1);
+        currentPlayer.subtractArmies(1);
+        return true;
+      }
     }
     return false;
   }
@@ -237,12 +239,14 @@ public class GameRunner {
   private boolean placeArmy(String countryName, int numArmies) {
     Player currentPlayer = playersList.get(currentPlayerIndex);
     String currentPlayerName = currentPlayer.getPlayerName();
-    Country currentCountry = gameMap.getCountries().get(countryName);
-    if (currentCountry.getOwnerName().equals(currentPlayerName)
-        && currentPlayer.getNumberOfArmies() > 0) {
-      currentCountry.addArmies(numArmies);
-      currentPlayer.subtractArmies(numArmies);
-      return true;
+    if (gameMap.getCountries().containsKey(countryName)) {
+      Country currentCountry = gameMap.getCountries().get(countryName);
+      if (currentCountry.getOwnerName().equals(currentPlayerName)
+          && currentPlayer.getNumberOfArmies() > 0) {
+        currentCountry.addArmies(numArmies);
+        currentPlayer.subtractArmies(numArmies);
+        return true;
+      }
     }
     return false;
   }
