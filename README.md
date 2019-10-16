@@ -21,7 +21,7 @@ We follow a model similar to the Model View Controller (MVC) pattern. This is ho
 - test/
 ```
 
-// TODO DESIGN DIAGRAM
+![Design Diagram](https://i.imgur.com/X5jPtNX.png)
 
 The model classes hold the definition for the various entities in the game: `Continent`, `Country`, `GameMap`, `Player` etc. The views house the CLI `Runner` and will hold the GUI elements (future builds). The controller is the `GameRunner` which is the main driver for our game loop. The utils folder has all sorts of utility methods to help our processing like the `MapParser` and the `CLI` manager class.
 
