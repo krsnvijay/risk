@@ -2,7 +2,6 @@ package views;
 
 import controllers.GameRunner;
 import models.GameMap;
-import models.Player;
 import utils.CLI;
 import utils.EditMap;
 import utils.MapParser;
@@ -10,7 +9,6 @@ import utils.MapParser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 /**
  * Runs the project and handles the initial commands.
@@ -29,7 +27,8 @@ public class Runner {
    */
   private static void beginEditor(EditMap editMap, GameMap gameMap) throws Exception {
     while (true) {
-    	System.out.println("available commands \n editcontinent -add <continentname> <continentvalue> -remove <continentname> \n editcountry -add <countryname> <continentname> -remove <countryname> \n editneighbor -add <countryname> <neighborcountryname> -remove <countryname> <neighborcountryname> \n validatemap \n showmap");
+      System.out.println(
+          "available commands \n editcontinent -add <continentname> <continentvalue> -remove <continentname> \n editcountry -add <countryname> <continentname> -remove <countryname> \n editneighbor -add <countryname> <neighborcountryname> -remove <countryname> <neighborcountryname> \n validatemap \n showmap");
       CLI cli = CLI.getInstance();
       String userInput = CLI.input.nextLine();
       String userCommand = userInput.split(" ")[0];
@@ -38,7 +37,6 @@ public class Runner {
         String[] originalSplit = userInput.split(" -");
         if (originalSplit.length > 1)
           opCommands = Arrays.copyOfRange(originalSplit, 1, originalSplit.length);
-
       }
 
       if (cli.validate(userCommand)) {
@@ -64,40 +62,10 @@ public class Runner {
           case "showmap":
             System.out.println(gameMap);
             break;
-          case "exiteditor":
+          case "exiteditor": {
+            System.out.println("EXITED Map Editor!");
+          }
             return;
-        }
-      } else return;
-    }
-  }
-
-  /** @param gameMap stores map data i.e borders, countries, files, continents */
-  private static void beginGame(GameMap gameMap) {
-    while (true) {
-        System.out.println("available commands \n editcontinent -add <continentname> <continentvalue> -remove <continentname> \n editcountry -add <countryname> <continentname> -remove <countryname> \n editneighbor -add <countryname> <neighborcountryname> -remove <countryname> <neighborcountryname> \n validatemap \n showmap");
-      CLI cli = CLI.getInstance();
-      String userInput = CLI.input.nextLine();
-      String userCommand = userInput.split(" ")[0];
-      String[] opCommands = null;
-
-      if (userInput.startsWith("edit")) {
-        String[] originalSplit = userInput.split(" -");
-        opCommands = Arrays.copyOfRange(originalSplit, 1, originalSplit.length);
-      }
-
-      if (cli.validate(userCommand)) {
-        switch (userCommand) {
-          case "editcontinent":
-            break;
-          case "editcountry":
-            break;
-          case "editneighbor":
-            break;
-          case "validatemap":
-            break;
-          case "showmap":
-            System.out.println(gameMap);
-            break;
         }
       } else return;
     }
@@ -114,12 +82,12 @@ public class Runner {
   public static void main(String[] args) throws IOException, Exception {
     CLI cli = CLI.getInstance();
     cli.setCurrentContext(CLI.Context.MAIN_MENU);
-    System.out.println("Welcome to Risk Game :(");
+    System.out.println("Welcome to The Game of Risk! :)");
 
     while (true) {
       try {
-    	    System.out.println("available commands \n editmap <fileName> \n loadmap <fileName> \n gameplayer -add <playerName> -remove <PlayerName>");
-    	    System.out.println(" Add players and Use load map to start the game");
+        System.out.println(
+            "available commands \n editmap <fileName> \n loadmap <fileName> \n gameplayer -add <playerName> -remove <PlayerName>");
         String userCommand = CLI.input.nextLine();
         if (cli.validate(userCommand)) {
           switch (userCommand.split(" ")[0]) {
@@ -131,14 +99,14 @@ public class Runner {
               beginEditor(new EditMap(), gameMap);
               break;
             case "loadmap":
-              ArrayList<String> playerNames = GameRunner.playersList.stream()
-                  .map(Player::getPlayerName)
-                  .collect(Collectors.toCollection(ArrayList::new));
-              if (GameRunner.validatePlayerCount(playerNames)) {
+              try {
                 GameMap loadedMap = MapParser.loadMap(userCommand.split(" ")[1]);
                 GameRunner gameRunner = new GameRunner(loadedMap);
+                System.out.println("Map has been LOADED!");
                 gameRunner.gameSetup();
                 return;
+              } catch (Exception e) {
+                System.out.println(e.getMessage());
               }
               break;
             case "gameplayer":
