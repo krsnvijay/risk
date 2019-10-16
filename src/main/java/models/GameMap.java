@@ -57,7 +57,7 @@ public class GameMap {
    * @return returns a pretty string of borders.
    */
   public static String showBorders(Map.Entry<String, Set<String>> border) {
-    return String.format("%s %s", border.getKey(), String.join(" ", border.getValue()));
+    return String.format("%s --> %s", border.getKey(), String.join(" --> ", border.getValue()));
   }
 
   /**
@@ -72,8 +72,8 @@ public class GameMap {
         border.getValue().stream()
             .map(this.countries::get)
             .map(Country::showCountryByOwnership)
-            .collect(joining(" "));
-    return String.format("%s -> %s", country, neighbors);
+            .collect(joining(" --> "));
+    return String.format("%s --> %s", country, neighbors);
   }
 
   /** Displays the map grouped by continents. */
