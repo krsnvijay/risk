@@ -378,7 +378,7 @@ public class GameRunner {
 
 	/**
 	 * This method randomly populates all the countries on the map.
-	 *
+	 * @param playerList list of players in the game
 	 * @return a map of countries with ownership
 	 * @author sabari
 	 */
