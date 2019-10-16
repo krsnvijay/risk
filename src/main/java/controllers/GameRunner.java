@@ -178,6 +178,7 @@ public class GameRunner {
                 }
                 if (turn != playersList.size() - 1) updatePlayerIndex();
               }
+              System.out.println("Placed armies on players' countries!");
               gameLoop();
               return;
             }
@@ -262,7 +263,6 @@ public class GameRunner {
       System.out.println(currentPlayer.getPlayerName() + "'s turn:");
       CLI cli = CLI.getInstance();
       for (Phases phase : Phases.values()) {
-        // TODO On "showmap" DO NOT UPDATE PLAYERINDEX as well as Phase
         switch (phase) {
           case REINFORCE:
             cli.setCurrentContext(Context.GAME_REINFORCE);

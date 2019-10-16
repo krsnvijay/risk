@@ -149,13 +149,13 @@ public class Country {
   /** Pretty prints the Country object. */
   @Override
   public String toString() {
-    return String.format("%s %s", this.name, this.continent);
+    return String.format("%s (%s)", this.name, this.continent);
   }
 
   /** @return String a formatted print of countries by ownership. */
   public String showCountryByOwnership() {
     return String.format(
-        "%s:%s:%s:%d", this.name, this.continent, this.ownerName, this.numberOfArmies);
+        "%s(%s:%s:%d)", this.name, this.continent, this.ownerName, this.numberOfArmies);
   }
 
   /**
