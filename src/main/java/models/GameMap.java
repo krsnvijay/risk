@@ -1,10 +1,19 @@
 package models;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toMap;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * GameMap stores map data i.e borders, countries, files, continents
@@ -27,6 +36,14 @@ public class GameMap {
 
   /** The name of the map file. */
   private String fileName;
+  /**
+   * Maintains whose turn it is (index).
+   */
+  private static int currentPlayerIndex = 0;
+  /**
+   * This maintains a list of players currently in the game.
+   */
+  public ArrayList<Player> playersList = new ArrayList<>();
 
   /**
    * This is the constructor for the GameMap class.
@@ -49,6 +66,30 @@ public class GameMap {
     this.continents = continents;
     this.countries = countries;
     this.fileName = fileName;
+  }
+
+  public GameMap() {
+    this.borders = new HashMap<>();
+    this.fileSectionData = new ArrayList<>();
+    this.countries = new HashMap<>();
+    this.continents = new HashMap<>();
+    this.fileName = "";
+  }
+
+  /**
+   * Updates the current player index (round robin fashion)
+   */
+  public void updatePlayerIndex() {
+    currentPlayerIndex = (currentPlayerIndex + 1) % playersList.size();
+  }
+
+  /**
+   * A getter for the current player object.
+   *
+   * @return Player object, for the player whose turn it is.
+   */
+  public Player getCurrentPlayer() {
+    return playersList.get(currentPlayerIndex);
   }
 
   /**
@@ -115,26 +156,27 @@ public class GameMap {
    *
    * @param continentName continent to add
    * @param value control value of continent
+   * @return true when continent is added
    */
-  public void addContinent(String continentName, int value) {
+  public boolean addContinent(String continentName, int value) {
     Continent continent = new Continent(continentName, value);
     this.continents.put(continentName, continent);
-    System.out.println("Added continent: " + continentName);
+    return true;
   }
 
   /**
    * Removes a continent and all its countries from the gameMap
    *
    * @param continentName continent to remove
+   * @return true if continent is removed
    */
-  public void removeContinent(String continentName) {
+  public boolean removeContinent(String continentName) {
     if (!this.continents.containsKey(continentName)) {
-      System.out.println("Error: The continent " + continentName + " does not exist");
-      return;
+      return false;
     }
     getCountriesByContinent(continentName).forEach(this::removeCountry);
     this.continents.remove(continentName);
-    System.out.println("Removed continent: " + continentName);
+    return true;
   }
 
   /**
@@ -142,31 +184,31 @@ public class GameMap {
    *
    * @param countryName country to add
    * @param continentName continent the country belongs to
+   * @return true if country is added
    */
-  public void addCountry(String countryName, String continentName) {
+  public boolean addCountry(String countryName, String continentName) {
     if (!this.continents.containsKey(continentName)) {
-      System.out.println("Error: The continent " + continentName + " does not exist");
-      return;
+      return false;
     }
     Country country = new Country(countryName, continentName);
     this.countries.put(countryName, country);
     this.borders.put(countryName, new HashSet<>());
-    System.out.println("Added country: " + countryName + " to " + continentName);
+    return true;
   }
 
   /**
    * Removes a country from the game map
    *
    * @param countryName country to remove
+   * @return true if country is removed
    */
-  public void removeCountry(String countryName) {
+  public boolean removeCountry(String countryName) {
     if (!this.countries.containsKey(countryName)) {
-      System.out.println("Error: The country " + countryName + " does not exist");
-      return;
+      return false;
     }
     removeCountryBorders(countryName);
     this.countries.remove(countryName);
-    System.out.println("Removed country: " + countryName);
+    return true;
   }
 
   /**
@@ -174,23 +216,20 @@ public class GameMap {
    *
    * @param country1 neighboring country 1
    * @param country2 neighboring country 2
+   * @return true if border is added
    */
-  public void addBorder(String country1, String country2) {
-    if (country1.equals(country2)) {
-      System.out.println("Error: The countries " + country1 + " and " + country2 + " are the same");
-      return;
-    }
+  public boolean addBorder(String country1, String country2) {
     if (!this.countries.containsKey(country1)) {
       System.out.println("Error: The country " + country1 + " does not exist");
-      return;
+      return false;
     }
     if (!this.countries.containsKey(country2)) {
       System.out.println("Error: The country " + country2 + " does not exist");
-      return;
+      return false;
     }
     this.borders.get(country1).add(country2);
     this.borders.get(country2).add(country1);
-    System.out.println("Added border: " + country1 + " - " + country2);
+    return true;
   }
 
   /**
@@ -198,23 +237,18 @@ public class GameMap {
    *
    * @param country1 neighboring country 1
    * @param country2 neighboring country 2
+   * @return true if border is removed
    */
-  public void removeBorder(String country1, String country2) {
-    if (country1.equals(country2)) {
-      System.out.println("Error: The countries" + country1 + " and " + country2 + " are the same");
-      return;
-    }
+  public boolean removeBorder(String country1, String country2) {
     if (!this.countries.containsKey(country1)) {
-      System.out.println("Error: The country " + country1 + " does not exist");
-      return;
+      return false;
     }
     if (!this.countries.containsKey(country2)) {
-      System.out.println("Error: The country " + country2 + " does not exist");
-      return;
+      return false;
     }
     this.borders.get(country1).remove(country2);
     this.borders.get(country2).remove(country1);
-    System.out.println("Removed border: " + country1 + " - " + country2);
+    return true;
   }
 
   /**
@@ -258,6 +292,24 @@ public class GameMap {
             .map(this::showBorderByOwnerShip)
             .sorted()
             .collect(joining("\n")));
+  }
+
+  public boolean addGamePlayer(String playerName) {
+    Player player = new Player(playerName);
+    if (!playersList.contains(player)) {
+      playersList.add(player);
+      return true;
+    }
+    return false;
+  }
+
+  public boolean removeGamePlayer(String playerName) {
+    Player player = new Player(playerName);
+    if (playersList.contains(player)) {
+      playersList.remove(player);
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -348,6 +400,145 @@ public class GameMap {
    */
   public void setCountries(Map<String, Country> countries) {
     this.countries = countries;
+  }
+
+  public ArrayList<Player> getPlayersList() {
+    return playersList;
+  }
+
+  public void setPlayersList(ArrayList<Player> playersList) {
+    this.playersList = playersList;
+  }
+
+  /**
+   * This method randomly populates all the countries on the map.
+   *
+   * @param playerList list of players in the game
+   * @return a map of countries with ownership
+   * @author sabari
+   */
+  public Map<String, Country> populateCountries(ArrayList<Player> playerList) {
+    ArrayList<Country> countries = new ArrayList<>(this.countries.values());
+    Collections.shuffle(countries);
+    int countrySize = countries.size();
+    int playerCount = playerList.size();
+    for (int i = 0; i < countrySize; i++) {
+      countries.get(i).setOwnerName(playerList.get(i % playerCount).getPlayerName());
+    }
+    return countries.stream().collect(toMap(Country::getName, c -> c));
+  }
+
+  /**
+   * Validates the count of players in the game.
+   *
+   * @return A boolean with success or failure.
+   */
+  public boolean validatePlayerCount() {
+    if (playersList.size() <= 1) {
+      System.out.println(
+          "There should be at least two players to play. Please add more players before loading map & starting game.");
+      return false;
+    }
+    if (playersList.size() > 6) {
+      System.out.println(
+          "Too many players! Limit is 6 players! Please remove players before loading map & starting game");
+      return false;
+    }
+    return true;
+  }
+
+  public boolean gameSetup() {
+    int[] totalArmyCounts = {40, 35, 30, 25, 20};
+    if (!validatePlayerCount()) {
+      return false;
+    }
+    int armiesPerPlayer = totalArmyCounts[playersList.size() - 2];
+    for (Player p : playersList) {
+      p.setNumberOfArmies(armiesPerPlayer);
+    }
+    this.setCountries(populateCountries(playersList));
+    return true;
+  }
+
+  /**
+   * This method places an army in a country that the player owns
+   *
+   * @param countryName name of the country to place an army
+   * @param numArmies   armies to place
+   * @return A boolean with success or failure.
+   */
+  public boolean placeArmy(String countryName, int numArmies) {
+    Player currentPlayer = getCurrentPlayer();
+    String currentPlayerName = currentPlayer.getPlayerName();
+    Country currentCountry = countries.get(countryName);
+    if (currentCountry.getOwnerName().equals(currentPlayerName)
+        && currentPlayer.getNumberOfArmies() > 0) {
+      currentCountry.addArmies(numArmies);
+      currentPlayer.subtractArmies(numArmies);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Checks if the setup is complete and the game is ready to begin
+   *
+   * @return true if numberOfArmies for each player is 0 ; else returns false
+   */
+  public boolean checkGameReady() {
+    return playersList.stream().mapToInt(Player::getNumberOfArmies).allMatch(count -> count == 0);
+  }
+
+  public boolean placeAll() {
+    for (int turn = 0; turn < playersList.size(); turn++) {
+      ArrayList<Country> countriesForPlayer =
+          Player.getCountriesByOwnership(getCurrentPlayer().getPlayerName(), this);
+      Random randomGen = new Random();
+      while (getCurrentPlayer().getNumberOfArmies() > 0) {
+        int randomIndexCountry = randomGen.nextInt(countriesForPlayer.size());
+        placeArmy(countriesForPlayer.get(randomIndexCountry).getName(), 1);
+      }
+      if (turn != playersList.size() - 1) {
+        updatePlayerIndex();
+      }
+    }
+    return true;
+  }
+
+  public boolean reinforce(String countryToPlace, int armiesToPlace) {
+    Player currentPlayer = getCurrentPlayer();
+    if (Player.getCountriesByOwnership(currentPlayer.getPlayerName(), this).stream()
+        .noneMatch(c -> c.getName().equals(countryToPlace))) {
+      return false;
+    }
+    placeArmy(countryToPlace, armiesToPlace);
+    return true;
+  }
+
+  public boolean fortify(String fromCountry, String toCountry, int armyToMove) {
+    boolean result = false;
+    boolean isOwnershipValid =
+        Player.getCountriesByOwnership(getCurrentPlayer().getPlayerName(), this).stream()
+            .anyMatch(c -> c.getName().equals(fromCountry))
+            && Player.getCountriesByOwnership(getCurrentPlayer().getPlayerName(), this).stream()
+            .anyMatch(c -> c.getName().equals(toCountry));
+    if (isOwnershipValid) {
+      boolean isAdjacent = borders.get(fromCountry).contains(toCountry);
+      if (isAdjacent) {
+        boolean isArmyRemoved = countries.get(fromCountry).removeArmies(armyToMove);
+        if (isArmyRemoved && armyToMove > 0) {
+          countries.get(toCountry).addArmies(armyToMove);
+          result = true;
+        } else {
+          System.out.println("Error number of army(s) is not valid");
+        }
+      } else {
+        System.out.println("Error fromCountry and toCountry are not adjacent");
+      }
+    } else {
+      System.out.println("Error player doesnt own the country or it does not exist in map");
+    }
+    return result;
   }
 
   /** Checks whether one GameMap object is equal to another. */

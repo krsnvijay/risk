@@ -1,27 +1,21 @@
 package models;
 
 import static java.util.stream.Collectors.toMap;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import controllers.GameRunner;
 import utils.MapParser;
 
 public class PlayerTest {
 
-	private GameRunner gamerunner;
 	private GameMap gameMap;
 	String playerName;
 	String reason;
@@ -40,13 +34,12 @@ public class PlayerTest {
 		player2 = new Player("Player2");
 		playersList.add(player1);
 		playersList.add(player2);
-		gamerunner = new GameRunner(gameMap);
 		countries = new ArrayList<>(gameMap.getCountries().values());
 	}
  @Test
   public void getCountriesByOwnership() {
 	  	playerName = player1.getPlayerName();
-	  	gameMap.setCountries(gamerunner.populateCountries(playersList));
+   gameMap.setCountries(gameMap.populateCountries(playersList));
 		ArrayList<Country> noOfCountries = new ArrayList<Country>();
 		noOfCountries = Player.getCountriesByOwnership(playerName, gameMap);
 		int ownedCountries = Player.getCountriesByOwnership("Player2", gameMap).size();
@@ -56,7 +49,7 @@ public class PlayerTest {
   
  @Test
   public void calculateReinforcements() {
-	 	gameMap.setCountries(gamerunner.populateCountries(playersList));
+   gameMap.setCountries(gameMap.populateCountries(playersList));
 	 	int ownedCountries = Player.getCountriesByOwnership("Player1", gameMap).size();
 	 	int expectedReinforcementArmies = (int) Math.floor(ownedCountries/3);
 	 	int actualReinforcementArmies = player1.calculateReinforcements(gameMap);

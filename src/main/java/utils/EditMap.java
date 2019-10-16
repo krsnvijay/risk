@@ -1,15 +1,14 @@
 package utils;
 
-import models.Continent;
-import models.Country;
-import models.GameMap;
+import static java.util.stream.Collectors.groupingBy;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static java.util.stream.Collectors.groupingBy;
+import models.Continent;
+import models.Country;
+import models.GameMap;
 
 /**
  * The Edit Map utility processes the editing commands.
@@ -153,7 +152,7 @@ public class EditMap extends MapParser {
    * @param map The entire GameMap
    * @return A boolean with success or failure.
    */
-  public boolean validateMap(GameMap map) {
+  public static boolean validateMap(GameMap map) {
     Map<String, Set<String>> copyOfBorders = map.getBorders();
     Map<String, Country> copyOfCountries = map.getCountries();
     Map<String, Continent> copyOfContinents = map.getContinents();
@@ -180,7 +179,7 @@ public class EditMap extends MapParser {
     return visited.size() == copyOfBorders.keySet().size();
   }
 
-  public boolean DFSCheckOnContinent(GameMap map) {
+  public static boolean DFSCheckOnContinent(GameMap map) {
     Map<String, List<Country>> groupedByCountries =
         map.getCountries().values().stream().collect(groupingBy(Country::getContinent));
     for (String continent : groupedByCountries.keySet()) {

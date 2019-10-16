@@ -15,7 +15,6 @@ import models.GameMap;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import utils.MapParser;
 
 public class PlaceholderTest {
 
