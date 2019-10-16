@@ -42,7 +42,8 @@ public class CLI {
                 "editcountry",
                 "editcontinent",
                 "editneighbor",
-                "showmap"));
+                "showmap",
+                "exiteditor"));
     validCommands.put(Context.EDITOR, editorCommands);
 
     // Setup commands

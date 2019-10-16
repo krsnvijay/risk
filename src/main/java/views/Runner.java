@@ -67,7 +67,10 @@ public class Runner {
           }
             return;
         }
-      } else return;
+      } else {
+        System.out.println("You entered an invalid command. The valid commands are: \n" +
+                "editcontinent, editcountry, editneighbor, savemap, validatemap, showmap, and exiteditor");
+      }
     }
   }
 
