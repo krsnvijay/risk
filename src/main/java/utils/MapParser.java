@@ -33,6 +33,7 @@ public class MapParser {
    *
    * @param fileName the location of the map file to be parsed
    * @return GameMap the parsed GameMap Object
+   * @throws Exception when map is invalid
    */
   public static GameMap loadMap(String fileName) throws Exception {
     boolean result = false;
@@ -210,6 +211,7 @@ public class MapParser {
    *
    * @param gameMap The GameMap object to save.
    * @param fileName The name of the file.
+   * @return parsed GameMap object
    */
   public static boolean saveMap(GameMap gameMap, String fileName) {
     boolean result = false;

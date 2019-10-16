@@ -19,7 +19,10 @@ public class Runner {
     display("Type help to see available commands");
     while (true) {
       String command = CLI.input.nextLine();
-      cli.getCurrentContext().runCommand(CLI.getGameMap(), command.trim());
+      boolean commandStatus = cli.getCurrentContext().runCommand(CLI.getGameMap(), command.trim());
+      if (!commandStatus) {
+        display("Invalid command, use help to check the list of available commands");
+      }
     }
   }
 }

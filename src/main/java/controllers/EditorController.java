@@ -33,14 +33,14 @@ public class EditorController {
         int continentControlValue = Integer.parseInt(subCommandSplit[2]);
         result = gameMap.addContinent(continentName, continentControlValue);
         if (result) {
-          display("Added continent: " + continentName);
+          display(String.format("Added continent: %s", continentName));
         }
       } else {
         result = gameMap.removeContinent(continentName);
         if (result) {
-          display("Removed continent: " + continentName);
+          display(String.format("Removed continent: %s", continentName));
         } else {
-          display("The continent " + continentName + " does not exist");
+          display(String.format("The continent %s does not exist", continentName));
           break;
         }
       }
@@ -66,17 +66,17 @@ public class EditorController {
         String continentName = subCommandSplit[2];
         result = gameMap.addCountry(countryName, continentName);
         if (result) {
-          display("Added country: " + countryName + " to " + continentName);
+          display(String.format("Added country: %s to %s", countryName, continentName));
         } else {
-          display("The continent " + continentName + " does not exist");
+          display(String.format("The continent %s does not exist", continentName));
           break;
         }
       } else {
         result = gameMap.removeCountry(countryName);
         if (result) {
-          display("Removed country: " + countryName);
+          display(String.format("Removed country: %s", countryName));
         } else {
-          display("The country " + countryName + " does not exist");
+          display(String.format("The country %s does not exist", countryName));
           break;
         }
       }
@@ -101,15 +101,16 @@ public class EditorController {
       String country2 = subCommandSplit[2];
       if (country1.equals(country2)) {
         result = false;
-        display("The countries " + country1 + " and " + country2 + " are the same");
+        display(String.format("The countries %s and %s are the same", country1, country2));
         break;
       }
       if (commandType.equals("add")) {
         result = gameMap.addBorder(country1, country2);
         if (result) {
-          display("Added border: " + country1 + " - " + country2);
+          display(String.format("Added border: %s - %s", country1, country2));
         } else {
-          display("One of the countries " + country2 + ", " + country1 + " does not exist");
+          display(
+              String.format("One of the countries %s, %s does not exist", country2, country1));
           break;
         }
       } else if (commandType.equals("remove")) {
@@ -117,7 +118,8 @@ public class EditorController {
         if (result) {
           display("Removed border: " + country1 + " - " + country2);
         } else {
-          display("One of the countries " + country2 + ", " + country1 + " does not exist");
+          display(
+              String.format("One of the countries %s, %s does not exist", country2, country1));
           break;
         }
       }
@@ -126,8 +128,7 @@ public class EditorController {
   }
 
   /**
-   * Processes validatemap from the cli Validates a map's connectivity and its subgraph
-   * connectivity
+   * Processes validatemap from the cli Validates a map's connectivity and its subgraph connectivity
    *
    * @param gameMap contains game state
    * @param command cli command from the user
@@ -144,24 +145,36 @@ public class EditorController {
   }
 
   /**
-   * Processes savemap from the cli
-   * Serializes the game state and saves it to a filelocation
+   * Processes savemap from the cli Serializes the game state and saves it to a filelocation
+   *
    * @param gameMap contains game state
    * @param command cli command from the user containing filelocation
    * @return boolean to indicate the status
    */
   public static boolean saveMap(GameMap gameMap, String command) {
     String fileLocation = command.split(" ", 2)[1];
-    boolean result = MapParser.saveMap(gameMap, fileLocation);
-    if (result) {
-      display("Game map saved to " + fileLocation);
-      CLI.getInstance().setCurrentContext(Context.MAIN_MENU);
+    boolean result = false;
+    boolean isMapValid = validateMap(gameMap, command);
+    if (isMapValid) {
+      result = MapParser.saveMap(gameMap, fileLocation);
+      if (result) {
+        display("Game map saved to " + fileLocation);
+        CLI.getInstance().setCurrentContext(Context.MAIN_MENU);
+      } else {
+        display(fileLocation + " is invalid");
+      }
     } else {
-      display(fileLocation + " is invalid");
+      display("Can't save an invalid map");
     }
     return result;
   }
 
+  /**
+   * Show map connectivity, continents, countries
+   * @param gameMap contains game state
+   * @param command command from the cli
+   * @return true indicating status
+   */
   public static boolean showMap(GameMap gameMap, String command) {
     display(gameMap.toString());
     return true;

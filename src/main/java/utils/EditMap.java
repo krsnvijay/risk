@@ -169,8 +169,9 @@ public class EditMap extends MapParser {
     }
     // CHECK CONNECTEDNESS OF SUBGRAPHS & WHOLE GRAPH
     // RUN DFS ON CONTINENTS
-    if (!DFSCheckOnContinent(map))
+    if (!DFSCheckOnContinent(map)) {
       return false;
+    }
     // RUN DFS ON WHOLE MAP
     HashSet<String> visited = new HashSet<>();
     copyOfCountries.keySet().stream()

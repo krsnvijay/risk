@@ -269,7 +269,7 @@ public class GameMap {
   @Override
   public String toString() {
     return String.format(
-        "[continents]\n%s\n\n[countries]\n%s\n\n[borders]\n%s\n",
+        "\n[continents]\n%s\n\n[countries]\n%s\n\n[borders]\n%s",
         this.continents.values().stream().map(Continent::toString).sorted().collect(joining("\n")),
         this.countries.values().stream().map(Country::toString).sorted().collect(joining("\n")),
         this.borders.entrySet().stream().map(GameMap::showBorders).sorted().collect(joining("\n")));
@@ -493,6 +493,9 @@ public class GameMap {
   public boolean placeArmy(String countryName, int numArmies) {
     Player currentPlayer = getCurrentPlayer();
     String currentPlayerName = currentPlayer.getPlayerName();
+    if (!countries.containsKey(countryName)) {
+      return false;
+    }
     Country currentCountry = countries.get(countryName);
     if (currentCountry.getOwnerName().equals(currentPlayerName)
         && currentPlayer.getNumberOfArmies() > 0) {
@@ -538,7 +541,7 @@ public class GameMap {
    *
    * @param countryToPlace name of country
    * @param armiesToPlace count of armies to place
-   * @return
+   * @return boolean to indicate success or failure
    */
   public boolean reinforce(String countryToPlace, int armiesToPlace) {
     Player currentPlayer = getCurrentPlayer();

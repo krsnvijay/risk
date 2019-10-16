@@ -25,22 +25,20 @@ public class GameController {
     boolean result = gameMap.reinforce(countryName, armiesToPlace);
     if (result) {
       display(
-          gameMap.getCurrentPlayer().getPlayerName()
-              + " has placed "
-              + armiesToPlace
-              + " army(s) in "
-              + countryName);
+          String
+              .format("%s has placed %d army(s) in %s", gameMap.getCurrentPlayer().getPlayerName(),
+                  armiesToPlace, countryName));
     } else {
-      display("player doesnt own the country or it does not exist in map");
+      display(String.format("%s doesnt own %s or it does not exist",
+          gameMap.getCurrentPlayer().getPlayerName(), countryName));
     }
     if (gameMap.getCurrentPlayer().getNumberOfArmies() == 0) {
       changeToNextPhase(gameMap);
     } else {
       display(
-          gameMap.getCurrentPlayer().getPlayerName()
-              + " has "
-              + gameMap.getCurrentPlayer().getNumberOfArmies()
-              + " army(s) to reinforce");
+          String.format("%s has %d army(s) to reinforce",
+              gameMap.getCurrentPlayer().getPlayerName(),
+              gameMap.getCurrentPlayer().getNumberOfArmies()));
     }
     return result;
   }
@@ -62,10 +60,12 @@ public class GameController {
     }
     boolean result = gameMap.fortify(fromCountry, toCountry, armyToMove);
     if (result) {
-      display("Fortified " + toCountry + " with " + armyToMove + " army(s) from " + fromCountry);
+      display(String
+          .format("Fortified %s with %d army(s) from %s", toCountry, armyToMove, fromCountry));
       changeToNextPhase(gameMap);
     } else {
-      display("Player doesnt own the country or it does not exist in map");
+      display(String.format("%s doesnt own the country(s) %s, %s or  does not exist",
+          gameMap.getCurrentPlayer().getPlayerName(), fromCountry, toCountry));
     }
     return result;
   }
@@ -77,7 +77,7 @@ public class GameController {
    * @return true to indicate status
    */
   public static boolean fortifyNone(GameMap gameMap, String command) {
-    display("player chose not to fortify");
+    display(String.format("%s chose not to fortify", gameMap.getCurrentPlayer().getPlayerName()));
     changeToNextPhase(gameMap);
     return true;
   }
@@ -127,10 +127,8 @@ public class GameController {
     display(gameMap.getCurrentPlayer().getPlayerName() + "'s turn:");
     display("[Reinforce]");
     display(
-        gameMap.getCurrentPlayer().getPlayerName()
-            + " has "
-            + gameMap.getCurrentPlayer().getNumberOfArmies()
-            + " army(s) to reinforce");
+        String.format("%s has %d army(s) to reinforce", gameMap.getCurrentPlayer().getPlayerName(),
+            gameMap.getCurrentPlayer().getNumberOfArmies()));
   }
 
   /**
@@ -141,7 +139,7 @@ public class GameController {
    * @return true to indicate status
    */
   public static boolean attackNone(GameMap gameMap, String command) {
-    display("player chose not to attack");
+    display(String.format("%s chose not to attack", gameMap.getCurrentPlayer().getPlayerName()));
     changeToNextPhase(gameMap);
     return true;
   }

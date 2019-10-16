@@ -36,6 +36,7 @@ public class MainController {
     }
 
     if (result) {
+      display("Map loaded successfully");
       CLI.getInstance().setGameMap(gameMap1);
       CLI.getInstance().setCurrentContext(Context.MAP_EDITOR);
     }
@@ -51,6 +52,7 @@ public class MainController {
    */
   public static boolean loadMap(GameMap gameMap, String command) {
     String fileLocation = command.split(" ", 2)[1];
+
     GameMap gameMap1 = null;
     boolean result = false;
     try {
@@ -61,6 +63,9 @@ public class MainController {
     }
     if (result) {
       display("Map loaded successfully");
+      if (gameMap.getPlayersList().size() != 0) {
+        gameMap1.setPlayersList(gameMap.getPlayersList());
+      }
       CLI.getInstance().setGameMap(gameMap1);
       CLI.getInstance().setCurrentContext(Context.GAME_SETUP);
     } else {
@@ -74,7 +79,7 @@ public class MainController {
    * Adds or removes players in the game state
    * @param gameMap contains game state
    * @param command cli command from the user
-   * @return
+   * @return boolean to indicate status
    */
   public static boolean gamePlayer(GameMap gameMap, String command) {
     String[] commandSplit = command.split(" -");
@@ -87,17 +92,17 @@ public class MainController {
       if (subCommandType.equals("add")) {
         result = gameMap.addGamePlayer(playerName);
         if (result) {
-          display("Added " + playerName);
+          display(String.format("Added %s", playerName));
         } else {
-          display(playerName + " already exists");
+          display(String.format("%s already exists", playerName));
           break;
         }
       } else {
         result = gameMap.removeGamePlayer(playerName);
         if (result) {
-          display("Removed " + playerName);
+          display(String.format("Removed %s", playerName));
         } else {
-          display(playerName + " does not exist");
+          display(String.format("%s does not exist", playerName));
           break;
         }
       }
@@ -129,7 +134,7 @@ public class MainController {
     Command[] validCommands = CLI.getInstance().getCurrentContext().getValidCommands();
     System.out.println("Available Commands:");
     for (Command validCommand : validCommands) {
-      display(validCommand.getUsage());
+      display("\t" + validCommand.getUsage());
     }
     return true;
   }

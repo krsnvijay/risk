@@ -22,26 +22,26 @@ public class StartUpController {
     String countryName = commandSplit[1];
     boolean result = gameMap.placeArmy(countryName, 1);
     if (result) {
-      display(gameMap.getCurrentPlayer().getPlayerName() + " placed an army in " + countryName);
+      display(String.format("%s placed an army in %s", gameMap.getCurrentPlayer().getPlayerName(),
+          countryName));
       if (gameMap.checkGameReady()) {
         startPhaseLoop(gameMap);
         return true;
       } else {
         gameMap.updatePlayerIndex();
-        display(gameMap.getCurrentPlayer().getPlayerName() + " 's turn");
+        display(String.format("%s's turn", gameMap.getCurrentPlayer().getPlayerName()));
       }
     } else {
       display(
-          gameMap.getCurrentPlayer().getPlayerName()
-              + " does not own "
-              + countryName
-              + " to place armies");
+          String.format("%s does not own %s to place armies or it does not exist",
+              gameMap.getCurrentPlayer().getPlayerName(), countryName));
     }
     return result;
   }
 
   /**
    * Processes placeall command from the cli
+   *
    * @param gameMap contains game state
    * @param command cli command from the user
    * @return true to indicate status

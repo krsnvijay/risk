@@ -50,6 +50,10 @@ public class CLI {
     return cli;
   }
 
+  /**
+   * A method to get the existing instance of gameMap, or creating one if it doesn't exist.
+   * @return The instance of the gameMap.
+   */
   public static GameMap getGameMap() {
     if (gameMap == null) {
       gameMap = new GameMap();
@@ -57,6 +61,10 @@ public class CLI {
     return gameMap;
   }
 
+  /**
+   * Setter for gamemap instance
+   * @param gameMap contains game state
+   */
   public void setGameMap(GameMap gameMap) {
     CLI.gameMap = gameMap;
   }

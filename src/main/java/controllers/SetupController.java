@@ -25,7 +25,7 @@ public class SetupController {
       display("Populated countries randomly");
       CLI.getInstance().setCurrentContext(Context.GAME_STARTUP);
       display("[Game Startup Phase]");
-      display(gameMap.getCurrentPlayer().getPlayerName() + " 's turn");
+      display(String.format("%s's turn", gameMap.getCurrentPlayer().getPlayerName()));
     } else {
       display("The player list should be > 1 and < 6");
     }
