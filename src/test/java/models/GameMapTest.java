@@ -18,6 +18,12 @@ import org.junit.Test;
 import utils.EditMap;
 import utils.MapParser;
 
+/**
+ * test class to check the functionalities of GameMap.java
+ * {@link GameMap.java}
+ * 
+ */
+
 public class GameMapTest {
     private GameMap gameMap;
     private String reason;
@@ -29,7 +35,12 @@ public class GameMapTest {
         gameMap = MapParser.loadMap(riskMap.getPath());
         reason = "";
     }
-
+    
+    /** 
+     * check if the added Continent is part of the map
+     * 
+     */
+    
     @Test
     public void addContinent() {
         // Arrange
@@ -43,6 +54,11 @@ public class GameMapTest {
         Collection<Continent> continents = gameMap.getContinents().values();
         assertThat(reason, continents, hasItem(continent));
     }
+    
+    /** 
+     * check if the selected continent was removed from the map
+     * 
+     */
 
     @Test
     public void removeContinent() {
@@ -71,6 +87,11 @@ public class GameMapTest {
         assertThat(reason, setOfContinentNamesInAllBorders, not(hasItem(continentName)));
     }
 
+    /** 
+     * check if the added Country is part of the map
+     * 
+     */
+    
     @Test
     public void addCountry() {
         // Arrange
@@ -84,6 +105,11 @@ public class GameMapTest {
         Collection<Country> countries = gameMap.getCountries().values();
         assertThat(reason, countries, hasItem(country));
     }
+    
+    /** 
+     * check if the selected country was removed from the map
+     * 
+     */
 
     @Test
     public void removeCountry() {
@@ -110,6 +136,11 @@ public class GameMapTest {
         assertThat(reason, setOfAllBorderCountryNames, not(hasItem(countryName)));
     }
 
+    /** 
+     * check if the selected two countries are neighbors
+     * 
+     */
+    
     @Test
     public void addBorder() {
         // Arrange
@@ -126,6 +157,11 @@ public class GameMapTest {
         Set<String> setOfCountry2NeighborNames = gameMap.getBorders().get(countryName2);
         assertThat(reason, setOfCountry2NeighborNames, hasItem(countryName1));
     }
+    
+    /** 
+     * check if the selected two countries doesn't have any neighbors
+     * 
+     */
 
     @Test
     public void removeBorder() {
@@ -144,6 +180,11 @@ public class GameMapTest {
         assertThat(reason, setOfCountry2NeighborNames, not(hasItem(countryName1)));
     }
 
+    /** 
+     * check if the country still has neighbors after removing its borders
+     * 
+     */
+    
     @Test
     public void removeCountryBorders() {
         // Arrange
@@ -164,9 +205,14 @@ public class GameMapTest {
                         .collect(toSet());
         assertThat(reason, setOfNeighborCountryNames, not(hasItem(countryName)));
     }
+    
+    /** 
+     * check if we can load an invalid map
+     * 
+     */
 
     @Test
-    public void validateMap1() {
+    public void loadValidMap() {
         //  Arrange
         File riskMap = new File("src/test/resources/riskinvalid.map");
         //  Act
@@ -179,7 +225,7 @@ public class GameMapTest {
             e.printStackTrace();
         }
     }
-
+    
     @Test
     public void validateMap2() {
         //  Arrange
