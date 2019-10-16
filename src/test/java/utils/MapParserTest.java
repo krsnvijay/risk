@@ -1,26 +1,40 @@
 package utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Scanner;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
-import java.lang.Object;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
+import models.GameMap;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import models.GameMap;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Scanner;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.either;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+/**
+ * test class to check the functionalities of MapParser.java
+ * {@link MapParser.java}
+ *
+ * @author SabariVenkadesh
+ */
 public class MapParserTest {
-	private GameMap gameMap;
-    private String reason;
-    
+  /**
+   * @param gameMap loads the invalid risk map from the resources folder
+   * @param reason displays the reason for the failed condition
+   */
+  private GameMap gameMap;
+  private String reason;
+
+  /**
+   * performs loading map from resources folder
+   * @throws Exception
+   */
+
   @Before
   public void setUp() throws Exception{
 	// Load Risk map from resource folder
@@ -28,6 +42,10 @@ public class MapParserTest {
       gameMap = MapParser.loadMap(riskMap.getPath());
       reason = "";
   }
+  /**
+   * checks the map has been loaded and parsed successfully
+   */
+
   @Test
   public void loadMap() throws Exception{
 	  GameMap gameMapInvalid;
@@ -44,6 +62,9 @@ public class MapParserTest {
 	  scan.close();
   }
 
+  /**
+   * checks the map has been saved in a file successfully
+   */
   @Test
   public void saveMap() throws IOException{
 	  Files.write(Paths.get("src/test/resources/mapparsersavetest.map"), MapParser.serializeMap(gameMap).getBytes());
