@@ -47,7 +47,7 @@ The `GameMap` is the mutable object holding the current state of the game. A ref
 
 We follow consistent coding standards in our team.
 
-Most standard Java conventions are used. Variables are camel cased and class names are proper singular nouns. Constants are named using capitals and underscores. White space after each declaration and definition is present. A 2-space model is followed for indentation, as [https://plugins.jetbrains.com/plugin/8527-google-java-format](defined by Google). Comments are spell-checked and maintained for clarity of code. All code is documented using Javadoc, including private instance members.
+Most standard Java conventions are used. Variables are camel cased and class names are proper singular nouns. Constants are named using capitals and underscores. White space after each declaration and definition is present. A 2-space model is followed for indentation, as [defined by Google](https://plugins.jetbrains.com/plugin/8527-google-java-format). Comments are spell-checked and maintained for clarity of code. All code is documented using Javadoc, including private instance members.
 
 We strive for high code quality. To ensure our code stays readable, brief but descriptive names are used for variables and methods. Utility methods are separated modules to ensure reusability and maintainability. We almost always work using Pair Programming to ensure all members are aware of all the sections of the code, as well as having a consensus on the methodology of the code we write.
 
