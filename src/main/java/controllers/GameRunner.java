@@ -18,9 +18,7 @@ import static java.util.stream.Collectors.toMap;
  */
 public class GameRunner {
 
-  /**
-   * This maintains a list of players currently in the game.
-   */
+  /** This maintains a list of players currently in the game. */
   public static ArrayList<Player> playersList = new ArrayList<>();
 
   /** Maintains whose turn it is (index). */
@@ -328,12 +326,12 @@ public class GameRunner {
                     int armyToMove = Integer.parseInt(opCmds[3]);
                     boolean isOwnershipValid =
                         Player.getCountriesByOwnership(currentPlayer.getPlayerName(), gameMap)
-                            .stream()
-                            .anyMatch(c -> c.getName().equals(fromCountry))
+                                .stream()
+                                .anyMatch(c -> c.getName().equals(fromCountry))
                             && Player.getCountriesByOwnership(
-                            currentPlayer.getPlayerName(), gameMap)
-                            .stream()
-                            .anyMatch(c -> c.getName().equals(toCountry));
+                                    currentPlayer.getPlayerName(), gameMap)
+                                .stream()
+                                .anyMatch(c -> c.getName().equals(toCountry));
                     if (isOwnershipValid) {
                       boolean isAdjacent =
                           gameMap.getBorders().get(fromCountry).contains(toCountry);
