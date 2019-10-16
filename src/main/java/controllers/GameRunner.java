@@ -266,7 +266,7 @@ public class GameRunner {
 
     while (true) {
       Player currentPlayer = getCurrentPlayer();
-      System.out.println(gameMap.showMapByOwnership());
+      System.out.println(gameMap.showMapByOwnershipByCurrentPlayer(getCurrentPlayer().getPlayerName()));
       System.out.println(currentPlayer.getPlayerName() + "'s turn:");
       CLI cli = CLI.getInstance();
       for (Phases phase : Phases.values()) {

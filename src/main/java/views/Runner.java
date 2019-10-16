@@ -28,7 +28,7 @@ public class Runner {
   private static void beginEditor(EditMap editMap, GameMap gameMap) throws Exception {
     while (true) {
       System.out.println(
-          "available commands \n editcontinent -add <continentname> <continentvalue> -remove <continentname> \n editcountry -add <countryname> <continentname> -remove <countryname> \n editneighbor -add <countryname> <neighborcountryname> -remove <countryname> <neighborcountryname> \n validatemap \n showmap");
+          "available commands \n editcontinent -add <continentname> <continentvalue> -remove <continentname> \n editcountry -add <countryname> <continentname> -remove <countryname> \n editneighbor -add <countryname> <neighborcountryname> -remove <countryname> <neighborcountryname> \n validatemap \n showmap \n exiteditor");
       CLI cli = CLI.getInstance();
       String userInput = CLI.input.nextLine();
       String userCommand = userInput.split(" ")[0];
@@ -53,17 +53,17 @@ public class Runner {
           case "savemap":
             opCommands = userInput.split(" ");
             if (editMap.validateMap(gameMap)) MapParser.saveMap(gameMap, opCommands[1]);
-            else throw new Exception("Invalid map!");
+            else System.out.println("Invalid Map!");
             break;
           case "validatemap":
             if (editMap.validateMap(gameMap)) System.out.println("Valid Map!");
-            else throw new Exception("Invalid map!");
+            else System.out.println("Invalid map!");
             break;
           case "showmap":
             System.out.println(gameMap);
             break;
           case "exiteditor": {
-            System.out.println("EXITED Map Editor!");
+            System.out.println("EXITED Map Editor! You have abandoned any changes made.");
           }
             return;
         }
