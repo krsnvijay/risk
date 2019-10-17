@@ -80,5 +80,4 @@ public class MapParserTest {
     File saveTestFile = new File("src/test/resources/mapparsersavetest.map");
     assertTrue(saveTestFile.exists());
   }
-  
 }

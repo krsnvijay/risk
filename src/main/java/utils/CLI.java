@@ -52,6 +52,7 @@ public class CLI {
 
   /**
    * A method to get the existing instance of gameMap, or creating one if it doesn't exist.
+   *
    * @return The instance of the gameMap.
    */
   public static GameMap getGameMap() {
@@ -63,6 +64,7 @@ public class CLI {
 
   /**
    * Setter for gamemap instance
+   *
    * @param gameMap contains game state
    */
   public void setGameMap(GameMap gameMap) {

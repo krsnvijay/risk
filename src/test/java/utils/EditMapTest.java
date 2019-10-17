@@ -7,10 +7,6 @@ import models.GameMap;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-
-import static org.junit.Assert.assertFalse;
-
 /**
  * test class to check the functionalities of EditMap.java
  *
@@ -19,8 +15,8 @@ import static org.junit.Assert.assertFalse;
 public class EditMapTest {
 
   /**
-   * gameMap loads the invalid risk map from the resources folder
-   * reason displays the reason for the failed condition
+   * gameMap loads the invalid risk map from the resources folder reason displays the reason for the
+   * failed condition
    */
   private GameMap gameMap;
   /** displays the reason for the failed condition */
@@ -28,6 +24,7 @@ public class EditMapTest {
 
   /**
    * performs loading invalid map and storing it in riskMap
+   *
    * @throws Exception if map is invalid
    */
   @Before
@@ -48,6 +45,5 @@ public class EditMapTest {
     assertFalse(reason, isMapValid);
     reason = "The continent is not a sub graph";
     assertFalse(reason, iSContinentASubGraph);
-
   }
 }
