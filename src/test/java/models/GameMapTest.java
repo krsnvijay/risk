@@ -20,7 +20,7 @@ import utils.MapParser;
 
 /**
  * test class to check the functionalities of GameMap.java
- * {@link GameMap.java}
+ * @see models.GameMap
  * 
  */
 
@@ -226,8 +226,13 @@ public class GameMapTest {
         }
     }
     
+    /** 
+     * check whether there are duplicate countries in the map
+     * 
+     */
+    
     @Test
-    public void validateMap2() {
+    public void duplicateCountries() {
         //  Arrange
         String continentName = "Asia";
         EditMap editMap = new EditMap();

@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * test class to check the functionalities of GameRunner.java
- * {@link GameRunner.java}
+ * @see controllers.GameRunner
  * 
  */
 

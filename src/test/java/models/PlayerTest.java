@@ -16,7 +16,9 @@ import org.junit.Test;
 import utils.MapParser;
 
 /**
- * test class to check the functionalities of Player.java {@link Player.java}
+ * test class to check the functionalities of Player.java 
+ * @see models.Player
+ * 
  */
 public class PlayerTest {
 
@@ -108,6 +110,10 @@ public class PlayerTest {
 
   /**
    * another variant of populateCountries to manage the context in this test class
+   * @param playerList list of active players in the game
+   * @param countries array list of the countries 
+   * @return Map of the countries randomly assigned to the players
+   * 
    */
   public Map<String, Country> populateCountriesVariant(
       ArrayList<Player> playerList, ArrayList<Country> countries) {
