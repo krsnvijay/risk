@@ -294,7 +294,9 @@ public class GameMap {
   /**
    * This method shows the map for the fortify and reinforce phases
    *
-   * @return String formatted String
+   * @param currentPlayer name of the current player
+   * @return String formatted String showing map ownership by player relevant to fortify/reinforce
+   *     phases
    */
   public String showMapByOwnershipByCurrentPlayer(String currentPlayer) {
     ArrayList<Country> countriesOwnedByCurrPlayer =

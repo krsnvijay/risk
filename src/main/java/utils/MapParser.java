@@ -1,25 +1,17 @@
 package utils;
 
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
+import models.Continent;
+import models.Country;
+import models.GameMap;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
-import models.Continent;
-import models.Country;
-import models.GameMap;
+
+import static java.util.stream.Collectors.*;
 
 /**
  * The Map Parser utility parses the whole map file from disk.
@@ -56,7 +48,6 @@ public class MapParser {
           }
           return sectionData;
         };
-    Scanner scanner = new Scanner(new File(fileName));
     while (scanner.hasNext()) {
       String line = scanner.nextLine();
       if (line.startsWith("name")) {
@@ -211,7 +202,7 @@ public class MapParser {
    *
    * @param gameMap The GameMap object to save.
    * @param fileName The name of the file.
-   * @return parsed GameMap object
+   * @throws boolean to indicate status
    */
   public static boolean saveMap(GameMap gameMap, String fileName) {
     boolean result = false;

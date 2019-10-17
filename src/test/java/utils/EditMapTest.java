@@ -7,17 +7,23 @@ import models.GameMap;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+
+import static org.junit.Assert.assertFalse;
+
 /**
  * test class to check the functionalities of EditMap.java
  *
  * @author SabariVenkadesh
  */
 public class EditMapTest {
+
   /**
    * gameMap loads the invalid risk map from the resources folder
    * reason displays the reason for the failed condition
    */
   private GameMap gameMap;
+  /** displays the reason for the failed condition */
   private String reason;
 
   /**
@@ -32,9 +38,7 @@ public class EditMapTest {
     reason = "";
   }
 
-  /**
-   * performs check on the map validity and DFS check on the continent
-   */
+  /** performs check on the map validity and DFS check on the continent */
   @Test
   public void validateSubgraphConnectivityMap() {
 

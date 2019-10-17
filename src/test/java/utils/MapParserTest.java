@@ -14,11 +14,25 @@ import models.GameMap;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * test class to check the functionalities of MapParser.java {@link MapParser}
+ *
+ * @author SabariVenkadesh
+ */
 public class MapParserTest {
 
+  /**
+   * gameMap loads the invalid risk map from the resources folder
+   */
   private GameMap gameMap;
+  /** reason displays the reason for the failed condition */
   private String reason;
 
+  /**
+   * performs loading map from resources folder
+   *
+   * @throws Exception when map location is invalid
+   */
   @Before
   public void setUp() throws Exception {
     // Load Risk map from resource folder
@@ -26,7 +40,11 @@ public class MapParserTest {
     gameMap = MapParser.loadMap(riskMap.getPath());
     reason = "";
   }
-
+  /**
+   * checks the map has been loaded and parsed successfully
+   *
+   * @throws Exception when map location is invalid
+   */
   @Test
   public void loadMap() throws Exception {
     GameMap gameMapInvalid = new GameMap();
@@ -49,6 +67,11 @@ public class MapParserTest {
     scan.close();
   }
 
+  /**
+   * checks the map has been saved in a file successfully
+   *
+   * @throws IOException when file location is invalid
+   */
   @Test
   public void saveMap() throws IOException {
     Files.write(
@@ -57,5 +80,5 @@ public class MapParserTest {
     File saveTestFile = new File("src/test/resources/mapparsersavetest.map");
     assertTrue(saveTestFile.exists());
   }
+  
 }
-
