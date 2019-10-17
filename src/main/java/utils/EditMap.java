@@ -1,15 +1,14 @@
 package utils;
 
-import models.Continent;
-import models.Country;
-import models.GameMap;
+import static java.util.stream.Collectors.groupingBy;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static java.util.stream.Collectors.groupingBy;
+import models.Continent;
+import models.Country;
+import models.GameMap;
 
 /**
  * The Edit Map utility processes the editing commands.
@@ -170,8 +169,9 @@ public class EditMap extends MapParser {
     }
     // CHECK CONNECTEDNESS OF SUBGRAPHS & WHOLE GRAPH
     // RUN DFS ON CONTINENTS
-    if (!DFSCheckOnContinent(map))
+    if (!DFSCheckOnContinent(map)) {
       return false;
+    }
     // RUN DFS ON WHOLE MAP
     HashSet<String> visited = new HashSet<>();
     copyOfCountries.keySet().stream()

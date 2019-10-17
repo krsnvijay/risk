@@ -1,17 +1,24 @@
 package utils;
 
-import models.Continent;
-import models.Country;
-import models.GameMap;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
 import java.util.function.Function;
-
-import static java.util.stream.Collectors.*;
+import models.Continent;
+import models.Country;
+import models.GameMap;
 
 /**
  * The Map Parser utility parses the whole map file from disk.

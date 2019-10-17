@@ -1,14 +1,12 @@
 package views;
 
 import controllers.GameRunner;
+import java.util.ArrayList;
+import java.util.Arrays;
 import models.GameMap;
 import utils.CLI;
 import utils.EditMap;
 import utils.MapParser;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Runs the project and handles the initial commands.
@@ -85,10 +83,8 @@ public class Runner {
    * editor.
    *
    * @param args The command line arguments as a String array.
-   * @throws IOException
-   * @throws Exception
    */
-  public static void main(String[] args) throws IOException, Exception {
+  public static void main(String[] args) {
     CLI cli = CLI.getInstance();
     cli.setCurrentContext(CLI.Context.MAIN_MENU);
     System.out.println("Welcome to The Game of Risk! :)");

@@ -1,9 +1,16 @@
 package models;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toSet;
 
-import static java.util.stream.Collectors.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * GameMap stores map data i.e borders, countries, files, continents
@@ -262,6 +269,7 @@ public class GameMap {
   /**
    * This method shows the map for the fortify and reinforce phases
    *
+   * @param currentPlayer name of the current player
    * @return String formatted String showing map ownership by player relevant to fortify/reinforce
    *     phases
    */

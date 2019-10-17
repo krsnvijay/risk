@@ -1,16 +1,21 @@
 package controllers;
 
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
 import models.Country;
 import models.GameMap;
 import models.Player;
 import utils.CLI;
 import utils.CLI.Context;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
 
 /**
  * Controls the Game Loop. Handles other actions.
@@ -257,11 +262,11 @@ public class GameRunner {
    * A recursively implemented utility function to perform a DFS on the modified map (only player
    * owned countries in adjacency)
    *
-   * @param visited                    a set of visited neighbor countries
-   * @param fromCountry                country from which Depth-first traversal starts
+   * @param visited a set of visited neighbor countries
+   * @param fromCountry country from which Depth-first traversal starts
    * @param mapByOwnershipByCurrPlayer a map that is relevant to the current player alone
    * @return visited the set of visited countries during the depth-first traversal starting from
-   * fromCountry
+   *     fromCountry
    */
   private Set<String> DFSCheckAdjacency(
       Set<String> visited,
@@ -281,7 +286,7 @@ public class GameRunner {
    * and to countries
    *
    * @param fromCountry the country from which armies are transferred
-   * @param toCountry   the country to which armies are to be transferred
+   * @param toCountry the country to which armies are to be transferred
    * @return true if such a path exist; false if it doesn't exist
    */
   private boolean checkIfPathExists(String fromCountry, String toCountry) {
@@ -314,9 +319,8 @@ public class GameRunner {
                   })
               .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-      if (DFSCheckAdjacency(visited, fromCountry, mapByOwnershipByCurrPlayer).contains(toCountry)) {
-        return true;
-      }
+      return DFSCheckAdjacency(visited, fromCountry, mapByOwnershipByCurrPlayer)
+          .contains(toCountry);
     }
     return false;
   }

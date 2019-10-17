@@ -16,20 +16,32 @@ import org.junit.Test;
 import utils.MapParser;
 
 /**
- * test class to check the functionalities of Player.java {@link Player.java}
+ * test class to check the functionalities of Player.java {@link Player}
  */
 public class PlayerTest {
 
+  /** list of playes */
   private static ArrayList<Player> playersList = new ArrayList<>();
+  /** player name */
   String playerName;
+  /** reason for failure */
   String reason;
+  /** list of countries */
   ArrayList<Country> countries;
-  Map<String, Country> countriesOwnership;
+  /** Instance of game runner calss */
   private GameRunner gamerunner;
+  /** store game state */
   private GameMap gameMap;
+  /** store player 1 */
   private Player player1;
+  /** store player 2 */
   private Player player2;
 
+  /**
+   * Sets up context for the test
+   *
+   * @throws Exception when map file is invalid
+   */
   @Before
   public void setUp() throws Exception {
     File riskMap = new File("src/test/resources/risk.map");
@@ -43,9 +55,7 @@ public class PlayerTest {
     countries = new ArrayList<>(gameMap.getCountries().values());
   }
 
-  /**
-   * check if countries are equally divided among the players
-   */
+  /** check if countries are equally divided among the players */
   @Test
   public void getCountriesByOwnership() {
     // Arrange
@@ -60,9 +70,7 @@ public class PlayerTest {
     assertEquals(reason, 21, ownedCountries);
   }
 
-  /**
-   * calculate whether the Reinforcement armies are calculated correctly
-   */
+  /** calculate whether the Reinforcement armies are calculated correctly */
   @Test
   public void calculateReinforcements() {
     // Arrange
@@ -77,9 +85,7 @@ public class PlayerTest {
     assertEquals(reason, expectedReinforcementArmies, actualReinforcementArmies);
   }
 
-  /**
-   * calculate whether the bonus armies for players who own a continent is calculated correctly
-   */
+  /** calculate whether the bonus armies for players who own a continent is calculated correctly */
   @Test
   public void checkBonusArmiesForContinent() {
     // Arrange
@@ -108,6 +114,10 @@ public class PlayerTest {
 
   /**
    * another variant of populateCountries to manage the context in this test class
+   *
+   * @param playerList list of players
+   * @param countries list of countriess
+   * @return Map of country name and country object
    */
   public Map<String, Country> populateCountriesVariant(
       ArrayList<Player> playerList, ArrayList<Country> countries) {

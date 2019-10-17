@@ -1,30 +1,30 @@
 package utils;
 
+import static org.junit.Assert.assertFalse;
+
+import java.io.File;
 import models.GameMap;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-
-import static org.junit.Assert.assertFalse;
-
 /**
- * test class to check the functionalities of EditMap.java
- * {@link EditMap.java}
+ * test class to check the functionalities of EditMap.java {@link EditMap}
  *
  * @author SabariVenkadesh
  */
 public class EditMapTest {
+
   /**
-   * @param gameMap loads the invalid risk map from the resources folder
-   * @param reason displays the reason for the failed condition
+   * loads the invalid risk map from the resources folder
    */
   private GameMap gameMap;
+  /** displays the reason for the failed condition */
   private String reason;
 
   /**
    * performs loading invalid map and storing it in riskMap
-   * @throws Exception
+   *
+   * @throws Exception when file location is invalid
    */
   @Before
   public void setUp() throws Exception {
@@ -34,9 +34,7 @@ public class EditMapTest {
     reason = "";
   }
 
-  /**
-   * performs check on the map validity and DFS check on the continent
-   */
+  /** performs check on the map validity and DFS check on the continent */
   @Test
   public void validateSubgraphConnectivityMap() {
 
@@ -47,6 +45,5 @@ public class EditMapTest {
     assertFalse(reason, isMapValid);
     reason = "The continent is not a sub graph";
     assertFalse(reason, iSContinentASubGraph);
-
   }
 }

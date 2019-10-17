@@ -2,7 +2,11 @@ package models;
 
 import java.util.Objects;
 
+/**
+ * This class maintains information about a continent
+ */
 public class Continent {
+
   /** The colour of the continent (serialization). */
   private String color;
 
