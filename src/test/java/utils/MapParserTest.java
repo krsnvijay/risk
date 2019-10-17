@@ -1,20 +1,18 @@
 package utils;
 
-import models.GameMap;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.either;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
-
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.either;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import models.GameMap;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * test class to check the functionalities of MapParser.java
@@ -71,7 +69,5 @@ public class MapParserTest {
 	  File saveTestFile = new File("src/test/resources/mapparsersavetest.map");
 	  assertTrue(saveTestFile.exists());
   }
-
-  @Ignore @Test
-  public void serializeMap() {}
+  
 }
