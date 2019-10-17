@@ -39,7 +39,8 @@ public enum Command {
   PLACE_ARMY("^placearmy (\\w+)$", StartUpController::placeArmy, "placearmy <countryName>"),
   PLACE_ALL("^placeall$", StartUpController::placeAll, "placeall"),
   REINFORCE(
-      "^reinforce (\\w+) (\\d+)$", GameController::reinforce,
+      "^reinforce (\\w+) (\\d+)$",
+      GameController::reinforce,
       "reinforce <countryName> <armyCount>"),
   FORTIFY(
       "^fortify (\\w+) (\\w+) (\\d+)$",
@@ -56,9 +57,9 @@ public enum Command {
   /**
    * Enum constructor
    *
-   * @param regex     command pattern matching
+   * @param regex command pattern matching
    * @param operation operation to run on the command
-   * @param usage     info about a command's usage
+   * @param usage info about a command's usage
    */
   Command(String regex, BiPredicate<GameMap, String> operation, String usage) {
     this.regex = regex;
@@ -68,6 +69,7 @@ public enum Command {
 
   /**
    * Getter for regex
+   *
    * @return regex pattern
    */
   public String getRegex() {
@@ -76,6 +78,7 @@ public enum Command {
 
   /**
    * getter for operation
+   *
    * @return operation
    */
   public BiPredicate<GameMap, String> getOperation() {
@@ -84,6 +87,7 @@ public enum Command {
 
   /**
    * Validates a command with a patter
+   *
    * @param riskCommand command to validate
    * @return boolean to indicate status
    */
@@ -93,6 +97,7 @@ public enum Command {
 
   /**
    * Getter for usage of a command
+   *
    * @return string about the usage of the risk command
    */
   public String getUsage() {
@@ -101,6 +106,7 @@ public enum Command {
 
   /**
    * Runs an operation on a gamestate and a command
+   *
    * @param gameMap contains game state
    * @param riskCommand command from the cli
    * @return boolean to indicate status

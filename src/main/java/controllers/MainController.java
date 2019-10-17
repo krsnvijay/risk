@@ -44,8 +44,8 @@ public class MainController {
   }
 
   /**
-   * Processes loadmap command from the cli
-   * Loads a map file and changes context to start the game
+   * Processes loadmap command from the cli Loads a map file and changes context to start the game
+   *
    * @param gameMap contains game state
    * @param command cli command from the user
    * @return true if loaded map successfully
@@ -75,8 +75,8 @@ public class MainController {
   }
 
   /**
-   * Process gameplayer commands from the cli
-   * Adds or removes players in the game state
+   * Process gameplayer commands from the cli Adds or removes players in the game state
+   *
    * @param gameMap contains game state
    * @param command cli command from the user
    * @return boolean to indicate status

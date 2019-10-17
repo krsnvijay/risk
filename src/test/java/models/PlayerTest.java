@@ -51,7 +51,7 @@ public class PlayerTest {
   public void calculateReinforcements() {
    gameMap.setCountries(gameMap.populateCountries(playersList));
 	 	int ownedCountries = Player.getCountriesByOwnership("Player1", gameMap).size();
-	 int ownedContinents = Player.getBonusArmiesIfPlayerOwnsContinents("Player 1", gameMap);
+   int ownedContinents = Player.getBonusArmiesIfPlayerOwnsContinents("Player1", gameMap);
 	 int expectedReinforcementArmies = ownedContinents + (ownedCountries / 3);
 	 	int actualReinforcementArmies = player1.calculateReinforcements(gameMap);
 	 	reason = "Number of reinforcement armies should be "+ expectedReinforcementArmies;

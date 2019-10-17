@@ -25,18 +25,21 @@ public class GameController {
     boolean result = gameMap.reinforce(countryName, armiesToPlace);
     if (result) {
       display(
-          String
-              .format("%s has placed %d army(s) in %s", gameMap.getCurrentPlayer().getPlayerName(),
-                  armiesToPlace, countryName));
+          String.format(
+              "%s has placed %d army(s) in %s",
+              gameMap.getCurrentPlayer().getPlayerName(), armiesToPlace, countryName));
     } else {
-      display(String.format("%s doesnt own %s or it does not exist",
-          gameMap.getCurrentPlayer().getPlayerName(), countryName));
+      display(
+          String.format(
+              "%s doesnt own %s or it does not exist",
+              gameMap.getCurrentPlayer().getPlayerName(), countryName));
     }
     if (gameMap.getCurrentPlayer().getNumberOfArmies() == 0) {
       changeToNextPhase(gameMap);
     } else {
       display(
-          String.format("%s has %d army(s) to reinforce",
+          String.format(
+              "%s has %d army(s) to reinforce",
               gameMap.getCurrentPlayer().getPlayerName(),
               gameMap.getCurrentPlayer().getNumberOfArmies()));
     }
@@ -45,6 +48,7 @@ public class GameController {
 
   /**
    * Processes fortify command from the cli
+   *
    * @param gameMap contains game state
    * @param command cli command from the user
    * @return true if successfully fortified
@@ -60,18 +64,22 @@ public class GameController {
     }
     boolean result = gameMap.fortify(fromCountry, toCountry, armyToMove);
     if (result) {
-      display(String
-          .format("Fortified %s with %d army(s) from %s", toCountry, armyToMove, fromCountry));
+      display(
+          String.format(
+              "Fortified %s with %d army(s) from %s", toCountry, armyToMove, fromCountry));
       changeToNextPhase(gameMap);
     } else {
-      display(String.format("%s doesnt own the country(s) %s, %s or  does not exist",
-          gameMap.getCurrentPlayer().getPlayerName(), fromCountry, toCountry));
+      display(
+          String.format(
+              "%s doesnt own the country(s) %s, %s or  does not exist",
+              gameMap.getCurrentPlayer().getPlayerName(), fromCountry, toCountry));
     }
     return result;
   }
 
   /**
    * Skips fortification for the current player
+   *
    * @param gameMap contains game state
    * @param command cli command from the user
    * @return true to indicate status
@@ -84,6 +92,7 @@ public class GameController {
 
   /**
    * Shows map connectivity, ownership, army(s)
+   *
    * @param gameMap contains game state
    * @param command cli command from the user
    * @return true to indicate status
@@ -95,6 +104,7 @@ public class GameController {
 
   /**
    * Changes to next phase in the game loop or changes player if in the last phase of current playe
+   *
    * @param gameMap contains game state
    */
   public static void changeToNextPhase(GameMap gameMap) {
@@ -117,6 +127,7 @@ public class GameController {
 
   /**
    * Starts the game loop
+   *
    * @param gameMap contains game state
    */
   public static void startPhaseLoop(GameMap gameMap) {
@@ -127,7 +138,9 @@ public class GameController {
     display(gameMap.getCurrentPlayer().getPlayerName() + "'s turn:");
     display("[Reinforce]");
     display(
-        String.format("%s has %d army(s) to reinforce", gameMap.getCurrentPlayer().getPlayerName(),
+        String.format(
+            "%s has %d army(s) to reinforce",
+            gameMap.getCurrentPlayer().getPlayerName(),
             gameMap.getCurrentPlayer().getNumberOfArmies()));
   }
 

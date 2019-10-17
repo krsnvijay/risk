@@ -3,6 +3,7 @@ package models;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -144,7 +145,7 @@ public class GameMap {
     return this.countries.values().stream()
         .filter(c -> c.getContinent().equals(continentName))
         .map(Country::getName)
-        .collect(Collectors.toSet());
+        .collect(toSet());
   }
 
   /**
@@ -288,6 +289,69 @@ public class GameMap {
             .map(this::showBorderByOwnerShip)
             .sorted()
             .collect(joining("\n")));
+  }
+
+  /**
+   * This method shows the map for the fortify and reinforce phases
+   *
+   * @return String formatted String
+   */
+  public String showMapByOwnershipByCurrentPlayer(String currentPlayer) {
+    ArrayList<Country> countriesOwnedByCurrPlayer =
+        this.countries.values().stream()
+            .filter(country -> country.getOwnerName().equals(currentPlayer))
+            .collect(Collectors.toCollection(ArrayList::new));
+    ArrayList<String> countriesOwnedByCurrPlayerStrings =
+        countriesOwnedByCurrPlayer.stream()
+            .map(Country::getName)
+            .collect(Collectors.toCollection(ArrayList::new));
+
+    String countryListForPlayer =
+        countriesOwnedByCurrPlayer.stream()
+            .map(
+                country -> String.format("%s (%d)", country.getName(), country.getNumberOfArmies()))
+            .sorted()
+            .collect(joining("\n"));
+    String adjacencyListForPlayer =
+        this.borders.entrySet().stream()
+            .filter(
+                borderEntry -> {
+                  if (!countriesOwnedByCurrPlayerStrings.contains(borderEntry.getKey())) {
+                    return false;
+                  }
+                  // perform a side effect on it's set to only keep neighbors owned by currPlayer
+                  borderEntry.setValue(
+                      borderEntry.getValue().stream()
+                          .filter(countriesOwnedByCurrPlayerStrings::contains)
+                          .collect(toSet()));
+                  return true;
+                })
+            .map(
+                borderEntry -> {
+                  Country country = this.countries.get(borderEntry.getKey());
+                  String countryStr =
+                      String.format("%s(%d)", country.getName(), country.getNumberOfArmies());
+                  StringBuilder neighborSetStr = new StringBuilder();
+                  if (borderEntry.getValue().size() > 0) {
+                    for (String neighbor : borderEntry.getValue()) {
+                      Country neighborCountry = this.countries.get(neighbor);
+                      neighborSetStr.append(
+                          String.format(
+                              " --> %s(%d)",
+                              neighborCountry.getName(), neighborCountry.getNumberOfArmies()));
+                    }
+                  } else {
+                    neighborSetStr =
+                        new StringBuilder(
+                            "  !! NO NEIGHBORS OF THIS COUNTRY OWNED BY " + currentPlayer);
+                  }
+                  return countryStr + neighborSetStr.toString();
+                })
+            .sorted()
+            .collect(joining("\n"));
+    return String.format(
+        "[Countries Owned by %s]\n%s\n\n[Adjacency List for Countries Owned by %s]\n\n%s",
+        currentPlayer, countryListForPlayer, currentPlayer, adjacencyListForPlayer);
   }
 
   /**

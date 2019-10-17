@@ -1,8 +1,15 @@
 package models;
 
-import java.util.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toMap;
 
-import static java.util.stream.Collectors.*;
+import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * This is the Player class which handles every player.
@@ -11,7 +18,9 @@ import static java.util.stream.Collectors.*;
  */
 public class Player {
 
-	/** This instance variable holds the name of the player. */
+	/**
+	 * This instance variable holds the name of the player.
+	 */
 	private String playerName;
 
 	/**
@@ -33,7 +42,7 @@ public class Player {
 	 * This method returns all countries owned by a player.
 	 *
 	 * @param playerName The name of the player.
-	 * @param gameMap the entire map graph
+	 * @param gameMap    the entire map graph
 	 * @return a list of countries owned by this player.
 	 */
 	public static ArrayList<Country> getCountriesByOwnership(String playerName, GameMap gameMap) {
@@ -44,15 +53,15 @@ public class Player {
 
 	/**
 	 * Utility method to check whether the player has lost the game.
-	 * 
+	 *
 	 * @param playerName String with the player's name.
-	 * @param gameMap The GameMap object.
+	 * @param gameMap    The GameMap object.
 	 * @return boolean true if player is still in the game, false otherwise.
 	 */
 	public static boolean checkPlayerOwnsAtleastOneCountry(String playerName, GameMap gameMap) {
 		return getCountriesByOwnership(playerName, gameMap).size() > 0;
 	}
-	
+
 	/**
 	 * Calculates bonus armies if a player owns a continent
 	 *
@@ -62,10 +71,20 @@ public class Player {
 	 */
 	public static int getBonusArmiesIfPlayerOwnsContinents(String playerName, GameMap gameMap) {
 		int bonusArmies = 0;
-		Map<String, List<Country>> mapByContinents = gameMap.getCountries().values().stream().collect(groupingBy(Country::getContinent));
-		Map<String, List<Country>> mapByPlayersOwnership = gameMap.getCountries().values().stream().filter(c -> c.getOwnerName().equals(playerName)).collect(groupingBy(Country::getContinent));
-		Map<String, Integer> continentsSize = mapByContinents.entrySet().stream().map(e -> new AbstractMap.SimpleEntry<String, Integer>(e.getKey(), e.getValue().size())).collect(toMap(e -> e.getKey(), e -> e.getValue()));
-		Map<String, Integer> continentsOwnership = mapByPlayersOwnership.entrySet().stream().map(e -> new AbstractMap.SimpleEntry<String, Integer>(e.getKey(), e.getValue().size())).collect(toMap(e -> e.getKey(), e -> e.getValue()));
+		Map<String, List<Country>> mapByContinents =
+				gameMap.getCountries().values().stream().collect(groupingBy(Country::getContinent));
+		Map<String, List<Country>> mapByPlayersOwnership =
+				gameMap.getCountries().values().stream()
+						.filter(c -> c.getOwnerName().equals(playerName))
+						.collect(groupingBy(Country::getContinent));
+		Map<String, Integer> continentsSize =
+				mapByContinents.entrySet().stream()
+						.map(e -> new AbstractMap.SimpleEntry<String, Integer>(e.getKey(), e.getValue().size()))
+						.collect(toMap(SimpleEntry::getKey, SimpleEntry::getValue));
+		Map<String, Integer> continentsOwnership =
+				mapByPlayersOwnership.entrySet().stream()
+						.map(e -> new AbstractMap.SimpleEntry<String, Integer>(e.getKey(), e.getValue().size()))
+						.collect(toMap(SimpleEntry::getKey, SimpleEntry::getValue));
 		for (Map.Entry<String, Integer> entry : continentsOwnership.entrySet()) {
 			int fullOwnerShip = continentsSize.get(entry.getKey());
 			int currentOwnerShip = entry.getValue();
@@ -73,7 +92,6 @@ public class Player {
 				int controlValue = gameMap.getContinents().get(entry.getKey()).getValue();
 				bonusArmies += controlValue;
 			}
-
 		}
 		return bonusArmies;
 	}
@@ -88,8 +106,9 @@ public class Player {
 		int ownedCountries = getCountriesByOwnership(this.playerName, gameMap).size();
 		int allReinforcementArmies = getBonusArmiesIfPlayerOwnsContinents(playerName, gameMap);
 
-		if (ownedCountries < 9)
+		if (ownedCountries < 9) {
 			allReinforcementArmies += 3;
+		}
 		allReinforcementArmies += ownedCountries / 3;
 		return allReinforcementArmies;
 	}
@@ -112,7 +131,9 @@ public class Player {
 		this.playerName = playername;
 	}
 
-	/** This is an override for pretty printing the name. */
+	/**
+	 * This is an override for pretty printing the name.
+	 */
 	@Override
 	public String toString() {
 		return String.format("%s", this.playerName);
@@ -120,7 +141,7 @@ public class Player {
 
 	/**
 	 * Getter for number of armies the player owns.
-	 * 
+	 *
 	 * @return int with number of armies
 	 */
 	public int getNumberOfArmies() {
@@ -129,7 +150,7 @@ public class Player {
 
 	/**
 	 * Setter for number of armies the player owns.
-	 * 
+	 *
 	 * @param numberOfArmies int with the number of armies.
 	 */
 	public void setNumberOfArmies(int numberOfArmies) {
@@ -166,8 +187,7 @@ public class Player {
 			return false;
 		}
 		Player player = (Player) o;
-		return numberOfArmies == player.numberOfArmies &&
-				playerName.equals(player.playerName);
+		return numberOfArmies == player.numberOfArmies && playerName.equals(player.playerName);
 	}
 
 	/**

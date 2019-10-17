@@ -12,7 +12,6 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 import models.GameMap;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class MapParserTest {
@@ -58,8 +57,5 @@ public class MapParserTest {
     File saveTestFile = new File("src/test/resources/mapparsersavetest.map");
     assertTrue(saveTestFile.exists());
   }
-
-  @Ignore
-  @Test
-  public void serializeMap() {}
 }
+

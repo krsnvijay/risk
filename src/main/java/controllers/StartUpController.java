@@ -22,8 +22,9 @@ public class StartUpController {
     String countryName = commandSplit[1];
     boolean result = gameMap.placeArmy(countryName, 1);
     if (result) {
-      display(String.format("%s placed an army in %s", gameMap.getCurrentPlayer().getPlayerName(),
-          countryName));
+      display(
+          String.format(
+              "%s placed an army in %s", gameMap.getCurrentPlayer().getPlayerName(), countryName));
       if (gameMap.checkGameReady()) {
         startPhaseLoop(gameMap);
         return true;
@@ -33,7 +34,8 @@ public class StartUpController {
       }
     } else {
       display(
-          String.format("%s does not own %s to place armies or it does not exist",
+          String.format(
+              "%s does not own %s to place armies or it does not exist",
               gameMap.getCurrentPlayer().getPlayerName(), countryName));
     }
     return result;

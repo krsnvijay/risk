@@ -109,8 +109,7 @@ public class EditorController {
         if (result) {
           display(String.format("Added border: %s - %s", country1, country2));
         } else {
-          display(
-              String.format("One of the countries %s, %s does not exist", country2, country1));
+          display(String.format("One of the countries %s, %s does not exist", country2, country1));
           break;
         }
       } else if (commandType.equals("remove")) {
@@ -118,8 +117,7 @@ public class EditorController {
         if (result) {
           display("Removed border: " + country1 + " - " + country2);
         } else {
-          display(
-              String.format("One of the countries %s, %s does not exist", country2, country1));
+          display(String.format("One of the countries %s, %s does not exist", country2, country1));
           break;
         }
       }
@@ -171,6 +169,7 @@ public class EditorController {
 
   /**
    * Show map connectivity, continents, countries
+   *
    * @param gameMap contains game state
    * @param command command from the cli
    * @return true indicating status
