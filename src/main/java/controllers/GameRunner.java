@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Controls the Game Loop. Handles other actions.
@@ -253,6 +254,74 @@ public class GameRunner {
   }
 
   /**
+   * A recursively implemented utility function to perform a DFS on the modified map (only player
+   * owned countries in adjacency)
+   *
+   * @param visited                    a set of visited neighbor countries
+   * @param fromCountry                country from which Depth-first traversal starts
+   * @param mapByOwnershipByCurrPlayer a map that is relevant to the current player alone
+   * @return visited the set of visited countries during the depth-first traversal starting from
+   * fromCountry
+   */
+  private Set<String> DFSCheckAdjacency(
+      Set<String> visited,
+      String fromCountry,
+      Map<String, Set<String>> mapByOwnershipByCurrPlayer) {
+    visited.add(fromCountry);
+    for (String neighbor : mapByOwnershipByCurrPlayer.get(fromCountry)) {
+      if (!visited.contains(neighbor)) {
+        DFSCheckAdjacency(visited, neighbor, mapByOwnershipByCurrPlayer);
+      }
+    }
+    return visited;
+  }
+
+  /**
+   * It verifies if the fortify move is possible by checking whether there is a path between from
+   * and to countries
+   *
+   * @param fromCountry the country from which armies are transferred
+   * @param toCountry   the country to which armies are to be transferred
+   * @return true if such a path exist; false if it doesn't exist
+   */
+  private boolean checkIfPathExists(String fromCountry, String toCountry) {
+    if (gameMap.getCountries().containsKey(fromCountry)
+        && gameMap.getCountries().containsKey(toCountry)) {
+      Set<String> visited = new HashSet<>();
+
+      ArrayList<Country> countriesOwnedByCurrPlayer =
+          gameMap.getCountries().values().stream()
+              .filter(country -> country.getOwnerName().equals(getCurrentPlayer().getPlayerName()))
+              .collect(Collectors.toCollection(ArrayList::new));
+
+      ArrayList<String> countriesOwnedByCurrPlayerStrings =
+          countriesOwnedByCurrPlayer.stream()
+              .map(Country::getName)
+              .collect(Collectors.toCollection(ArrayList::new));
+
+      Map<String, Set<String>> mapByOwnershipByCurrPlayer =
+          gameMap.getBorders().entrySet().stream()
+              .filter(
+                  borderEntry -> {
+                    if (!countriesOwnedByCurrPlayerStrings.contains(borderEntry.getKey()))
+                      return false;
+                    // perform a side effect on it's set to only keep neighbors owned by currPlayer
+                    borderEntry.setValue(
+                        borderEntry.getValue().stream()
+                            .filter(countriesOwnedByCurrPlayerStrings::contains)
+                            .collect(toSet()));
+                    return true;
+                  })
+              .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+      if (DFSCheckAdjacency(visited, fromCountry, mapByOwnershipByCurrPlayer).contains(toCountry)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * The Game Loop method: handles all the logic for processing turns. Reading and executing
    * commands for REINFORCE, ATTACK (TODO), and FORTIFY phases.
    */
@@ -337,8 +406,7 @@ public class GameRunner {
                                 .stream()
                                 .anyMatch(c -> c.getName().equals(toCountry));
                     if (isOwnershipValid) {
-                      boolean isAdjacent =
-                          gameMap.getBorders().get(fromCountry).contains(toCountry);
+                      boolean isAdjacent = checkIfPathExists(fromCountry, toCountry);
                       if (isAdjacent) {
                         boolean isArmyRemoved =
                             gameMap.getCountries().get(fromCountry).removeArmies(armyToMove);
