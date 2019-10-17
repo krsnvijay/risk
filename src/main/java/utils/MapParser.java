@@ -211,7 +211,7 @@ public class MapParser {
    *
    * @param gameMap The GameMap object to save.
    * @param fileName The name of the file.
-   * @throws boolean to indicate status
+   * @return boolean to indicate status
    */
   public static boolean saveMap(GameMap gameMap, String fileName) {
     boolean result = false;
