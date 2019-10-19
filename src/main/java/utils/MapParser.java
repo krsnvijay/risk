@@ -1,17 +1,25 @@
 package utils;
 
-import models.Continent;
-import models.Country;
-import models.GameMap;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
 import java.util.function.Function;
-
-import static java.util.stream.Collectors.*;
+import models.Continent;
+import models.Country;
+import models.GameMap;
 
 /**
  * The Map Parser utility parses the whole map file from disk.
@@ -25,16 +33,16 @@ public class MapParser {
    *
    * @param fileName the location of the map file to be parsed
    * @return GameMap the parsed GameMap Object
-   * @throws IOException when file location/contents are invalid
-   * @throws Exception when map file doesn't contain all the required sections
+   * @throws Exception when map is invalid
    */
-  public static GameMap loadMap(String fileName) throws IOException, Exception {
-    ArrayList<String> fileSectionData = null;
-    Map<String, Set<String>> borders = null;
-    Map<String, Continent> continents = null;
-    Map<String, Country> countries = null;
-    String mapName = null;
-    Scanner scanner = new Scanner(new File(fileName));
+  public static GameMap loadMap(String fileName) throws Exception {
+    boolean result = false;
+    GameMap gameMap = new GameMap();
+    ArrayList<String> fileSectionData = new ArrayList<>();
+    Map<String, Set<String>> borders = new HashMap<>();
+    Map<String, Continent> continents = new HashMap<>();
+    Map<String, Country> countries = new HashMap<>();
+    String mapName = "";
     ArrayList<String> continentsInOrder = new ArrayList<>();
     ArrayList<String> countriesInOrder = new ArrayList<>();
     Function<Scanner, ArrayList<String>> readSectionData =
@@ -48,6 +56,7 @@ public class MapParser {
           }
           return sectionData;
         };
+    Scanner scanner = new Scanner(new File(fileName));
     while (scanner.hasNext()) {
       String line = scanner.nextLine();
       if (line.startsWith("name")) {
@@ -90,13 +99,14 @@ public class MapParser {
       }
     }
     scanner.close();
-    if (countries == null
-        || continents == null
-        || borders == null
-        || fileSectionData == null
-        || mapName == null) System.out.println(("Map file is INVALID!"));
-
-    return new GameMap(fileSectionData, borders, continents, countries, mapName);
+    if (countries.size() == 0
+        || continents.size() == 0
+        || borders.size() == 0
+        || fileSectionData.size() == 0
+        || mapName.isEmpty()) {
+      throw new Exception("Invalid map");
+    }
+    return new GameMap(fileSectionData, borders, continents, countries, fileName);
   }
 
   /**
@@ -201,11 +211,17 @@ public class MapParser {
    *
    * @param gameMap The GameMap object to save.
    * @param fileName The name of the file.
-   * @throws IOException TODO: will handle this.
+   * @return boolean to indicate status
    */
-  public static void saveMap(GameMap gameMap, String fileName) throws IOException {
-    Files.write(Paths.get(fileName), serializeMap(gameMap).getBytes());
-    System.out.println("Saved map to " + fileName + " successfully");
+  public static boolean saveMap(GameMap gameMap, String fileName) {
+    boolean result = false;
+    try {
+      Files.write(Paths.get(fileName), serializeMap(gameMap).getBytes());
+      result = true;
+    } catch (IOException e) {
+      System.out.println(e.getMessage());
+    }
+    return result;
   }
 
   /**

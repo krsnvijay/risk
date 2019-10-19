@@ -1,1 +1,14 @@
-typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"utils","l":"CLI"},{"p":"utils","l":"CLI.Context"},{"p":"models","l":"Continent"},{"p":"models","l":"Country"},{"p":"utils","l":"EditMap"},{"p":"models","l":"GameMap"},{"p":"controllers","l":"GameRunner"},{"p":"utils","l":"Logger"},{"p":"views","l":"MainMenu"},{"p":"utils","l":"MapParser"},{"p":"models","l":"Pair"},{"p":"models","l":"Player"},{"p":"views","l":"Runner"}]
+typeSearchIndex = [{"l": "All Classes", "url": "allclasses-index.html"},
+  {"p": "utils", "l": "CLI"}, {"p": "models", "l": "Command"},
+  {"p": "views", "l": "ConsoleView"}, {"p": "models", "l": "Context"},
+  {"p": "models", "l": "Continent"}, {"p": "models", "l": "Country"},
+  {"p": "utils", "l": "EditMap"}, {"p": "utils", "l": "EditMapTest"},
+  {"p": "controllers", "l": "EditorController"},
+  {"p": "controllers", "l": "GameController"}, {"p": "models", "l": "GameMap"},
+  {"p": "models", "l": "GameMapTest"},
+  {"p": "controllers", "l": "GameRunnerTest"},
+  {"p": "controllers", "l": "MainController"}, {"p": "utils", "l": "MapParser"},
+  {"p": "utils", "l": "MapParserTest"}, {"p": "models", "l": "Player"},
+  {"p": "models", "l": "PlayerTest"}, {"p": "views", "l": "Runner"},
+  {"p": "controllers", "l": "SetupController"},
+  {"p": "controllers", "l": "StartUpController"}];

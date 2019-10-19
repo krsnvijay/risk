@@ -1,0 +1,16 @@
+loadmap E:\Projects\risk\src\main\resources\risk.map
+gameplayer -add Vijay -add Krishna
+populatecountries
+placeall
+showmap
+reinforce Quebec 7
+reinforce Brazil 7
+help
+attack none
+fortify none
+reinforce India 7
+reunforce China 7
+attack none
+fortify none
+showmap
+exitgame

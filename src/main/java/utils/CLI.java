@@ -1,6 +1,11 @@
 package utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+import models.Context;
+import models.GameMap;
 
 /**
  * This singleton utility class handles all the text commands for the game.
@@ -17,9 +22,13 @@ public class CLI {
 
   /** The current context for the game. */
   public Context currentContext;
+  /**
+   * The game state
+   */
+  public static GameMap gameMap = null;
 
   /** A Map of all the valid commands for a specific Context. */
-  Map<Context, ArrayList<String>> validCommands = new HashMap<>();
+  static Map<Context, ArrayList<String>> validCommands = new HashMap<>();
 
   /**
    * The constructor for the CLI class, initiates all the command lists and puts them in the
@@ -27,41 +36,6 @@ public class CLI {
    */
   private CLI() {
     input = new Scanner(System.in);
-
-    // Main Menu commands
-    ArrayList<String> mainMenuCommands =
-        new ArrayList<>(Arrays.asList("loadmap", "editmap", "gameplayer"));
-    validCommands.put(Context.MAIN_MENU, mainMenuCommands);
-
-    // Editor commands
-    ArrayList<String> editorCommands =
-        new ArrayList<>(
-            Arrays.asList(
-                "savemap",
-                "validatemap",
-                "editcountry",
-                "editcontinent",
-                "editneighbor",
-                "showmap",
-                "exiteditor"));
-    validCommands.put(Context.EDITOR, editorCommands);
-
-    // Setup commands
-    ArrayList<String> setupCommands =
-        new ArrayList<>(
-            Arrays.asList("showmap", "placearmy", "placeall", "gameplayer", "populatecountries"));
-    validCommands.put(Context.GAME_SETUP, setupCommands);
-
-    // Reinforcement commands
-    ArrayList<String> reinforcementCommands =
-        new ArrayList<>(Arrays.asList("showmap", "reinforce"));
-    validCommands.put(Context.GAME_REINFORCE, reinforcementCommands);
-
-    // Attack commands
-
-    // Fortification commands
-    ArrayList<String> fortificationCommands = new ArrayList<>(Arrays.asList("showmap", "fortify"));
-    validCommands.put(Context.GAME_FORTIFY, fortificationCommands);
   }
 
   /**
@@ -77,13 +51,24 @@ public class CLI {
   }
 
   /**
-   * Validates the command with regards to the current context.
+   * A method to get the existing instance of gameMap, or creating one if it doesn't exist.
    *
-   * @param command The command as a String.
-   * @return A boolean based on whether the command is valid or not (in the current phase).
+   * @return The instance of the gameMap.
    */
-  public boolean validate(String command) {
-    return validCommands.get(currentContext).contains(command.split(" ")[0]);
+  public static GameMap getGameMap() {
+    if (gameMap == null) {
+      gameMap = new GameMap();
+    }
+    return gameMap;
+  }
+
+  /**
+   * Setter for gamemap instance
+   *
+   * @param gameMap contains game state
+   */
+  public void setGameMap(GameMap gameMap) {
+    CLI.gameMap = gameMap;
   }
 
   /**
@@ -102,20 +87,5 @@ public class CLI {
    */
   public void setCurrentContext(Context currentContext) {
     this.currentContext = currentContext;
-  }
-
-  /**
-   * This enum maintains the context the commands are being called in, i.e. if the command is valid
-   * for the phase we're currently in.
-   *
-   * @author Siddhant Bansal
-   */
-  public enum Context {
-    MAIN_MENU,
-    GAME_SETUP,
-    GAME_REINFORCE,
-    GAME_ATTACK,
-    GAME_FORTIFY,
-    EDITOR
   }
 }

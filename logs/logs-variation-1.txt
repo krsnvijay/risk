@@ -1,0 +1,227 @@
+-> Welcome to risk game
+-> Type help to see available commands
+-> Map loaded successfully
+-> Added Vijay
+-> Added Krishna
+-> Populated countries randomly
+-> [Game Startup Phase]
+-> Vijay's turn
+-> Placed player armies randomly in countries that they own
+-> Krishna's turn:
+-> [Reinforce]
+-> Krishna has 7 army(s) to reinforce
+-> [continents]
+Africa 3 orange
+Asia 7 pink
+Europe 5 blue
+North-America 5 yellow
+Oceania 2 red
+South-America 2 green
+
+[countries]
+Afghanistan(Asia:Vijay:2)
+Alaska(North-America:Vijay:1)
+Alberta(North-America:Vijay:2)
+Argentina(South-America:Vijay:2)
+Brazil(South-America:Vijay:2)
+Central-America(North-America:Vijay:4)
+China(Asia:Vijay:3)
+Congo(Africa:Krishna:1)
+East-Africa(Africa:Vijay:4)
+Eastern-Australia(Oceania:Krishna:2)
+Eastern-United-States(North-America:Vijay:0)
+Egypt(Africa:Vijay:1)
+Great-Britain(Europe:Vijay:0)
+Greenland(North-America:Krishna:1)
+Iceland(Europe:Krishna:2)
+India(Asia:Krishna:0)
+Indonesia(Oceania:Krishna:3)
+Irkutsk(Asia:Vijay:0)
+Japan(Asia:Krishna:2)
+Kamchatka(Asia:Vijay:3)
+Madagascar(Africa:Vijay:3)
+Middle-East(Asia:Krishna:0)
+Mongolia(Asia:Krishna:1)
+New-Guinea(Oceania:Vijay:1)
+North-Africa(Africa:Krishna:0)
+North-West-Territory(North-America:Vijay:3)
+Northern-Europe(Europe:Vijay:1)
+Ontario(North-America:Krishna:1)
+Peru(South-America:Krishna:1)
+Quebec(North-America:Vijay:2)
+Scandinavia(Europe:Krishna:4)
+Siam(Asia:Krishna:1)
+Siberia(Asia:Krishna:3)
+South-Africa(Africa:Krishna:3)
+Southern-Europe(Europe:Vijay:2)
+Ukraine(Europe:Krishna:4)
+Ural(Asia:Krishna:3)
+Venezuela(South-America:Krishna:2)
+Western-Australia(Oceania:Krishna:4)
+Western-Europe(Europe:Vijay:3)
+Western-United-States(North-America:Vijay:1)
+Yakutsk(Asia:Krishna:2)
+
+[borders]
+Afghanistan(Asia:Vijay:2) -> Ural(Asia:Krishna:3) China(Asia:Vijay:3) Ukraine(Europe:Krishna:4) Middle-East(Asia:Krishna:0) India(Asia:Krishna:0)
+Alaska(North-America:Vijay:1) -> Alberta(North-America:Vijay:2) North-West-Territory(North-America:Vijay:3) Kamchatka(Asia:Vijay:3)
+Alberta(North-America:Vijay:2) -> Western-United-States(North-America:Vijay:1) North-West-Territory(North-America:Vijay:3) Alaska(North-America:Vijay:1) Ontario(North-America:Krishna:1)
+Argentina(South-America:Vijay:2) -> Brazil(South-America:Vijay:2) Peru(South-America:Krishna:1)
+Brazil(South-America:Vijay:2) -> Venezuela(South-America:Krishna:2) Argentina(South-America:Vijay:2) North-Africa(Africa:Krishna:0) Peru(South-America:Krishna:1)
+Central-America(North-America:Vijay:4) -> Venezuela(South-America:Krishna:2) Western-United-States(North-America:Vijay:1) Eastern-United-States(North-America:Vijay:0)
+China(Asia:Vijay:3) -> Ural(Asia:Krishna:3) Afghanistan(Asia:Vijay:2) Mongolia(Asia:Krishna:1) Siam(Asia:Krishna:1) Siberia(Asia:Krishna:3) India(Asia:Krishna:0)
+Congo(Africa:Krishna:1) -> North-Africa(Africa:Krishna:0) East-Africa(Africa:Vijay:4) South-Africa(Africa:Krishna:3)
+East-Africa(Africa:Vijay:4) -> North-Africa(Africa:Krishna:0) Egypt(Africa:Vijay:1) Madagascar(Africa:Vijay:3) Middle-East(Asia:Krishna:0) Congo(Africa:Krishna:1) South-Africa(Africa:Krishna:3)
+Eastern-Australia(Oceania:Krishna:2) -> New-Guinea(Oceania:Vijay:1) Western-Australia(Oceania:Krishna:4)
+Eastern-United-States(North-America:Vijay:0) -> Western-United-States(North-America:Vijay:1) Central-America(North-America:Vijay:4) Quebec(North-America:Vijay:2) Ontario(North-America:Krishna:1)
+Egypt(Africa:Vijay:1) -> North-Africa(Africa:Krishna:0) Southern-Europe(Europe:Vijay:2) Middle-East(Asia:Krishna:0) East-Africa(Africa:Vijay:4)
+Great-Britain(Europe:Vijay:0) -> Northern-Europe(Europe:Vijay:1) Western-Europe(Europe:Vijay:3) Iceland(Europe:Krishna:2)
+Greenland(North-America:Krishna:1) -> North-West-Territory(North-America:Vijay:3) Quebec(North-America:Vijay:2) Ontario(North-America:Krishna:1) Iceland(Europe:Krishna:2)
+Iceland(Europe:Krishna:2) -> Great-Britain(Europe:Vijay:0) Greenland(North-America:Krishna:1)
+India(Asia:Krishna:0) -> Afghanistan(Asia:Vijay:2) Siam(Asia:Krishna:1) China(Asia:Vijay:3) Middle-East(Asia:Krishna:0)
+Indonesia(Oceania:Krishna:3) -> New-Guinea(Oceania:Vijay:1) Siam(Asia:Krishna:1) Western-Australia(Oceania:Krishna:4)
+Irkutsk(Asia:Vijay:0) -> Yakutsk(Asia:Krishna:2) Mongolia(Asia:Krishna:1) Siberia(Asia:Krishna:3) Kamchatka(Asia:Vijay:3)
+Japan(Asia:Krishna:2) -> Mongolia(Asia:Krishna:1) Kamchatka(Asia:Vijay:3)
+Kamchatka(Asia:Vijay:3) -> Yakutsk(Asia:Krishna:2) Mongolia(Asia:Krishna:1) Irkutsk(Asia:Vijay:0) Japan(Asia:Krishna:2) Alaska(North-America:Vijay:1)
+Madagascar(Africa:Vijay:3) -> East-Africa(Africa:Vijay:4) South-Africa(Africa:Krishna:3)
+Middle-East(Asia:Krishna:0) -> Afghanistan(Asia:Vijay:2) Southern-Europe(Europe:Vijay:2) Ukraine(Europe:Krishna:4) Egypt(Africa:Vijay:1) East-Africa(Africa:Vijay:4) India(Asia:Krishna:0)
+Mongolia(Asia:Krishna:1) -> Irkutsk(Asia:Vijay:0) China(Asia:Vijay:3) Japan(Asia:Krishna:2) Siberia(Asia:Krishna:3) Kamchatka(Asia:Vijay:3)
+New-Guinea(Oceania:Vijay:1) -> Eastern-Australia(Oceania:Krishna:2) Western-Australia(Oceania:Krishna:4) Indonesia(Oceania:Krishna:3)
+North-Africa(Africa:Krishna:0) -> Southern-Europe(Europe:Vijay:2) Egypt(Africa:Vijay:1) Brazil(South-America:Vijay:2) Western-Europe(Europe:Vijay:3) Congo(Africa:Krishna:1) East-Africa(Africa:Vijay:4)
+North-West-Territory(North-America:Vijay:3) -> Alberta(North-America:Vijay:2) Alaska(North-America:Vijay:1) Ontario(North-America:Krishna:1) Greenland(North-America:Krishna:1)
+Northern-Europe(Europe:Vijay:1) -> Great-Britain(Europe:Vijay:0) Southern-Europe(Europe:Vijay:2) Ukraine(Europe:Krishna:4) Scandinavia(Europe:Krishna:4) Western-Europe(Europe:Vijay:3)
+Ontario(North-America:Krishna:1) -> Western-United-States(North-America:Vijay:1) Alberta(North-America:Vijay:2) North-West-Territory(North-America:Vijay:3) Quebec(North-America:Vijay:2) Eastern-United-States(North-America:Vijay:0) Greenland(North-America:Krishna:1)
+Peru(South-America:Krishna:1) -> Venezuela(South-America:Krishna:2) Argentina(South-America:Vijay:2) Brazil(South-America:Vijay:2)
+Quebec(North-America:Vijay:2) -> Eastern-United-States(North-America:Vijay:0) Ontario(North-America:Krishna:1) Greenland(North-America:Krishna:1)
+Scandinavia(Europe:Krishna:4) -> Northern-Europe(Europe:Vijay:1) Ukraine(Europe:Krishna:4)
+Siam(Asia:Krishna:1) -> China(Asia:Vijay:3) India(Asia:Krishna:0) Indonesia(Oceania:Krishna:3)
+Siberia(Asia:Krishna:3) -> Ural(Asia:Krishna:3) Yakutsk(Asia:Krishna:2) Mongolia(Asia:Krishna:1) Irkutsk(Asia:Vijay:0) China(Asia:Vijay:3)
+South-Africa(Africa:Krishna:3) -> Madagascar(Africa:Vijay:3) Congo(Africa:Krishna:1) East-Africa(Africa:Vijay:4)
+Southern-Europe(Europe:Vijay:2) -> North-Africa(Africa:Krishna:0) Northern-Europe(Europe:Vijay:1) Ukraine(Europe:Krishna:4) Egypt(Africa:Vijay:1) Middle-East(Asia:Krishna:0) Western-Europe(Europe:Vijay:3)
+Ukraine(Europe:Krishna:4) -> Ural(Asia:Krishna:3) Afghanistan(Asia:Vijay:2) Southern-Europe(Europe:Vijay:2) Northern-Europe(Europe:Vijay:1) Middle-East(Asia:Krishna:0) Scandinavia(Europe:Krishna:4)
+Ural(Asia:Krishna:3) -> Afghanistan(Asia:Vijay:2) China(Asia:Vijay:3) Ukraine(Europe:Krishna:4) Siberia(Asia:Krishna:3)
+Venezuela(South-America:Krishna:2) -> Central-America(North-America:Vijay:4) Brazil(South-America:Vijay:2) Peru(South-America:Krishna:1)
+Western-Australia(Oceania:Krishna:4) -> New-Guinea(Oceania:Vijay:1) Eastern-Australia(Oceania:Krishna:2) Indonesia(Oceania:Krishna:3)
+Western-Europe(Europe:Vijay:3) -> Great-Britain(Europe:Vijay:0) North-Africa(Africa:Krishna:0) Southern-Europe(Europe:Vijay:2) Northern-Europe(Europe:Vijay:1)
+Western-United-States(North-America:Vijay:1) -> Alberta(North-America:Vijay:2) Central-America(North-America:Vijay:4) Eastern-United-States(North-America:Vijay:0) Ontario(North-America:Krishna:1)
+Yakutsk(Asia:Krishna:2) -> Irkutsk(Asia:Vijay:0) Siberia(Asia:Krishna:3) Kamchatka(Asia:Vijay:3)
+
+-> Krishna doesnt own Quebec or it does not exist
+-> Krishna has 7 army(s) to reinforce
+-> Invalid command, use help to check the list of available commands
+-> Krishna doesnt own Brazil or it does not exist
+-> Krishna has 7 army(s) to reinforce
+-> Invalid command, use help to check the list of available commands
+Available Commands:
+-> 	help
+-> 	exitgame
+-> 	showmap
+-> 	reinforce <countryName> <armyCount>
+-> Invalid command, use help to check the list of available commands
+-> Invalid command, use help to check the list of available commands
+-> Krishna has placed 7 army(s) in India
+-> [Attack]
+-> Invalid command, use help to check the list of available commands
+-> Krishna chose not to attack
+-> [Fortify]
+-> Krishna chose not to fortify
+-> Vijay's turn:
+-> [Reinforce]
+-> Vijay has 7 army(s) to reinforce
+-> [continents]
+Africa 3 orange
+Asia 7 pink
+Europe 5 blue
+North-America 5 yellow
+Oceania 2 red
+South-America 2 green
+
+[countries]
+Afghanistan(Asia:Vijay:2)
+Alaska(North-America:Vijay:1)
+Alberta(North-America:Vijay:2)
+Argentina(South-America:Vijay:2)
+Brazil(South-America:Vijay:2)
+Central-America(North-America:Vijay:4)
+China(Asia:Vijay:3)
+Congo(Africa:Krishna:1)
+East-Africa(Africa:Vijay:4)
+Eastern-Australia(Oceania:Krishna:2)
+Eastern-United-States(North-America:Vijay:0)
+Egypt(Africa:Vijay:1)
+Great-Britain(Europe:Vijay:0)
+Greenland(North-America:Krishna:1)
+Iceland(Europe:Krishna:2)
+India(Asia:Krishna:7)
+Indonesia(Oceania:Krishna:3)
+Irkutsk(Asia:Vijay:0)
+Japan(Asia:Krishna:2)
+Kamchatka(Asia:Vijay:3)
+Madagascar(Africa:Vijay:3)
+Middle-East(Asia:Krishna:0)
+Mongolia(Asia:Krishna:1)
+New-Guinea(Oceania:Vijay:1)
+North-Africa(Africa:Krishna:0)
+North-West-Territory(North-America:Vijay:3)
+Northern-Europe(Europe:Vijay:1)
+Ontario(North-America:Krishna:1)
+Peru(South-America:Krishna:1)
+Quebec(North-America:Vijay:2)
+Scandinavia(Europe:Krishna:4)
+Siam(Asia:Krishna:1)
+Siberia(Asia:Krishna:3)
+South-Africa(Africa:Krishna:3)
+Southern-Europe(Europe:Vijay:2)
+Ukraine(Europe:Krishna:4)
+Ural(Asia:Krishna:3)
+Venezuela(South-America:Krishna:2)
+Western-Australia(Oceania:Krishna:4)
+Western-Europe(Europe:Vijay:3)
+Western-United-States(North-America:Vijay:1)
+Yakutsk(Asia:Krishna:2)
+
+[borders]
+Afghanistan(Asia:Vijay:2) -> Ural(Asia:Krishna:3) China(Asia:Vijay:3) Ukraine(Europe:Krishna:4) Middle-East(Asia:Krishna:0) India(Asia:Krishna:7)
+Alaska(North-America:Vijay:1) -> Alberta(North-America:Vijay:2) North-West-Territory(North-America:Vijay:3) Kamchatka(Asia:Vijay:3)
+Alberta(North-America:Vijay:2) -> Western-United-States(North-America:Vijay:1) North-West-Territory(North-America:Vijay:3) Alaska(North-America:Vijay:1) Ontario(North-America:Krishna:1)
+Argentina(South-America:Vijay:2) -> Brazil(South-America:Vijay:2) Peru(South-America:Krishna:1)
+Brazil(South-America:Vijay:2) -> Venezuela(South-America:Krishna:2) Argentina(South-America:Vijay:2) North-Africa(Africa:Krishna:0) Peru(South-America:Krishna:1)
+Central-America(North-America:Vijay:4) -> Venezuela(South-America:Krishna:2) Western-United-States(North-America:Vijay:1) Eastern-United-States(North-America:Vijay:0)
+China(Asia:Vijay:3) -> Ural(Asia:Krishna:3) Afghanistan(Asia:Vijay:2) Mongolia(Asia:Krishna:1) Siam(Asia:Krishna:1) Siberia(Asia:Krishna:3) India(Asia:Krishna:7)
+Congo(Africa:Krishna:1) -> North-Africa(Africa:Krishna:0) East-Africa(Africa:Vijay:4) South-Africa(Africa:Krishna:3)
+East-Africa(Africa:Vijay:4) -> North-Africa(Africa:Krishna:0) Egypt(Africa:Vijay:1) Madagascar(Africa:Vijay:3) Middle-East(Asia:Krishna:0) Congo(Africa:Krishna:1) South-Africa(Africa:Krishna:3)
+Eastern-Australia(Oceania:Krishna:2) -> New-Guinea(Oceania:Vijay:1) Western-Australia(Oceania:Krishna:4)
+Eastern-United-States(North-America:Vijay:0) -> Western-United-States(North-America:Vijay:1) Central-America(North-America:Vijay:4) Quebec(North-America:Vijay:2) Ontario(North-America:Krishna:1)
+Egypt(Africa:Vijay:1) -> North-Africa(Africa:Krishna:0) Southern-Europe(Europe:Vijay:2) Middle-East(Asia:Krishna:0) East-Africa(Africa:Vijay:4)
+Great-Britain(Europe:Vijay:0) -> Northern-Europe(Europe:Vijay:1) Western-Europe(Europe:Vijay:3) Iceland(Europe:Krishna:2)
+Greenland(North-America:Krishna:1) -> North-West-Territory(North-America:Vijay:3) Quebec(North-America:Vijay:2) Ontario(North-America:Krishna:1) Iceland(Europe:Krishna:2)
+Iceland(Europe:Krishna:2) -> Great-Britain(Europe:Vijay:0) Greenland(North-America:Krishna:1)
+India(Asia:Krishna:7) -> Afghanistan(Asia:Vijay:2) Siam(Asia:Krishna:1) China(Asia:Vijay:3) Middle-East(Asia:Krishna:0)
+Indonesia(Oceania:Krishna:3) -> New-Guinea(Oceania:Vijay:1) Siam(Asia:Krishna:1) Western-Australia(Oceania:Krishna:4)
+Irkutsk(Asia:Vijay:0) -> Yakutsk(Asia:Krishna:2) Mongolia(Asia:Krishna:1) Siberia(Asia:Krishna:3) Kamchatka(Asia:Vijay:3)
+Japan(Asia:Krishna:2) -> Mongolia(Asia:Krishna:1) Kamchatka(Asia:Vijay:3)
+Kamchatka(Asia:Vijay:3) -> Yakutsk(Asia:Krishna:2) Mongolia(Asia:Krishna:1) Irkutsk(Asia:Vijay:0) Japan(Asia:Krishna:2) Alaska(North-America:Vijay:1)
+Madagascar(Africa:Vijay:3) -> East-Africa(Africa:Vijay:4) South-Africa(Africa:Krishna:3)
+Middle-East(Asia:Krishna:0) -> Afghanistan(Asia:Vijay:2) Southern-Europe(Europe:Vijay:2) Ukraine(Europe:Krishna:4) Egypt(Africa:Vijay:1) East-Africa(Africa:Vijay:4) India(Asia:Krishna:7)
+Mongolia(Asia:Krishna:1) -> Irkutsk(Asia:Vijay:0) China(Asia:Vijay:3) Japan(Asia:Krishna:2) Siberia(Asia:Krishna:3) Kamchatka(Asia:Vijay:3)
+New-Guinea(Oceania:Vijay:1) -> Eastern-Australia(Oceania:Krishna:2) Western-Australia(Oceania:Krishna:4) Indonesia(Oceania:Krishna:3)
+North-Africa(Africa:Krishna:0) -> Southern-Europe(Europe:Vijay:2) Egypt(Africa:Vijay:1) Brazil(South-America:Vijay:2) Western-Europe(Europe:Vijay:3) Congo(Africa:Krishna:1) East-Africa(Africa:Vijay:4)
+North-West-Territory(North-America:Vijay:3) -> Alberta(North-America:Vijay:2) Alaska(North-America:Vijay:1) Ontario(North-America:Krishna:1) Greenland(North-America:Krishna:1)
+Northern-Europe(Europe:Vijay:1) -> Great-Britain(Europe:Vijay:0) Southern-Europe(Europe:Vijay:2) Ukraine(Europe:Krishna:4) Scandinavia(Europe:Krishna:4) Western-Europe(Europe:Vijay:3)
+Ontario(North-America:Krishna:1) -> Western-United-States(North-America:Vijay:1) Alberta(North-America:Vijay:2) North-West-Territory(North-America:Vijay:3) Quebec(North-America:Vijay:2) Eastern-United-States(North-America:Vijay:0) Greenland(North-America:Krishna:1)
+Peru(South-America:Krishna:1) -> Venezuela(South-America:Krishna:2) Argentina(South-America:Vijay:2) Brazil(South-America:Vijay:2)
+Quebec(North-America:Vijay:2) -> Eastern-United-States(North-America:Vijay:0) Ontario(North-America:Krishna:1) Greenland(North-America:Krishna:1)
+Scandinavia(Europe:Krishna:4) -> Northern-Europe(Europe:Vijay:1) Ukraine(Europe:Krishna:4)
+Siam(Asia:Krishna:1) -> China(Asia:Vijay:3) India(Asia:Krishna:7) Indonesia(Oceania:Krishna:3)
+Siberia(Asia:Krishna:3) -> Ural(Asia:Krishna:3) Yakutsk(Asia:Krishna:2) Mongolia(Asia:Krishna:1) Irkutsk(Asia:Vijay:0) China(Asia:Vijay:3)
+South-Africa(Africa:Krishna:3) -> Madagascar(Africa:Vijay:3) Congo(Africa:Krishna:1) East-Africa(Africa:Vijay:4)
+Southern-Europe(Europe:Vijay:2) -> North-Africa(Africa:Krishna:0) Northern-Europe(Europe:Vijay:1) Ukraine(Europe:Krishna:4) Egypt(Africa:Vijay:1) Middle-East(Asia:Krishna:0) Western-Europe(Europe:Vijay:3)
+Ukraine(Europe:Krishna:4) -> Ural(Asia:Krishna:3) Afghanistan(Asia:Vijay:2) Southern-Europe(Europe:Vijay:2) Northern-Europe(Europe:Vijay:1) Middle-East(Asia:Krishna:0) Scandinavia(Europe:Krishna:4)
+Ural(Asia:Krishna:3) -> Afghanistan(Asia:Vijay:2) China(Asia:Vijay:3) Ukraine(Europe:Krishna:4) Siberia(Asia:Krishna:3)
+Venezuela(South-America:Krishna:2) -> Central-America(North-America:Vijay:4) Brazil(South-America:Vijay:2) Peru(South-America:Krishna:1)
+Western-Australia(Oceania:Krishna:4) -> New-Guinea(Oceania:Vijay:1) Eastern-Australia(Oceania:Krishna:2) Indonesia(Oceania:Krishna:3)
+Western-Europe(Europe:Vijay:3) -> Great-Britain(Europe:Vijay:0) North-Africa(Africa:Krishna:0) Southern-Europe(Europe:Vijay:2) Northern-Europe(Europe:Vijay:1)
+Western-United-States(North-America:Vijay:1) -> Alberta(North-America:Vijay:2) Central-America(North-America:Vijay:4) Eastern-United-States(North-America:Vijay:0) Ontario(North-America:Krishna:1)
+Yakutsk(Asia:Krishna:2) -> Irkutsk(Asia:Vijay:0) Siberia(Asia:Krishna:3) Kamchatka(Asia:Vijay:3)
+
+-> Closing Risk Game
