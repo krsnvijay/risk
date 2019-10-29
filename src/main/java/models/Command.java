@@ -1,10 +1,7 @@
 package models;
 
-import controllers.EditorController;
-import controllers.GameController;
-import controllers.MainController;
-import controllers.SetupController;
-import controllers.StartUpController;
+import controllers.*;
+
 import java.util.function.BiPredicate;
 
 /**
@@ -16,34 +13,34 @@ public enum Command {
   EXIT_GAME("^exitgame$", MainController::exitGame, "exitgame"),
   EDIT_MAP("^editmap (.+)$", MainController::editMap, "editmap <fileLocation>"),
   EDIT_CONTINENT(
-      "^editcontinent( -(add (\\w+) (\\d+)|remove (\\w+)))+$",
+      "^editcontinent( -(add ([^ ]+) (\\d+)|remove ([^ ]+)))+$",
       EditorController::editContinent,
       "editcontinent -add <continentName> <controlValue> -remove <continentName>"),
   EDIT_COUNTRY(
-      "^editcountry( -(add (\\w+) (\\w+)|remove (\\w+)))+$",
+      "^editcountry( -(add ([^ ]+) ([^ ]+)|remove ([^ ]+)))+$",
       EditorController::editCountry,
       "editcountry -add <countryName> <continentName> -remove <countryName>"),
   EDIT_NEIGHBOR(
-      "^editneighbor( -(add|remove) (\\w+) (\\w+))+$",
+      "^editneighbor( -(add|remove) ([^ ]+) ([^ ]+))+$",
       EditorController::editNeighbor,
       "editneighbor -add <countryName1> <countryName2> -remove <countryName1> <countryName2>"),
   VALIDATE_MAP("^validatemap$", EditorController::validateMap, "validatemap"),
   SAVE_MAP("^savemap (.+)$", EditorController::saveMap, "savemap <fileLocation>"),
   GAME_PLAYER(
-      "^gameplayer( -(add|remove) (\\w+))+$",
+      "^gameplayer( -(add|remove) ([^ ]+))+$",
       MainController::gamePlayer,
       "gameplayer -add <playerName> -remove <playerName>"),
   LOAD_MAP("^loadmap (.+)$", MainController::loadMap, "loadmap <fileLocation>"),
   POPULATE_COUNTRIES(
       "^populatecountries$", SetupController::populateCountries, "populatecountries"),
-  PLACE_ARMY("^placearmy (\\w+)$", StartUpController::placeArmy, "placearmy <countryName>"),
+  PLACE_ARMY("^placearmy ([^ ]+)$", StartUpController::placeArmy, "placearmy <countryName>"),
   PLACE_ALL("^placeall$", StartUpController::placeAll, "placeall"),
   REINFORCE(
-      "^reinforce (\\w+) (\\d+)$",
+      "^reinforce ([^ ]+) (\\d+)$",
       GameController::reinforce,
       "reinforce <countryName> <armyCount>"),
   FORTIFY(
-      "^fortify (\\w+) (\\w+) (\\d+)$",
+      "^fortify ([^ ]+) ([^ ]+) (\\d+)$",
       GameController::fortify,
       "fortify <fromCountryName> <toCountryName> <armyCount>"),
   FORTIFY_NONE("^fortify none$", GameController::fortifyNone, "fortify none"),
