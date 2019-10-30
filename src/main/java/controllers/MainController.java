@@ -2,6 +2,8 @@ package controllers;
 
 import static views.ConsoleView.display;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import models.Command;
@@ -27,16 +29,23 @@ public class MainController {
   public static boolean editMap(GameMap gameMap, String command) {
     String fileLocation = command.split(" ", 2)[1];
     boolean result = false;
+    boolean newFile = false;
     GameMap gameMap1 = null;
     try {
       gameMap1 = MapParser.loadMap(fileLocation);
       result = true;
-    } catch (Exception e) {
+    } catch (FileNotFoundException e) {
+      gameMap1 = new GameMap();
+      result = true;
+      newFile = true;
+    }
+    catch (Exception e) {
       display(e.getMessage());
     }
 
     if (result) {
-      display("Map loaded successfully");
+      if(newFile) display("File not found! Empty map object provided to edit.");
+      else display("Map loaded successfully");
       CLI.getInstance().setGameMap(gameMap1);
       CLI.getInstance().setCurrentContext(Context.MAP_EDITOR);
     }

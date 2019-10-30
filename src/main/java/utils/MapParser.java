@@ -1,25 +1,16 @@
 package utils;
 
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import models.Continent;
 import models.Country;
 import models.GameMap;
+
+import static java.util.stream.Collectors.*;
 
 /**
  * The Map Parser utility parses the whole map file from disk.
@@ -216,7 +207,7 @@ public class MapParser {
   public static boolean saveMap(GameMap gameMap, String fileName) {
     boolean result = false;
     try {
-      Files.write(Paths.get(fileName), serializeMap(gameMap).getBytes());
+      Files.write(Paths.get(fileName), serializeMap(gameMap, fileName).getBytes());
       result = true;
     } catch (IOException e) {
       System.out.println(e.getMessage());
@@ -228,11 +219,15 @@ public class MapParser {
    * Serializes a GameMap object into a string (file data).
    *
    * @param gameMap The GameMap object to serialize.
+   * @param filename the filename of file to which the map is to be saved
    * @return The file as a string.
    */
-  public static String serializeMap(GameMap gameMap) {
+  public static String serializeMap(GameMap gameMap, String filename) {
     // Get required data to serialize
-    String files = String.join("\n", gameMap.getFileSectionData());
+    String files = gameMap.getFileName().isEmpty() ?
+        String.join("\n", "pic placeholder_pic.png" ,"map placeholder_map.gif" ,"crd placeholder.cards" ,"prv placeholder.jpg") :
+        String.join("\n", gameMap.getFileSectionData());
+
     Map<String, Country> gameCountries = gameMap.getCountries();
     Map<String, Continent> gameContinents = gameMap.getContinents();
     Map<String, Set<String>> gameBorders = gameMap.getBorders();
@@ -262,6 +257,10 @@ public class MapParser {
         countriesOrder.stream()
             .map(c -> serializeBorder(c, countriesOrder, gameBorders))
             .collect(joining("\n"));
+
+    if(gameMap.getFileName().isEmpty()){
+      gameMap.setFileName(String.format("name %s map", filename));
+    }
 
     // serialize gameMap to Risk Map format
     return String.format(

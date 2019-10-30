@@ -76,7 +76,7 @@ public class MapParserTest {
   public void saveMap() throws IOException {
     Files.write(
         Paths.get("src/test/resources/mapparsersavetest.map"),
-        MapParser.serializeMap(gameMap).getBytes());
+        MapParser.serializeMap(gameMap, "mapparsersavetest").getBytes());
     File saveTestFile = new File("src/test/resources/mapparsersavetest.map");
     assertTrue(saveTestFile.exists());
   }
