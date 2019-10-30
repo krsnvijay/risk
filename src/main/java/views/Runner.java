@@ -4,6 +4,8 @@ import static models.Context.*;
 import static views.ConsoleView.display;
 
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -15,6 +17,8 @@ import javafx.stage.Stage;
 import models.Context;
 import utils.CLI;
 
+import java.util.function.Supplier;
+
 /**
  * Runs the project and handles the initial commands.
  *
@@ -24,9 +28,11 @@ public class Runner extends Application {
 
   public static void main(String[] args) {
     CLI cli = CLI.getInstance();
-    PhaseView phaseView = new PhaseView();
-    WDView wdView = new WDView();
     launch(args);
+  }
+
+  public static void processCommandline() {
+    CLI cli = CLI.getInstance();
     cli.setCurrentContext(Context.MAIN_MENU);
     display("Welcome to risk game");
     display("Type help to see available commands");
@@ -40,7 +46,7 @@ public class Runner extends Application {
   }
 
   // TODO move to a decent place
-  public String getPhaseName(Context context) {
+  public static String getPhaseName(Context context) {
     switch(context) {
       case GAME_ATTACK: return "Attack Phase";
       case GAME_FORTIFY: return "Fortify Phase";
@@ -119,5 +125,9 @@ public class Runner extends Application {
     Scene scene = new Scene(vbox, 800, 600);
     primaryStage.setScene(scene);
     primaryStage.show();
+
+    Thread cliThread = new Thread(Runner::processCommandline);
+    cliThread.setDaemon(true);
+    cliThread.start();
   }
 }

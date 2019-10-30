@@ -10,7 +10,7 @@ import static java.util.stream.Collectors.*;
  *
  * @author Vijay
  */
-public class GameMap {
+public class GameMap extends Observable{
 
   /** Contains the information in the [File] section. */
   private ArrayList<String> fileSectionData;
@@ -67,6 +67,8 @@ public class GameMap {
   /** Updates the current player index (round robin fashion) */
   public void updatePlayerIndex() {
     currentPlayerIndex = (currentPlayerIndex + 1) % playersList.size();
+    setChanged();
+    notifyObservers();
   }
 
   /**
