@@ -4,19 +4,15 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toMap;
 
-import java.util.AbstractMap;
+import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * This is the Player class which handles every player.
  *
  * @author s_anakih
  */
-public class Player {
+public class Player extends Observable {
 
 	/**
 	 * This instance variable holds the name of the player.
