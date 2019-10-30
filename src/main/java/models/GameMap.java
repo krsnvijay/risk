@@ -1,20 +1,9 @@
 package models;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
 
 /**
  * GameMap stores map data i.e borders, countries, files, continents
@@ -638,17 +627,11 @@ public class GameMap {
       boolean isAdjacent = borders.get(fromCountry).contains(toCountry);
       if (isAdjacent) {
         boolean isArmyRemoved = countries.get(fromCountry).removeArmies(armyToMove);
-        if (isArmyRemoved && armyToMove > 0) {
+        if (isArmyRemoved) {
           countries.get(toCountry).addArmies(armyToMove);
           result = true;
-        } else {
-          System.out.println("Error number of army(s) is not valid");
         }
-      } else {
-        System.out.println("Error fromCountry and toCountry are not adjacent");
       }
-    } else {
-      System.out.println("Error player doesnt own the country or it does not exist in map");
     }
     return result;
   }
