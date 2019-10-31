@@ -27,8 +27,6 @@ public class MapParser {
    * @throws Exception when map is invalid
    */
   public static GameMap loadMap(String fileName) throws Exception {
-    boolean result = false;
-    GameMap gameMap = new GameMap();
     ArrayList<String> fileSectionData = new ArrayList<>();
     Map<String, Set<String>> borders = new HashMap<>();
     Map<String, Continent> continents = new HashMap<>();
@@ -97,7 +95,11 @@ public class MapParser {
         || mapName.isEmpty()) {
       throw new Exception("Invalid map");
     }
-    return new GameMap(fileSectionData, borders, continents, countries, fileName);
+
+    GameMap gameMap = GameMap.getGameMap();
+    fileName = String.format("name %s map", fileName);
+    gameMap.populateGameMap(fileSectionData, borders, continents, countries, fileName);
+    return gameMap;
   }
 
   /**
@@ -258,7 +260,7 @@ public class MapParser {
             .map(c -> serializeBorder(c, countriesOrder, gameBorders))
             .collect(joining("\n"));
 
-    if(gameMap.getFileName().isEmpty()){
+    if(gameMap.getFileName().isEmpty()) {
       gameMap.setFileName(String.format("name %s map", filename));
     }
 

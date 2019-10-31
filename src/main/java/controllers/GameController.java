@@ -104,14 +104,14 @@ public class GameController {
    * @param gameMap contains game state
    */
   public static void changeToNextPhase(GameMap gameMap) {
-    Context currentContext = CLI.getInstance().getCurrentContext();
+    Context currentContext = gameMap.getCurrentContext();
     switch (currentContext) {
       case GAME_REINFORCE:
-        CLI.getInstance().setCurrentContext(Context.GAME_ATTACK);
+        gameMap.setCurrentContext(Context.GAME_ATTACK);
         display("[Attack]");
         break;
       case GAME_ATTACK:
-        CLI.getInstance().setCurrentContext(Context.GAME_FORTIFY);
+        gameMap.setCurrentContext(Context.GAME_FORTIFY);
         display("[Fortify]");
         break;
       case GAME_FORTIFY:
@@ -127,7 +127,7 @@ public class GameController {
    * @param gameMap contains game state
    */
   public static void startPhaseLoop(GameMap gameMap) {
-    CLI.getInstance().setCurrentContext(Context.GAME_REINFORCE);
+    gameMap.setCurrentContext(Context.GAME_REINFORCE);
     gameMap
         .getCurrentPlayer()
         .setNumberOfArmies(gameMap.getCurrentPlayer().calculateReinforcements(gameMap));
@@ -190,7 +190,7 @@ public class GameController {
             .anyMatch(armyCount -> armyCount > 1);
     if (!isAttackPossible) {
       //If Attack in the whole map is not possible move automatically to fortify
-      CLI.getInstance().setCurrentContext(Context.GAME_FORTIFY);
+      gameMap.setCurrentContext(Context.GAME_FORTIFY);
       return true;
     }
     // Roll dice for attacker
@@ -210,7 +210,7 @@ public class GameController {
           // Change ownership to attacker
           defendingCountry.setOwnerName(attackerName);
           // Change context to Battle victory
-          CLI.getInstance().setCurrentContext(Context.GAME_ATTACK_BATTLE_VICTORY);
+          gameMap.setCurrentContext(Context.GAME_ATTACK_BATTLE_VICTORY);
           // Check Game Victory condition
           if (gameMap.checkGameVictory()) {
             // Player Won the Game, Exit
@@ -218,7 +218,7 @@ public class GameController {
             System.exit(0);
           } else {
             // Change to initial attack phase where player can choose to battle again
-            CLI.getInstance().setCurrentContext(Context.GAME_ATTACK);
+            gameMap.setCurrentContext(Context.GAME_ATTACK);
           }
         }
       } else {
@@ -232,7 +232,7 @@ public class GameController {
           // set defendingCountryName in gameMap to empty
           gameMap.setDefendingCountryName("");
           // Change to initial attack phase where player can choose to battle again
-          CLI.getInstance().setCurrentContext(Context.GAME_ATTACK);
+          gameMap.setCurrentContext(Context.GAME_ATTACK);
         }
       }
     }

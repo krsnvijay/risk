@@ -23,7 +23,7 @@ public class SetupController {
     boolean result = gameMap.gameSetup();
     if (result) {
       display("Populated countries randomly");
-      CLI.getInstance().setCurrentContext(Context.GAME_STARTUP);
+      gameMap.setCurrentContext(Context.GAME_STARTUP);
       display("[Game Startup Phase]");
       display(String.format("%s's turn", gameMap.getCurrentPlayer().getPlayerName()));
     } else {

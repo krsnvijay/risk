@@ -25,7 +25,7 @@ public class GameRunnerTest {
   @Test
   public void validatePlayerCount() {
     String reason;
-    GameMap gameMap = new GameMap();
+    GameMap gameMap = GameMap.getGameMap();
     gameMap.addGamePlayer("player1");
     boolean result = gameMap.validatePlayerCount();
     reason = "Player count should be greater than 2";

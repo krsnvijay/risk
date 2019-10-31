@@ -158,7 +158,7 @@ public class EditorController {
       result = MapParser.saveMap(gameMap, fileLocation);
       if (result) {
         display("Game map saved to " + fileLocation);
-        CLI.getInstance().setCurrentContext(Context.MAIN_MENU);
+        gameMap.setCurrentContext(Context.MAIN_MENU);
       } else {
         display(fileLocation + " is invalid");
       }

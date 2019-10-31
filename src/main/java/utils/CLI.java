@@ -1,9 +1,6 @@
 package utils;
 
 import models.Context;
-import models.GameMap;
-import views.Runner;
-
 import java.util.*;
 
 /**
@@ -18,13 +15,6 @@ public class CLI {
 
   /** The singleton instance of the CLI class. */
   private static CLI cli = null;
-
-  /** The current context for the game. */
-  public Context currentContext;
-  /**
-   * The game state
-   */
-  public static GameMap gameMap = null;
 
   /** A Map of all the valid commands for a specific Context. */
   static Map<Context, ArrayList<String>> validCommands = new HashMap<>();
@@ -49,45 +39,4 @@ public class CLI {
     return cli;
   }
 
-  /**
-   * A method to get the existing instance of gameMap, or creating one if it doesn't exist.
-   *
-   * @return The instance of the gameMap.
-   */
-  public static GameMap getGameMap() {
-    if (gameMap == null) {
-      gameMap = new GameMap();
-    }
-    return gameMap;
-  }
-
-  /**
-   * Setter for gamemap instance
-   *
-   * @param gameMap contains game state
-   */
-  public void setGameMap(GameMap gameMap) {
-    CLI.gameMap = gameMap;
-    for (Observer ob : Runner.ObserverList) {
-      gameMap.addObserver(ob);
-    }
-  }
-
-  /**
-   * Returns the current context.
-   *
-   * @return The current Context for the game.
-   */
-  public Context getCurrentContext() {
-    return currentContext;
-  }
-
-  /**
-   * Sets the current context.
-   *
-   * @param currentContext A Context object to set in the class.
-   */
-  public void setCurrentContext(Context currentContext) {
-    this.currentContext = currentContext;
-  }
 }

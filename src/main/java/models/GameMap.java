@@ -9,10 +9,16 @@ import static java.util.stream.Collectors.*;
 
 /**
  * GameMap stores map data i.e borders, countries, files, continents
+ * The class is a singleton.
  *
  * @author Vijay
  */
 public class GameMap extends Observable {
+
+  /**
+   * The singleton instance of the game's state
+   */
+  public static GameMap gameMap = null;
 
   /** Contains the information in the [File] section. */
   private ArrayList<String> fileSectionData;
@@ -29,6 +35,9 @@ public class GameMap extends Observable {
   /** The name of the map file. */
   private String fileName;
 
+  /** The current phase of the game. */
+  private Context currentContext;
+
   /**
    * Maintains whose turn it is (index).
    */
@@ -37,6 +46,7 @@ public class GameMap extends Observable {
    * The name of country to defend
    */
   private String defendingCountryName;
+
   /** This maintains a list of players currently in the game. */
   public ArrayList<Player> playersList = new ArrayList<>();
 
@@ -49,13 +59,12 @@ public class GameMap extends Observable {
    * @param countries Stores a map of all countries.
    * @param fileName contains map name
    */
-  public GameMap(
+  public void populateGameMap(
       ArrayList<String> fileSectionData,
       Map<String, Set<String>> borders,
       Map<String, Continent> continents,
       Map<String, Country> countries,
       String fileName) {
-    super();
     this.fileSectionData = fileSectionData;
     this.borders = borders;
     this.continents = continents;
@@ -63,12 +72,34 @@ public class GameMap extends Observable {
     this.fileName = fileName;
   }
 
-  public GameMap() {
+  private GameMap() {
+    super();
     this.borders = new HashMap<>();
     this.fileSectionData = new ArrayList<>();
     this.countries = new HashMap<>();
     this.continents = new HashMap<>();
     this.fileName = "";
+  }
+
+  /**
+   * A method to get the existing instance of gameMap, or creating one if it doesn't exist.
+   *
+   * @return The instance of the gameMap.
+   */
+  public static GameMap getGameMap() {
+    if (gameMap == null) {
+      gameMap = new GameMap();
+    }
+    return gameMap;
+  }
+
+  /**
+   * Setter for gamemap instance, used in case a map is loaded from file.
+   *
+   * @param gameMap contains game state
+   */
+  public static void modifyInstance(GameMap gameMap) {
+    GameMap.gameMap = gameMap;
   }
 
   public static ArrayList<Boolean> compareDiceRolls(int[] attackerDiceRoll, int[] defenderDiceRoll) {
@@ -718,5 +749,23 @@ public class GameMap extends Observable {
    */
   public void setDefendingCountryName(String defendingCountryName) {
     this.defendingCountryName = defendingCountryName;
+  }
+
+  /**
+   * Returns the current context
+   *
+   * @return Context the current context
+   */
+  public Context getCurrentContext() {
+    return currentContext;
+  }
+
+  /**
+   * Sets the current context
+   *
+   * @param currentContext the context to be set
+   */
+  public void setCurrentContext(Context currentContext) {
+    this.currentContext = currentContext;
   }
 }

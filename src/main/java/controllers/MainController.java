@@ -30,12 +30,12 @@ public class MainController {
     String fileLocation = command.split(" ", 2)[1];
     boolean result = false;
     boolean newFile = false;
-    GameMap gameMap1 = null;
+    GameMap newGameMap = null;
     try {
-      gameMap1 = MapParser.loadMap(fileLocation);
+      newGameMap = MapParser.loadMap(fileLocation);
       result = true;
     } catch (FileNotFoundException e) {
-      gameMap1 = new GameMap();
+      newGameMap = GameMap.getGameMap();
       result = true;
       newFile = true;
     }
@@ -46,8 +46,8 @@ public class MainController {
     if (result) {
       if(newFile) display("File not found! Empty map object provided to edit.");
       else display("Map loaded successfully");
-      CLI.getInstance().setGameMap(gameMap1);
-      CLI.getInstance().setCurrentContext(Context.MAP_EDITOR);
+      GameMap.modifyInstance(newGameMap);
+      GameMap.getGameMap().setCurrentContext(Context.MAP_EDITOR);
     }
     return result;
   }
@@ -61,11 +61,10 @@ public class MainController {
    */
   public static boolean loadMap(GameMap gameMap, String command) {
     String fileLocation = command.split(" ", 2)[1];
-
-    GameMap gameMap1 = null;
+    GameMap newGameMap = null;
     boolean result = false;
     try {
-      gameMap1 = MapParser.loadMap(fileLocation);
+      newGameMap = MapParser.loadMap(fileLocation);
       result = true;
     } catch (Exception e) {
       display(e.getMessage());
@@ -73,10 +72,10 @@ public class MainController {
     if (result) {
       display("Map loaded successfully");
       if (gameMap.getPlayersList().size() != 0) {
-        gameMap1.setPlayersList(gameMap.getPlayersList());
+        newGameMap.setPlayersList(gameMap.getPlayersList());
       }
-      CLI.getInstance().setGameMap(gameMap1);
-      CLI.getInstance().setCurrentContext(Context.GAME_SETUP);
+      GameMap.modifyInstance(newGameMap);
+      GameMap.getGameMap().setCurrentContext(Context.GAME_SETUP);
     } else {
       display("Invalid map");
     }
@@ -140,7 +139,7 @@ public class MainController {
    * @return true to indicate status
    */
   public static boolean gameHelp(GameMap gameMap, String command) {
-    Command[] validCommands = CLI.getInstance().getCurrentContext().getValidCommands();
+    Command[] validCommands = gameMap.getCurrentContext().getValidCommands();
     System.out.println("Available Commands:");
     for (Command validCommand : validCommands) {
       display("\t" + validCommand.getUsage());

@@ -47,7 +47,7 @@ public class MapParserTest {
    */
   @Test
   public void loadMap() throws Exception {
-    GameMap gameMapInvalid = new GameMap();
+    GameMap gameMapInvalid = null;
     File testMap = new File("src/test/resources/mapparserinvalid.map");
     gameMapInvalid = MapParser.loadMap(testMap.getPath());
     Scanner scan = new Scanner(testMap);
