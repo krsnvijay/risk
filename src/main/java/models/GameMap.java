@@ -68,6 +68,7 @@ public class GameMap extends Observable{
   public void updatePlayerIndex() {
     currentPlayerIndex = (currentPlayerIndex + 1) % playersList.size();
     setChanged();
+    System.out.println("count " + this.countObservers());
     notifyObservers();
   }
 

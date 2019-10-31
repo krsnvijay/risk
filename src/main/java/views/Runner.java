@@ -1,34 +1,60 @@
 package views;
 
-import static models.Context.*;
-import static views.ConsoleView.display;
-
 import javafx.application.Application;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.geometry.HPos;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.Context;
+import models.GameMap;
 import utils.CLI;
 
-import java.util.function.Supplier;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observer;
 
+import static views.ConsoleView.display;
 /**
  * Runs the project and handles the initial commands.
  *
  * @author Siddhant Bansal
  */
 public class Runner extends Application {
+  public static List<Observer> ObserverList = new ArrayList<>();
+
+  Label rootTitleLabel, rootControlLabel, rootArmyLabel;
+  Label rootPhaseNameLabel, rootPlayerLabel, rootPhaseInfoLabel;
+
+  public Runner() {
+    rootPlayerLabel = new Label("Game Not Started!");
+    rootPhaseNameLabel = new Label("Setup Phase");
+    rootPhaseInfoLabel = new Label("Siddhant rolled 2 dice and attacked Albania (Owned by Sabari).\n" +
+        "Siddhant lost 3 armies.\n" +
+        "Sabari lost 2 armies\nAttack Phase ends...\n");
+
+    rootTitleLabel = new Label("World Domination Information");
+    rootControlLabel = new Label("Controlled territory:");
+    rootArmyLabel = new Label("Total armies:");
+  }
 
   public static void main(String[] args) {
-    CLI cli = CLI.getInstance();
     launch(args);
+  }
+
+  public void updatePlayerLabel(String labelValue) {
+    Platform.runLater(() -> {
+      rootPlayerLabel.setText(labelValue);
+    });
+  }
+
+  public void updatePhaseLabel(String labelValue) {
+    Platform.runLater(() -> {
+      rootPhaseNameLabel.setText(labelValue);
+    });
   }
 
   public static void processCommandline() {
@@ -58,11 +84,22 @@ public class Runner extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
+    GameMap gameMap = CLI.getGameMap();
+
+    CLI cli = CLI.getInstance();
+
+    PhaseView phaseView = new PhaseView(this);
+    WDView wdView = new WDView(this);
+
+    gameMap.addObserver(phaseView);
+    gameMap.addObserver(wdView);
+
+    ObserverList.add(phaseView);
+    ObserverList.add(wdView);
+
     // TODO refactor this entirely (modularize)
 
     // Declarations
-    Label titleLabel, controlLabel, armyLabel;
-    Label phaseNameLabel, playerLabel, phaseInfoLabel;
     primaryStage.setTitle("Risk by Group 2");
 
     // Parent layout
@@ -76,30 +113,27 @@ public class Runner extends Application {
     WDSection.setMinHeight(300);
 
     // WD: title label
-    titleLabel = new Label("World Domination Information");
-    titleLabel.setStyle("-fx-font-size: 18px; -fx-alignment: center;");
-    WDSection.setTop(titleLabel);
-    BorderPane.setAlignment(titleLabel, Pos.CENTER);
-    BorderPane.setMargin(titleLabel, new Insets(10, 0, 0, 0));
+    rootTitleLabel.setStyle("-fx-font-size: 18px; -fx-alignment: center;");
+    WDSection.setTop(rootTitleLabel);
+    BorderPane.setAlignment(rootTitleLabel, Pos.CENTER);
+    BorderPane.setMargin(rootTitleLabel, new Insets(10, 0, 0, 0));
 
     // WD: control % label
     VBox controlSection = new VBox();
-    controlLabel = new Label("Controlled territory:");
     // TODO dynamically add labels for players...
     Label player1 = new Label("Siddhant: 30%");
     Label player2 = new Label("Warren: 10%");
-    controlSection.getChildren().addAll(controlLabel, player1, player2);
+    controlSection.getChildren().addAll(rootControlLabel, player1, player2);
     WDSection.setLeft(controlSection);
 
     // WD: TODO map here...
 
     // WD: army counts
     VBox armySection = new VBox();
-    armyLabel = new Label("Total armies:");
     // TODO dynamically add labels for players...
     Label army1 = new Label("Siddhant: 34");
     Label army2 = new Label("Warren: 14");
-    armySection.getChildren().addAll(armyLabel, army1, army2);
+    armySection.getChildren().addAll(rootArmyLabel, army1, army2);
     WDSection.setRight(armySection);
 
     // Phase View Section
@@ -107,19 +141,13 @@ public class Runner extends Application {
     phaseSection.setPadding(new Insets(10, 0, 0, 40));
 
     // PV: components
-    phaseNameLabel = new Label("Setup Phase");
-    phaseNameLabel.setStyle("-fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 18px");
-    phaseNameLabel.setPadding(new Insets(0, 0, 10, 0));
+    rootPhaseNameLabel.setStyle("-fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 18px");
+    rootPhaseNameLabel.setPadding(new Insets(0, 0, 10, 0));
 
-    playerLabel = new Label("Siddhant's Turn");
-    playerLabel.setStyle("-fx-font-weight: bold");
-    playerLabel.setPadding(new Insets(0, 0, 10, 0));
+    rootPlayerLabel.setStyle("-fx-font-weight: bold");
+    rootPlayerLabel.setPadding(new Insets(0, 0, 10, 0));
 
-    phaseInfoLabel = new Label("Siddhant rolled 2 dice and attacked Albania (Owned by Sabari).\n" +
-            "Siddhant lost 3 armies.\n" +
-            "Sabari lost 2 armies\nAttack Phase ends...\n");
-
-    phaseSection.getChildren().addAll(phaseNameLabel, playerLabel, phaseInfoLabel);
+    phaseSection.getChildren().addAll(rootPhaseNameLabel, rootPlayerLabel, rootPhaseInfoLabel);
 
     vbox.getChildren().addAll(WDSection, phaseSection);
     Scene scene = new Scene(vbox, 800, 600);

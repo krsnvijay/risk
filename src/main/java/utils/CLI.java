@@ -1,11 +1,10 @@
 package utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
 import models.Context;
 import models.GameMap;
+import views.Runner;
+
+import java.util.*;
 
 /**
  * This singleton utility class handles all the text commands for the game.
@@ -69,6 +68,9 @@ public class CLI {
    */
   public void setGameMap(GameMap gameMap) {
     CLI.gameMap = gameMap;
+    for (Observer ob : Runner.ObserverList) {
+      gameMap.addObserver(ob);
+    }
   }
 
   /**
