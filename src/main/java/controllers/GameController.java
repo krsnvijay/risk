@@ -4,9 +4,6 @@ import models.Context;
 import models.Country;
 import models.GameMap;
 import models.Player;
-import utils.CLI;
-
-import java.util.ArrayList;
 
 import static views.ConsoleView.display;
 
@@ -64,6 +61,8 @@ public class GameController {
       return true;
     }
     String[] commandSplit = command.split(" ");
+    if (commandSplit.length == 1) return false;
+
     String fromCountry = commandSplit[1];
     String toCountry = commandSplit[2];
     int armyToMove = Integer.parseInt(commandSplit[3]);
@@ -148,40 +147,61 @@ public class GameController {
    * @return true to indicate status
    */
   public static boolean attack(GameMap gameMap, String command) {
-    // Store defendingCountryName in gameMap
-    // If no attack set it to empty string
-    // get owner of defendingCountryName
-    // Allow defend command for defending Player
     if (command.contains("-noattack")) {
       display(String.format("%s chose not to attack", gameMap.getCurrentPlayer().getPlayerName()));
       changeToNextPhase(gameMap);
       return true;
-    } else if (command.contains("-allout")) {
-
-      // Attack till you win or have no armies to attack
-      // Requires no input from attacker but defender needs to specify dice
-      // Attacker cannot abandon an ongoing battle
-      // Allow defender to make their move
-      // Simulate Roll dice
-      // Remove armies by comparing dices
-      // If Attacker wins the battle they can move armies to their new territory and plan another
-      // attack
-      // Check for Game Victory Condition here
-      // If Attack not possible move automatically to fortify
-
     }
-    // Initial Attack Phase - Choose what to attack or stop attack phase and move to fortify
-    // Start Battle loop or stop attack phase and move to fortify
-    // Requires input from both the attacker and the defender after every attack move
-    // Attacker can abandon an ongoing battle and plan another attack
-    // Allow defender to make their move
-    // Todo get player names
-    Country defendingCountry = gameMap.getCountries().get("");
-    Country attackingCountry = gameMap.getCountries().get("");
-    String attackerName = gameMap.getCurrentPlayer().getPlayerName();
+    String[] commandSplit = command.split(" ");
+    if (commandSplit.length == 1) return false;
+    if (!gameMap.getCountries().containsKey(commandSplit[1])
+        || !gameMap.getCountries().containsKey(commandSplit[2])) {
+      display("Error: One or both the countries do not exist");
+      return false;
+    }
+
+    Country attackingCountry = gameMap.getCountries().get(commandSplit[1]);
+    String attackerName = attackingCountry.getOwnerName();
+    Country defendingCountry = gameMap.getCountries().get(commandSplit[2]);
     String defenderName = defendingCountry.getOwnerName();
-    int numOfDiceAttacker = 1;
-    int numOfDiceDefender = 1;
+    String currentPlayer = gameMap.getCurrentPlayer().getPlayerName();
+
+    // Current Player should be owner of the from country
+    if (!attackerName.equals(gameMap.getCurrentPlayer().getPlayerName())) {
+      display(
+          String.format(
+              "Error: Current player %s should be owner of %s to attack",
+              currentPlayer, attackingCountry.getName()));
+      return false;
+    }
+    // Player can't attack their own country
+    if (attackerName.equals(defenderName)) {
+      display("Error: Player can't attack their own country");
+      return false;
+    }
+
+    // Both from , to country must be adjacent
+    if (!gameMap
+        .getBorders()
+        .get(attackingCountry.getName())
+        .contains(defendingCountry.getName())) {
+      display(
+          String.format(
+              "Error: %s and %s need to be adjacent for attack",
+              attackingCountry.getName(), defendingCountry.getName()));
+      return false;
+    }
+    int numOfDiceAttacker = Integer.parseInt(commandSplit[3]);
+    // numOfDice for attacker can't be > 5
+    if (numOfDiceAttacker > 5 || numOfDiceAttacker < 1) {
+      display("Error: numOfDice must be between 1-5");
+      return false;
+    }
+    // for numOfDice allowed value is one less than the numOfArmies
+    if (!(numOfDiceAttacker < attackingCountry.getNumberOfArmies())) {
+      display("Error: numOfDice should always be one less than numOfArmies");
+      return false;
+    }
 
     // Player can only attack if he has atleast two armies in a country he owns
     boolean isAttackPossible =
@@ -189,54 +209,17 @@ public class GameController {
             .mapToInt(Country::getNumberOfArmies)
             .anyMatch(armyCount -> armyCount > 1);
     if (!isAttackPossible) {
-      //If Attack in the whole map is not possible move automatically to fortify
+      // If Attack in the whole map is not possible move automatically to fortify
+      display("No possible attack left, changing to next phase");
       gameMap.setCurrentContext(Context.GAME_FORTIFY);
       return true;
     }
-    // Roll dice for attacker
-    int[] attackerDiceRoll = GameMap.rollDice(numOfDiceAttacker);
-    // Roll dice for defender
-    int[] defenderDiceRoll = GameMap.rollDice(numOfDiceDefender);
-    // Compare diceRoll results
-    ArrayList<Boolean> results = GameMap.compareDiceRolls(attackerDiceRoll, defenderDiceRoll);
-    for (boolean result : results) {
-      if (result) {
-        if (defendingCountry.getNumberOfArmies() > 1) {
-          // Attack successful: Remove army from defender
-          defendingCountry.removeArmies(1);
-        } else if (defendingCountry.getNumberOfArmies() == 1) {
-          // Attacker Won the battle and conquered the defending country
-          defendingCountry.removeArmies(1);
-          // Change ownership to attacker
-          defendingCountry.setOwnerName(attackerName);
-          // Change context to Battle victory
-          gameMap.setCurrentContext(Context.GAME_ATTACK_BATTLE_VICTORY);
-          // Check Game Victory condition
-          if (gameMap.checkGameVictory()) {
-            // Player Won the Game, Exit
-            display("Victory!");
-            System.exit(0);
-          } else {
-            // Change to initial attack phase where player can choose to battle again
-            gameMap.setCurrentContext(Context.GAME_ATTACK);
-          }
-        }
-      } else {
-        if (attackingCountry.getNumberOfArmies() > 1) {
-          // Defend successful: Remove army from attacker
-          attackingCountry.removeArmies(1);
-        } else if (attackingCountry.getNumberOfArmies() == 1) {
-          // Remove last army from attacking country
-          attackingCountry.removeArmies(1);
-          // Attacker has no armies left to attack. Stop battle
-          // set defendingCountryName in gameMap to empty
-          gameMap.setDefendingCountryName("");
-          // Change to initial attack phase where player can choose to battle again
-          gameMap.setCurrentContext(Context.GAME_ATTACK);
-        }
-      }
-    }
-    return true;
+    BattleController battleController = new BattleController(gameMap, command);
+    display(
+        String.format(
+            "%s owned by %s declared an attack on %s owned by %s",
+            attackingCountry.getName(), attackerName, defendingCountry.getName(), defenderName));
+    return battleController.startBattle(command.contains("-allout"));
   }
 
   public static boolean defend(GameMap gameMap, String s) {

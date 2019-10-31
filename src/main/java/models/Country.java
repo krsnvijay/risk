@@ -183,7 +183,7 @@ public class Country {
    * @return true if armies can be added
    */
   public boolean addArmies(int count) {
-    if (numberOfArmies + count > 0) {
+    if (numberOfArmies + count >= 0) {
       this.numberOfArmies += count;
       return true;
     }
@@ -197,7 +197,7 @@ public class Country {
    * @return true if armies can be removed
    */
   public boolean removeArmies(int count) {
-    if (numberOfArmies - count > 0) {
+    if (numberOfArmies - count >= 0) {
       this.numberOfArmies -= count;
       return true;
     }

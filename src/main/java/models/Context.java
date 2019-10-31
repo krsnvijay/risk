@@ -1,6 +1,7 @@
 package models;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static models.Command.*;
@@ -15,8 +16,7 @@ public enum Context {
   GAME_SETUP(GAME_HELP, SHOW_MAP, EXIT_GAME, GAME_PLAYER, POPULATE_COUNTRIES),
   GAME_STARTUP(SHOW_MAP_OWNERSHIP, PLACE_ARMY, PLACE_ALL),
   GAME_REINFORCE(SHOW_MAP_OWNERSHIP, REINFORCE),
-  GAME_ATTACK(ATTACK),
-  GAME_ATTACK_BATTLE_ATTACKER(ATTACK),
+  GAME_ATTACK(SHOW_MAP_OWNERSHIP, ATTACK),
   GAME_ATTACK_BATTLE_DEFENDER(DEFEND),
   GAME_ATTACK_BATTLE_VICTORY(ATTACK_MOVE),
   GAME_FORTIFY(SHOW_MAP_OWNERSHIP, FORTIFY);
@@ -30,6 +30,10 @@ public enum Context {
 
   public boolean validate(String riskCommand) {
     return Arrays.stream(validCommands).map(Command::getRegex).anyMatch(riskCommand::matches);
+  }
+
+  public Optional<Command> getMatchedCommand(String riskCommand) {
+    return Arrays.stream(validCommands).filter(c -> c.validate(riskCommand)).findFirst();
   }
 
   public boolean runCommand(GameMap gameMap, String riskCommand) {

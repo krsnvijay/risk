@@ -85,7 +85,7 @@ public class Runner extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    GameMap gameMap = CLI.getGameMap();
+    GameMap gameMap = GameMap.getGameMap();
 
     CLI cli = CLI.getInstance();
 

@@ -1,15 +1,11 @@
 package models;
 
 import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
 
-import static java.util.Collections.reverseOrder;
 import static java.util.stream.Collectors.*;
 
 /**
- * GameMap stores map data i.e borders, countries, files, continents
- * The class is a singleton.
+ * GameMap stores map data i.e borders, countries, files, continents The class is a singleton.
  *
  * @author Vijay
  */
@@ -38,14 +34,8 @@ public class GameMap extends Observable {
   /** The current phase of the game. */
   private Context currentContext;
 
-  /**
-   * Maintains whose turn it is (index).
-   */
+  /** Maintains whose turn it is (index). */
   private static int currentPlayerIndex = 0;
-  /**
-   * The name of country to defend
-   */
-  private String defendingCountryName;
 
   /** This maintains a list of players currently in the game. */
   public ArrayList<Player> playersList = new ArrayList<>();
@@ -100,18 +90,6 @@ public class GameMap extends Observable {
    */
   public static void modifyInstance(GameMap gameMap) {
     GameMap.gameMap = gameMap;
-  }
-
-  public static ArrayList<Boolean> compareDiceRolls(int[] attackerDiceRoll, int[] defenderDiceRoll) {
-    Iterator<Integer> attackerDiceIterator = Arrays.stream(attackerDiceRoll).boxed().sorted(reverseOrder()).iterator();
-    Iterator<Integer> defenderDiceIterator = Arrays.stream(defenderDiceRoll).boxed().sorted(reverseOrder()).iterator();
-    ArrayList<Boolean> diceComparisonResult = new ArrayList<>();
-    while (attackerDiceIterator.hasNext() && defenderDiceIterator.hasNext()) {
-      int maxAttacker = attackerDiceIterator.next();
-      int maxDefender = defenderDiceIterator.next();
-      diceComparisonResult.add(maxAttacker > maxDefender);
-    }
-    return diceComparisonResult;
   }
 
   /** Updates the current player index (round robin fashion) */
@@ -331,17 +309,6 @@ public class GameMap extends Observable {
             .map(this::showBorderByOwnerShip)
             .sorted()
             .collect(joining("\n")));
-  }
-
-  /**
-   * Rolls multiple dice
-   *
-   * @param numOfDice number of dice to roll
-   * @return result of each dice roll
-   */
-  public static int[] rollDice(int numOfDice) {
-    Supplier<Integer> roll = () -> (int) (Math.random() * 6) + 1;
-    return Stream.generate(roll).limit(numOfDice).mapToInt(Integer::intValue).toArray();
   }
 
   /**
@@ -612,7 +579,7 @@ public class GameMap extends Observable {
    *
    * @param currentPlayer name of the current player
    * @return String formatted String showing map ownership by player relevant to fortify/reinforce
-   * phases
+   *     phases
    */
   public String showMapByOwnershipByCurrentPlayer(String currentPlayer) {
     ArrayList<Country> countriesOwnedByCurrPlayer =
@@ -672,9 +639,7 @@ public class GameMap extends Observable {
         currentPlayer, countryListForPlayer, currentPlayer, adjacencyListForPlayer);
   }
 
-  /**
-   * Checks whether one GameMap object is equal to another.
-   */
+  /** Checks whether one GameMap object is equal to another. */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -731,24 +696,6 @@ public class GameMap extends Observable {
    */
   public boolean checkGameVictory() {
     return getPlayersList().size() == 1;
-  }
-
-  /**
-   * Getter for defendingCountryName
-   *
-   * @return String defending country name
-   */
-  public String getDefendingCountryName() {
-    return defendingCountryName;
-  }
-
-  /**
-   * Setter for defendingCountryName
-   *
-   * @param defendingCountryName name of country that is currently being defended
-   */
-  public void setDefendingCountryName(String defendingCountryName) {
-    this.defendingCountryName = defendingCountryName;
   }
 
   /**
