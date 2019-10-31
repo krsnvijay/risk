@@ -1,10 +1,14 @@
 package controllers;
 
-import static views.ConsoleView.display;
-
 import models.Context;
+import models.Country;
 import models.GameMap;
+import models.Player;
 import utils.CLI;
+
+import java.util.ArrayList;
+
+import static views.ConsoleView.display;
 
 /**
  * Controller for Game loop and phases
@@ -54,6 +58,11 @@ public class GameController {
    * @return true if successfully fortified
    */
   public static boolean fortify(GameMap gameMap, String command) {
+    if (command.contains("-none")) {
+      display(String.format("%s chose not to fortify", gameMap.getCurrentPlayer().getPlayerName()));
+      changeToNextPhase(gameMap);
+      return true;
+    }
     String[] commandSplit = command.split(" ");
     String fromCountry = commandSplit[1];
     String toCountry = commandSplit[2];
@@ -75,19 +84,6 @@ public class GameController {
               gameMap.getCurrentPlayer().getPlayerName(), fromCountry, toCountry));
     }
     return result;
-  }
-
-  /**
-   * Skips fortification for the current player
-   *
-   * @param gameMap contains game state
-   * @param command cli command from the user
-   * @return true to indicate status
-   */
-  public static boolean fortifyNone(GameMap gameMap, String command) {
-    display(String.format("%s chose not to fortify", gameMap.getCurrentPlayer().getPlayerName()));
-    changeToNextPhase(gameMap);
-    return true;
   }
 
   /**
@@ -151,9 +147,103 @@ public class GameController {
    * @param command cli command from the user
    * @return true to indicate status
    */
-  public static boolean attackNone(GameMap gameMap, String command) {
-    display(String.format("%s chose not to attack", gameMap.getCurrentPlayer().getPlayerName()));
-    changeToNextPhase(gameMap);
+  public static boolean attack(GameMap gameMap, String command) {
+    // Store defendingCountryName in gameMap
+    // If no attack set it to empty string
+    // get owner of defendingCountryName
+    // Allow defend command for defending Player
+    if (command.contains("-noattack")) {
+      display(String.format("%s chose not to attack", gameMap.getCurrentPlayer().getPlayerName()));
+      changeToNextPhase(gameMap);
+      return true;
+    } else if (command.contains("-allout")) {
+
+      // Attack till you win or have no armies to attack
+      // Requires no input from attacker but defender needs to specify dice
+      // Attacker cannot abandon an ongoing battle
+      // Allow defender to make their move
+      // Simulate Roll dice
+      // Remove armies by comparing dices
+      // If Attacker wins the battle they can move armies to their new territory and plan another
+      // attack
+      // Check for Game Victory Condition here
+      // If Attack not possible move automatically to fortify
+
+    }
+    // Initial Attack Phase - Choose what to attack or stop attack phase and move to fortify
+    // Start Battle loop or stop attack phase and move to fortify
+    // Requires input from both the attacker and the defender after every attack move
+    // Attacker can abandon an ongoing battle and plan another attack
+    // Allow defender to make their move
+    // Todo get player names
+    Country defendingCountry = gameMap.getCountries().get("");
+    Country attackingCountry = gameMap.getCountries().get("");
+    String attackerName = gameMap.getCurrentPlayer().getPlayerName();
+    String defenderName = defendingCountry.getOwnerName();
+    int numOfDiceAttacker = 1;
+    int numOfDiceDefender = 1;
+
+    // Player can only attack if he has atleast two armies in a country he owns
+    boolean isAttackPossible =
+        Player.getCountriesByOwnership(attackerName, gameMap).stream()
+            .mapToInt(Country::getNumberOfArmies)
+            .anyMatch(armyCount -> armyCount > 1);
+    if (!isAttackPossible) {
+      //If Attack in the whole map is not possible move automatically to fortify
+      CLI.getInstance().setCurrentContext(Context.GAME_FORTIFY);
+      return true;
+    }
+    // Roll dice for attacker
+    int[] attackerDiceRoll = GameMap.rollDice(numOfDiceAttacker);
+    // Roll dice for defender
+    int[] defenderDiceRoll = GameMap.rollDice(numOfDiceDefender);
+    // Compare diceRoll results
+    ArrayList<Boolean> results = GameMap.compareDiceRolls(attackerDiceRoll, defenderDiceRoll);
+    for (boolean result : results) {
+      if (result) {
+        if (defendingCountry.getNumberOfArmies() > 1) {
+          // Attack successful: Remove army from defender
+          defendingCountry.removeArmies(1);
+        } else if (defendingCountry.getNumberOfArmies() == 1) {
+          // Attacker Won the battle and conquered the defending country
+          defendingCountry.removeArmies(1);
+          // Change ownership to attacker
+          defendingCountry.setOwnerName(attackerName);
+          // Change context to Battle victory
+          CLI.getInstance().setCurrentContext(Context.GAME_ATTACK_BATTLE_VICTORY);
+          // Check Game Victory condition
+          if (gameMap.checkGameVictory()) {
+            // Player Won the Game, Exit
+            display("Victory!");
+            System.exit(0);
+          } else {
+            // Change to initial attack phase where player can choose to battle again
+            CLI.getInstance().setCurrentContext(Context.GAME_ATTACK);
+          }
+        }
+      } else {
+        if (attackingCountry.getNumberOfArmies() > 1) {
+          // Defend successful: Remove army from attacker
+          attackingCountry.removeArmies(1);
+        } else if (attackingCountry.getNumberOfArmies() == 1) {
+          // Remove last army from attacking country
+          attackingCountry.removeArmies(1);
+          // Attacker has no armies left to attack. Stop battle
+          // set defendingCountryName in gameMap to empty
+          gameMap.setDefendingCountryName("");
+          // Change to initial attack phase where player can choose to battle again
+          CLI.getInstance().setCurrentContext(Context.GAME_ATTACK);
+        }
+      }
+    }
+    return true;
+  }
+
+  public static boolean defend(GameMap gameMap, String s) {
+    return true;
+  }
+
+  public static boolean attackMove(GameMap gameMap, String s) {
     return true;
   }
 }
