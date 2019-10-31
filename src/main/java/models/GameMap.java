@@ -1,8 +1,10 @@
 package models;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
+import static java.util.Collections.reverseOrder;
 import static java.util.stream.Collectors.*;
 
 /**
@@ -10,7 +12,7 @@ import static java.util.stream.Collectors.*;
  *
  * @author Vijay
  */
-public class GameMap extends Observable{
+public class GameMap extends Observable {
 
   /** Contains the information in the [File] section. */
   private ArrayList<String> fileSectionData;
@@ -26,10 +28,15 @@ public class GameMap extends Observable{
 
   /** The name of the map file. */
   private String fileName;
+
   /**
    * Maintains whose turn it is (index).
    */
   private static int currentPlayerIndex = 0;
+  /**
+   * The name of country to defend
+   */
+  private String defendingCountryName;
   /** This maintains a list of players currently in the game. */
   public ArrayList<Player> playersList = new ArrayList<>();
 
@@ -62,6 +69,18 @@ public class GameMap extends Observable{
     this.countries = new HashMap<>();
     this.continents = new HashMap<>();
     this.fileName = "";
+  }
+
+  public static ArrayList<Boolean> compareDiceRolls(int[] attackerDiceRoll, int[] defenderDiceRoll) {
+    Iterator<Integer> attackerDiceIterator = Arrays.stream(attackerDiceRoll).boxed().sorted(reverseOrder()).iterator();
+    Iterator<Integer> defenderDiceIterator = Arrays.stream(defenderDiceRoll).boxed().sorted(reverseOrder()).iterator();
+    ArrayList<Boolean> diceComparisonResult = new ArrayList<>();
+    while (attackerDiceIterator.hasNext() && defenderDiceIterator.hasNext()) {
+      int maxAttacker = attackerDiceIterator.next();
+      int maxDefender = defenderDiceIterator.next();
+      diceComparisonResult.add(maxAttacker > maxDefender);
+    }
+    return diceComparisonResult;
   }
 
   /** Updates the current player index (round robin fashion) */
@@ -283,68 +302,14 @@ public class GameMap extends Observable{
   }
 
   /**
-   * This method shows the map for the fortify and reinforce phases
+   * Rolls multiple dice
    *
-   * @param currentPlayer name of the current player
-   * @return String formatted String showing map ownership by player relevant to fortify/reinforce
-   *     phases
+   * @param numOfDice number of dice to roll
+   * @return result of each dice roll
    */
-  public String showMapByOwnershipByCurrentPlayer(String currentPlayer) {
-    ArrayList<Country> countriesOwnedByCurrPlayer =
-        this.countries.values().stream()
-            .filter(country -> country.getOwnerName().equals(currentPlayer))
-            .collect(Collectors.toCollection(ArrayList::new));
-    ArrayList<String> countriesOwnedByCurrPlayerStrings =
-        countriesOwnedByCurrPlayer.stream()
-            .map(Country::getName)
-            .collect(Collectors.toCollection(ArrayList::new));
-
-    String countryListForPlayer =
-        countriesOwnedByCurrPlayer.stream()
-            .map(
-                country -> String.format("%s (%d)", country.getName(), country.getNumberOfArmies()))
-            .sorted()
-            .collect(joining("\n"));
-    String adjacencyListForPlayer =
-        this.borders.entrySet().stream()
-            .filter(
-                borderEntry -> {
-                  if (!countriesOwnedByCurrPlayerStrings.contains(borderEntry.getKey())) {
-                    return false;
-                  }
-                  // perform a side effect on it's set to only keep neighbors owned by currPlayer
-                  borderEntry.setValue(
-                      borderEntry.getValue().stream()
-                          .filter(countriesOwnedByCurrPlayerStrings::contains)
-                          .collect(toSet()));
-                  return true;
-                })
-            .map(
-                borderEntry -> {
-                  Country country = this.countries.get(borderEntry.getKey());
-                  String countryStr =
-                      String.format("%s(%d)", country.getName(), country.getNumberOfArmies());
-                  StringBuilder neighborSetStr = new StringBuilder();
-                  if (borderEntry.getValue().size() > 0) {
-                    for (String neighbor : borderEntry.getValue()) {
-                      Country neighborCountry = this.countries.get(neighbor);
-                      neighborSetStr.append(
-                          String.format(
-                              " --> %s(%d)",
-                              neighborCountry.getName(), neighborCountry.getNumberOfArmies()));
-                    }
-                  } else {
-                    neighborSetStr =
-                        new StringBuilder(
-                            "  !! NO NEIGHBORS OF THIS COUNTRY OWNED BY " + currentPlayer);
-                  }
-                  return countryStr + neighborSetStr.toString();
-                })
-            .sorted()
-            .collect(joining("\n"));
-    return String.format(
-        "[Countries Owned by %s]\n%s\n\n[Adjacency List for Countries Owned by %s]\n\n%s",
-        currentPlayer, countryListForPlayer, currentPlayer, adjacencyListForPlayer);
+  public static int[] rollDice(int numOfDice) {
+    Supplier<Integer> roll = () -> (int) (Math.random() * 6) + 1;
+    return Stream.generate(roll).limit(numOfDice).mapToInt(Integer::intValue).toArray();
   }
 
   /**
@@ -611,6 +576,90 @@ public class GameMap extends Observable{
   }
 
   /**
+   * This method shows the map for the fortify and reinforce phases
+   *
+   * @param currentPlayer name of the current player
+   * @return String formatted String showing map ownership by player relevant to fortify/reinforce
+   * phases
+   */
+  public String showMapByOwnershipByCurrentPlayer(String currentPlayer) {
+    ArrayList<Country> countriesOwnedByCurrPlayer =
+        this.countries.values().stream()
+            .filter(country -> country.getOwnerName().equals(currentPlayer))
+            .collect(toCollection(ArrayList::new));
+    ArrayList<String> countriesOwnedByCurrPlayerStrings =
+        countriesOwnedByCurrPlayer.stream()
+            .map(Country::getName)
+            .collect(toCollection(ArrayList::new));
+
+    String countryListForPlayer =
+        countriesOwnedByCurrPlayer.stream()
+            .map(
+                country -> String.format("%s (%d)", country.getName(), country.getNumberOfArmies()))
+            .sorted()
+            .collect(joining("\n"));
+    String adjacencyListForPlayer =
+        this.borders.entrySet().stream()
+            .filter(
+                borderEntry -> {
+                  if (!countriesOwnedByCurrPlayerStrings.contains(borderEntry.getKey())) {
+                    return false;
+                  }
+                  // perform a side effect on it's set to only keep neighbors owned by currPlayer
+                  borderEntry.setValue(
+                      borderEntry.getValue().stream()
+                          .filter(countriesOwnedByCurrPlayerStrings::contains)
+                          .collect(toSet()));
+                  return true;
+                })
+            .map(
+                borderEntry -> {
+                  Country country = this.countries.get(borderEntry.getKey());
+                  String countryStr =
+                      String.format("%s(%d)", country.getName(), country.getNumberOfArmies());
+                  StringBuilder neighborSetStr = new StringBuilder();
+                  if (borderEntry.getValue().size() > 0) {
+                    for (String neighbor : borderEntry.getValue()) {
+                      Country neighborCountry = this.countries.get(neighbor);
+                      neighborSetStr.append(
+                          String.format(
+                              " --> %s(%d)",
+                              neighborCountry.getName(), neighborCountry.getNumberOfArmies()));
+                    }
+                  } else {
+                    neighborSetStr =
+                        new StringBuilder(
+                            "  !! NO NEIGHBORS OF THIS COUNTRY OWNED BY " + currentPlayer);
+                  }
+                  return countryStr + neighborSetStr.toString();
+                })
+            .sorted()
+            .collect(joining("\n"));
+    return String.format(
+        "[Countries Owned by %s]\n%s\n\n[Adjacency List for Countries Owned by %s]\n\n%s",
+        currentPlayer, countryListForPlayer, currentPlayer, adjacencyListForPlayer);
+  }
+
+  /**
+   * Checks whether one GameMap object is equal to another.
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    GameMap gameMap = (GameMap) o;
+    return fileSectionData.equals(gameMap.fileSectionData)
+        && borders.equals(gameMap.borders)
+        && continents.equals(gameMap.continents)
+        && countries.equals(gameMap.countries)
+        && fileName.equals(gameMap.fileName);
+  }
+
+  /**
    * Moves armies from one adjacent country to the other
    *
    * @param fromCountry country name to move from
@@ -637,27 +686,36 @@ public class GameMap extends Observable{
     }
     return result;
   }
-
-  /** Checks whether one GameMap object is equal to another. */
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    GameMap gameMap = (GameMap) o;
-    return fileSectionData.equals(gameMap.fileSectionData)
-        && borders.equals(gameMap.borders)
-        && continents.equals(gameMap.continents)
-        && countries.equals(gameMap.countries)
-        && fileName.equals(gameMap.fileName);
-  }
-
   /** @return int hash code for the GameMap object. */
   @Override
   public int hashCode() {
     return Objects.hash(fileSectionData, borders, continents, countries, fileName);
+  }
+
+  /**
+   * Check Game Win Condition
+   *
+   * @return True if there's only one player left
+   */
+  public boolean checkGameVictory() {
+    return getPlayersList().size() == 1;
+  }
+
+  /**
+   * Getter for defendingCountryName
+   *
+   * @return String defending country name
+   */
+  public String getDefendingCountryName() {
+    return defendingCountryName;
+  }
+
+  /**
+   * Setter for defendingCountryName
+   *
+   * @param defendingCountryName name of country that is currently being defended
+   */
+  public void setDefendingCountryName(String defendingCountryName) {
+    this.defendingCountryName = defendingCountryName;
   }
 }

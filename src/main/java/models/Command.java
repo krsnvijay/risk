@@ -40,11 +40,15 @@ public enum Command {
       GameController::reinforce,
       "reinforce <countryName> <armyCount>"),
   FORTIFY(
-      "^fortify ([^ ]+) ([^ ]+) (\\d+)$",
+      "^fortify( ([^ ]+) ([^ ]+) (\\d+))?( -none)?$",
       GameController::fortify,
-      "fortify <fromCountryName> <toCountryName> <armyCount>"),
-  FORTIFY_NONE("^fortify none$", GameController::fortifyNone, "fortify none"),
-  ATTACK_NONE("^attack none$", GameController::attackNone, "attack none"),
+      "fortify <fromCountryName> <toCountryName> <armyCount> -none"),
+  ATTACK(
+      "^attack( ([^ ]+) ([^ ]+) (\\d+))?( (-allout|-noattack))?$",
+      GameController::attack,
+      "attack <fromCountryName> <toCountryName> <numOfDice> -allout -noattack"),
+  DEFEND("^defend (\\d+)$", GameController::defend, "defend <numOfDice>"),
+  ATTACK_MOVE("^attackmove (\\d+)$", GameController::attackMove, "attackmove <armyCount>"),
   SHOW_MAP("^showmap$", EditorController::showMap, "showmap"),
   SHOW_MAP_OWNERSHIP("^showmap$", GameController::showMap, "showmap");
   String regex;
