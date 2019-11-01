@@ -16,12 +16,23 @@ public class PhaseView implements Observer {
   }
 
   @Override
-  public void update(Observable o, Object arg) {
+  public void update(Observable o, Object changed) {
     GameMap gameMap = ((GameMap) o);
-    String currentPlayer = gameMap.getCurrentPlayer().getPlayerName();
-    service.submit(() -> appInstance.updatePlayerLabel(currentPlayer));
-
-    String currentPhase = gameMap.getCurrentContext().name();
-    service.submit(() -> appInstance.updatePhaseLabel(currentPhase));
+    switch((String)changed){
+      case "PHASE_LOG":
+        String phaseLog = gameMap.getPhaseLog();
+        service.submit(() -> appInstance.updatePhaseInfoLabel(phaseLog));
+        break;
+      case "CURRENT_PLAYER":
+        String currentPlayer = gameMap.getCurrentPlayer().getPlayerName();
+        service.submit(() -> appInstance.updatePlayerLabel(currentPlayer));
+        break;
+      case "CURRENT_CONTEXT":
+        String currentPhase = gameMap.getCurrentContext().name();
+        // clear phase log
+        gameMap.setPhaseLog("",true);
+        service.submit(() -> appInstance.updatePhaseLabel(currentPhase));
+        break;
+    }
   }
 }

@@ -12,7 +12,7 @@ import java.util.AbstractMap.SimpleEntry;
  *
  * @author s_anakih
  */
-public class Player extends Observable {
+public class Player {
 
 	/**
 	 * This instance variable holds the name of the player.

@@ -40,6 +40,10 @@ public class GameMap extends Observable {
   /** This maintains a list of players currently in the game. */
   public ArrayList<Player> playersList = new ArrayList<>();
 
+
+  /** This maintains a log of phase-wise activity in the game */
+  public String phaseLog = "";
+
   /**
    * This is the constructor for the GameMap class.
    *
@@ -97,7 +101,7 @@ public class GameMap extends Observable {
     currentPlayerIndex = (currentPlayerIndex + 1) % playersList.size();
     setChanged();
     System.out.println("count " + this.countObservers());
-    notifyObservers();
+    notifyObservers("CURRENT_PLAYER");
   }
 
   /**
@@ -714,5 +718,19 @@ public class GameMap extends Observable {
    */
   public void setCurrentContext(Context currentContext) {
     this.currentContext = currentContext;
+    setChanged();
+    notifyObservers("CURRENT_CONTEXT");
+  }
+
+  public String getPhaseLog() {
+    return phaseLog;
+  }
+
+  public void setPhaseLog(String phaseLog, boolean flushLog) {
+    if(flushLog) this.phaseLog = "";
+    else this.phaseLog += phaseLog + "\n";
+
+    setChanged();
+    notifyObservers("PHASE_LOG");
   }
 }

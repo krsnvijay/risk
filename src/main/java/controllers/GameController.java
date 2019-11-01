@@ -28,12 +28,12 @@ public class GameController {
       display(
           String.format(
               "%s has placed %d army(s) in %s",
-              gameMap.getCurrentPlayer().getPlayerName(), armiesToPlace, countryName));
+              gameMap.getCurrentPlayer().getPlayerName(), armiesToPlace, countryName), true);
     } else {
       display(
           String.format(
               "%s doesnt own %s or it does not exist",
-              gameMap.getCurrentPlayer().getPlayerName(), countryName));
+              gameMap.getCurrentPlayer().getPlayerName(), countryName), false);
     }
     if (gameMap.getCurrentPlayer().getNumberOfArmies() == 0) {
       changeToNextPhase(gameMap);
@@ -42,7 +42,7 @@ public class GameController {
           String.format(
               "%s has %d army(s) to reinforce",
               gameMap.getCurrentPlayer().getPlayerName(),
-              gameMap.getCurrentPlayer().getNumberOfArmies()));
+              gameMap.getCurrentPlayer().getNumberOfArmies()), true);
     }
     return result;
   }
@@ -56,7 +56,7 @@ public class GameController {
    */
   public static boolean fortify(GameMap gameMap, String command) {
     if (command.contains("-none")) {
-      display(String.format("%s chose not to fortify", gameMap.getCurrentPlayer().getPlayerName()));
+      display(String.format("%s chose not to fortify", gameMap.getCurrentPlayer().getPlayerName()), true);
       changeToNextPhase(gameMap);
       return true;
     }
@@ -67,20 +67,20 @@ public class GameController {
     String toCountry = commandSplit[2];
     int armyToMove = Integer.parseInt(commandSplit[3]);
     if (armyToMove < 0) {
-      display("Army(s) count is invalid");
+      display("Army(s) count is invalid", false);
       return false;
     }
     boolean result = gameMap.fortify(fromCountry, toCountry, armyToMove);
     if (result) {
       display(
           String.format(
-              "Fortified %s with %d army(s) from %s", toCountry, armyToMove, fromCountry));
+              "Fortified %s with %d army(s) from %s", toCountry, armyToMove, fromCountry), true);
       changeToNextPhase(gameMap);
     } else {
       display(
           String.format(
               "%s doesnt own the country(s) %s, %s or  does not exist",
-              gameMap.getCurrentPlayer().getPlayerName(), fromCountry, toCountry));
+              gameMap.getCurrentPlayer().getPlayerName(), fromCountry, toCountry), false);
     }
     return result;
   }
@@ -93,7 +93,7 @@ public class GameController {
    * @return true to indicate status
    */
   public static boolean showMap(GameMap gameMap, String command) {
-    display(gameMap.showMapByOwnership());
+    display(gameMap.showMapByOwnership(), false);
     return true;
   }
 
@@ -107,11 +107,11 @@ public class GameController {
     switch (currentContext) {
       case GAME_REINFORCE:
         gameMap.setCurrentContext(Context.GAME_ATTACK);
-        display("[Attack]");
+        display("[Attack]", false);
         break;
       case GAME_ATTACK:
         gameMap.setCurrentContext(Context.GAME_FORTIFY);
-        display("[Fortify]");
+        display("[Fortify]", false);
         break;
       case GAME_FORTIFY:
         gameMap.updatePlayerIndex();
@@ -130,13 +130,13 @@ public class GameController {
     gameMap
         .getCurrentPlayer()
         .setNumberOfArmies(gameMap.getCurrentPlayer().calculateReinforcements(gameMap));
-    display(gameMap.getCurrentPlayer().getPlayerName() + "'s turn:");
-    display("[Reinforce]");
+    display(gameMap.getCurrentPlayer().getPlayerName() + "'s turn:", false);
+    display("[Reinforce]", false);
     display(
         String.format(
             "%s has %d army(s) to reinforce",
             gameMap.getCurrentPlayer().getPlayerName(),
-            gameMap.getCurrentPlayer().getNumberOfArmies()));
+            gameMap.getCurrentPlayer().getNumberOfArmies()), true);
   }
 
   /**
@@ -148,7 +148,7 @@ public class GameController {
    */
   public static boolean attack(GameMap gameMap, String command) {
     if (command.contains("-noattack")) {
-      display(String.format("%s chose not to attack", gameMap.getCurrentPlayer().getPlayerName()));
+      display(String.format("%s chose not to attack", gameMap.getCurrentPlayer().getPlayerName()), true);
       changeToNextPhase(gameMap);
       return true;
     }
@@ -156,7 +156,7 @@ public class GameController {
     if (commandSplit.length == 1) return false;
     if (!gameMap.getCountries().containsKey(commandSplit[1])
         || !gameMap.getCountries().containsKey(commandSplit[2])) {
-      display("Error: One or both the countries do not exist");
+      display("Error: One or both the countries do not exist", false);
       return false;
     }
 
@@ -171,12 +171,12 @@ public class GameController {
       display(
           String.format(
               "Error: Current player %s should be owner of %s to attack",
-              currentPlayer, attackingCountry.getName()));
+              currentPlayer, attackingCountry.getName()), false);
       return false;
     }
     // Player can't attack their own country
     if (attackerName.equals(defenderName)) {
-      display("Error: Player can't attack their own country");
+      display("Error: Player can't attack their own country", false);
       return false;
     }
 
@@ -188,18 +188,18 @@ public class GameController {
       display(
           String.format(
               "Error: %s and %s need to be adjacent for attack",
-              attackingCountry.getName(), defendingCountry.getName()));
+              attackingCountry.getName(), defendingCountry.getName()), false);
       return false;
     }
     int numOfDiceAttacker = Integer.parseInt(commandSplit[3]);
     // numOfDice for attacker can't be > 5
     if (numOfDiceAttacker > 5 || numOfDiceAttacker < 1) {
-      display("Error: numOfDice must be between 1-5");
+      display("Error: numOfDice must be between 1-5", false);
       return false;
     }
     // for numOfDice allowed value is one less than the numOfArmies
     if (!(numOfDiceAttacker < attackingCountry.getNumberOfArmies())) {
-      display("Error: numOfDice should always be one less than numOfArmies");
+      display("Error: numOfDice should always be one less than numOfArmies", false);
       return false;
     }
 
@@ -210,7 +210,7 @@ public class GameController {
             .anyMatch(armyCount -> armyCount > 1);
     if (!isAttackPossible) {
       // If Attack in the whole map is not possible move automatically to fortify
-      display("No possible attack left, changing to next phase");
+      display("No possible attack left, changing to next phase", true);
       gameMap.setCurrentContext(Context.GAME_FORTIFY);
       return true;
     }
@@ -218,7 +218,7 @@ public class GameController {
     display(
         String.format(
             "%s owned by %s declared an attack on %s owned by %s",
-            attackingCountry.getName(), attackerName, defendingCountry.getName(), defenderName));
+            attackingCountry.getName(), attackerName, defendingCountry.getName(), defenderName),true);
     return battleController.startBattle(command.contains("-allout"));
   }
 

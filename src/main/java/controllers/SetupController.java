@@ -22,12 +22,12 @@ public class SetupController {
   public static boolean populateCountries(GameMap gameMap, String command) {
     boolean result = gameMap.gameSetup();
     if (result) {
-      display("Populated countries randomly");
+      display("Populated countries randomly", false);
       gameMap.setCurrentContext(Context.GAME_STARTUP);
-      display("[Game Startup Phase]");
-      display(String.format("%s's turn", gameMap.getCurrentPlayer().getPlayerName()));
+      display("[Game Startup Phase]", false);
+      display(String.format("%s's turn", gameMap.getCurrentPlayer().getPlayerName()),false);
     } else {
-      display("The player list should be > 1 and < 6");
+      display("The player list should be > 1 and < 6", false);
     }
     return result;
   }

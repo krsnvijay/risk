@@ -34,14 +34,14 @@ public class EditorController {
         int continentControlValue = Integer.parseInt(subCommandSplit[2]);
         result = gameMap.addContinent(continentName, continentControlValue);
         if (result) {
-          display(String.format("Added continent: %s", continentName));
+          display(String.format("Added continent: %s", continentName), false);
         }
       } else {
         result = gameMap.removeContinent(continentName);
         if (result) {
-          display(String.format("Removed continent: %s", continentName));
+          display(String.format("Removed continent: %s", continentName), false);
         } else {
-          display(String.format("The continent %s does not exist", continentName));
+          display(String.format("The continent %s does not exist", continentName), false);
           break;
         }
       }
@@ -67,17 +67,17 @@ public class EditorController {
         String continentName = subCommandSplit[2];
         result = gameMap.addCountry(countryName, continentName);
         if (result) {
-          display(String.format("Added country: %s to %s", countryName, continentName));
+          display(String.format("Added country: %s to %s", countryName, continentName), false);
         } else {
-          display(String.format("The continent %s does not exist", continentName));
+          display(String.format("The continent %s does not exist", continentName), false);
           break;
         }
       } else {
         result = gameMap.removeCountry(countryName);
         if (result) {
-          display(String.format("Removed country: %s", countryName));
+          display(String.format("Removed country: %s", countryName), false);
         } else {
-          display(String.format("The country %s does not exist", countryName));
+          display(String.format("The country %s does not exist", countryName), false);
           break;
         }
       }
@@ -102,23 +102,23 @@ public class EditorController {
       String country2 = subCommandSplit[2];
       if (country1.equals(country2)) {
         result = false;
-        display(String.format("The countries %s and %s are the same", country1, country2));
+        display(String.format("The countries %s and %s are the same", country1, country2), false);
         break;
       }
       if (commandType.equals("add")) {
         result = gameMap.addBorder(country1, country2);
         if (result) {
-          display(String.format("Added border: %s - %s", country1, country2));
+          display(String.format("Added border: %s - %s", country1, country2), false);
         } else {
-          display(String.format("One of the countries %s, %s does not exist", country2, country1));
+          display(String.format("One of the countries %s, %s does not exist", country2, country1), false);
           break;
         }
       } else if (commandType.equals("remove")) {
         result = gameMap.removeBorder(country1, country2);
         if (result) {
-          display("Removed border: " + country1 + " - " + country2);
+          display("Removed border: " + country1 + " - " + country2, false);
         } else {
-          display(String.format("One of the countries %s, %s does not exist", country2, country1));
+          display(String.format("One of the countries %s, %s does not exist", country2, country1), false);
           break;
         }
       }
@@ -136,9 +136,9 @@ public class EditorController {
   public static boolean validateMap(GameMap gameMap, String command) {
     boolean result = EditMap.validateMap(gameMap);
     if (result) {
-      display("Game map is valid");
+      display("Game map is valid", false);
     } else {
-      display("Game map is invalid");
+      display("Game map is invalid", false);
     }
     return result;
   }
@@ -157,13 +157,13 @@ public class EditorController {
     if (isMapValid) {
       result = MapParser.saveMap(gameMap, fileLocation);
       if (result) {
-        display("Game map saved to " + fileLocation);
+        display("Game map saved to " + fileLocation, false);
         gameMap.setCurrentContext(Context.MAIN_MENU);
       } else {
-        display(fileLocation + " is invalid");
+        display(fileLocation + " is invalid", false);
       }
     } else {
-      display("Can't save an invalid map");
+      display("Can't save an invalid map", false);
     }
     return result;
   }
@@ -176,7 +176,7 @@ public class EditorController {
    * @return true indicating status
    */
   public static boolean showMap(GameMap gameMap, String command) {
-    display(gameMap.toString());
+    display(gameMap.toString(), false);
     return true;
   }
 }

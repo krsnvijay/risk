@@ -69,20 +69,20 @@ public class BattleController {
   public boolean startBattle(boolean isAllOutEnabled) {
     gameMap.setCurrentContext(Context.GAME_ATTACK_BATTLE_DEFENDER);
     while (true) {
-      display(String.format("%s(defender)'s turn", defenderName));
+      display(String.format("%s(defender)'s turn", defenderName), true);
       display(
           String.format(
               "DefendingCountry %s owned by %s has %d armies",
-              defendingCountry.getName(), defenderName, defendingCountry.getNumberOfArmies()));
+              defendingCountry.getName(), defenderName, defendingCountry.getNumberOfArmies()), true);
       display(
           String.format(
               "AttackingCountry %s owned by %s has %d armies",
-              attackingCountry.getName(), attackerName, attackingCountry.getNumberOfArmies()));
+              attackingCountry.getName(), attackerName, attackingCountry.getNumberOfArmies()), true);
       String inputCommand = CLI.input.nextLine().trim();
       Optional<Command> matchedCommand =
           gameMap.getCurrentContext().getMatchedCommand(inputCommand);
       if (!matchedCommand.isPresent()) {
-        display("Invalid command, use help to check the list of available commands");
+        display("Invalid command, use help to check the list of available commands", false);
         continue;
       }
       if (matchedCommand.get().equals(Command.DEFEND)) {
@@ -90,29 +90,29 @@ public class BattleController {
         numOfDiceDefender = Integer.parseInt(commandSplit[1]);
         // Defender can only use 1 or 2 dice
         if (numOfDiceDefender != 1 && numOfDiceDefender != 2) {
-          display("Error: Defender can only defend with 1 or 2 Dice");
+          display("Error: Defender can only defend with 1 or 2 Dice", false);
           return false;
         }
         // Need atleast 2 armies to use 2 Dice
         if (numOfDiceDefender == 2 && defendingCountry.getNumberOfArmies() < 2) {
-          display("Error: Need atleast 2 armies to use 2 Dice");
+          display("Error: Need atleast 2 armies to use 2 Dice", false);
           return false;
         }
         // Always choose max dice for attacker if allout mode is enabled
         if (isAllOutEnabled) {
-          display("Attacker enabled allout, will always choose max dice");
+          display("Attacker enabled allout, will always choose max dice", true);
           numOfDiceAttacker = calculateMaxDice(attackingCountry);
         }
-        display(String.format("Rolling %d dice for attacker", numOfDiceAttacker));
+        display(String.format("Rolling %d dice for attacker", numOfDiceAttacker), false);
         ArrayList<Integer> attackerDiceRoll = rollDice(numOfDiceAttacker);
-        display(String.format("Rolling %d dice for defender", numOfDiceDefender));
+        display(String.format("Rolling %d dice for defender", numOfDiceDefender), false);
         ArrayList<Integer> defenderDiceRoll = rollDice(numOfDiceDefender);
         // Compare diceRoll results
 
         display(
-            String.format("%s (attacker) rolled : %s", attackerName, attackerDiceRoll.toString()));
+            String.format("%s (attacker) rolled : %s", attackerName, attackerDiceRoll.toString()), true);
         display(
-            String.format("%s (defender) rolled : %s", defenderName, defenderDiceRoll.toString()));
+            String.format("%s (defender) rolled : %s", defenderName, defenderDiceRoll.toString()), true);
         ArrayList<Boolean> results = compareDiceRolls(attackerDiceRoll, defenderDiceRoll);
         for (boolean result : results) {
           if (result) {
@@ -121,32 +121,32 @@ public class BattleController {
               display(
                   String.format(
                       "Attack successful: Removed 1 army from %s (defendingCountry)",
-                      defendingCountry.getName()));
+                      defendingCountry.getName()), true);
               display(
-                  "Remaining armies in defendingCountry " + defendingCountry.getNumberOfArmies());
+                  "Remaining armies in defendingCountry " + defendingCountry.getNumberOfArmies(), true);
 
             } else if (defendingCountry.getNumberOfArmies() == 1) {
               defendingCountry.removeArmies(1);
               display(
                   String.format(
                       "Attack successful: Removed 1 army from %s (defendingCountry)",
-                      defendingCountry.getName()));
+                      defendingCountry.getName()), true);
               display(
                   String.format(
                       " Attacker Won the battle and conquered the country %s",
-                      defendingCountry.getName()));
+                      defendingCountry.getName()), true);
               display(
-                  "Remaining armies in defendingCountry " + defendingCountry.getNumberOfArmies());
+                  "Remaining armies in defendingCountry " + defendingCountry.getNumberOfArmies(), true);
               defendingCountry.setOwnerName(attackerName);
               display(
                   String.format(
                       "Changing ownership of %s from %s to %s",
-                      defendingCountry.getName(), defenderName, attackerName));
+                      defendingCountry.getName(), defenderName, attackerName), true);
               boolean isDefenderHavingCountries =
                   Player.checkPlayerOwnsAtleastOneCountry(defenderName, gameMap);
               if (!isDefenderHavingCountries) {
                 display(
-                    String.format("Removing %s from the game due to no ownership", defenderName));
+                    String.format("Removing %s from the game due to no ownership", defenderName), true);
                 gameMap.removeGamePlayer(defenderName);
               }
               // Change context to Battle victory
@@ -156,11 +156,11 @@ public class BattleController {
               // Check Game Victory condition
               if (!Player.checkPlayerOwnsAtleastOneCountry(attackerName, gameMap)) {
                 // Player Won the Game, Exit
-                display(String.format("%s(attacker) won the game!", attackerName));
+                display(String.format("%s(attacker) won the game!", attackerName), true);
                 System.exit(0);
               } else {
                 // Change to initial attack phase where player can choose to battle again
-                display("Ending battle, choose another attack move");
+                display("Ending battle, choose another attack move", true);
                 gameMap.setCurrentContext(Context.GAME_ATTACK);
                 return true;
               }
@@ -171,11 +171,11 @@ public class BattleController {
               display(
                   String.format(
                       "Defend successful: Removed 1 army from %s (attackingCountry)",
-                      attackingCountry.getName()));
+                      attackingCountry.getName()), true);
               display(
-                  "Remaining armies in defendingCountry " + defendingCountry.getNumberOfArmies());
+                  "Remaining armies in defendingCountry " + defendingCountry.getNumberOfArmies(), true);
               if (!isAllOutEnabled) {
-                display("%s(Attacker)'s turn: can attack or abandon");
+                display("%s(Attacker)'s turn: can attack or abandon", false);
                 gameMap.setCurrentContext(Context.GAME_ATTACK);
                 return true;
               }
@@ -185,9 +185,9 @@ public class BattleController {
               display(
                   String.format(
                       "Defend successful: Removed last army from %s attackingCountry",
-                      attackingCountry.getName()));
-              display("attackingCountry has no armies left to attack");
-              display("Ending battle, choose another attack move");
+                      attackingCountry.getName()), true);
+              display("attackingCountry has no armies left to attack", true);
+              display("Ending battle, choose another attack move", true);
               gameMap.setCurrentContext(Context.GAME_ATTACK);
               return true;
             }

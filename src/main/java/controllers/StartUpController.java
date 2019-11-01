@@ -24,19 +24,19 @@ public class StartUpController {
     if (result) {
       display(
           String.format(
-              "%s placed an army in %s", gameMap.getCurrentPlayer().getPlayerName(), countryName));
+              "%s placed an army in %s", gameMap.getCurrentPlayer().getPlayerName(), countryName), true);
       if (gameMap.checkGameReady()) {
         startPhaseLoop(gameMap);
         return true;
       } else {
         gameMap.updatePlayerIndex();
-        display(String.format("%s's turn", gameMap.getCurrentPlayer().getPlayerName()));
+        display(String.format("%s's turn", gameMap.getCurrentPlayer().getPlayerName()), false);
       }
     } else {
       display(
           String.format(
               "%s does not own %s to place armies or it does not exist",
-              gameMap.getCurrentPlayer().getPlayerName(), countryName));
+              gameMap.getCurrentPlayer().getPlayerName(), countryName), false);
     }
     return result;
   }
@@ -50,7 +50,7 @@ public class StartUpController {
    */
   public static boolean placeAll(GameMap gameMap, String command) {
     gameMap.placeAll();
-    display("Placed player armies randomly in countries that they own");
+    display("Placed player armies randomly in countries that they own", true);
     startPhaseLoop(gameMap);
     return true;
   }

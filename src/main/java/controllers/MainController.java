@@ -40,12 +40,12 @@ public class MainController {
       newFile = true;
     }
     catch (Exception e) {
-      display(e.getMessage());
+      display(e.getMessage(),false);
     }
 
     if (result) {
-      if(newFile) display("File not found! Empty map object provided to edit.");
-      else display("Map loaded successfully");
+      if(newFile) display("File not found! Empty map object provided to edit.", false);
+      else display("Map loaded successfully", false);
       GameMap.modifyInstance(newGameMap);
       GameMap.getGameMap().setCurrentContext(Context.MAP_EDITOR);
     }
@@ -67,17 +67,17 @@ public class MainController {
       newGameMap = MapParser.loadMap(fileLocation);
       result = true;
     } catch (Exception e) {
-      display(e.getMessage());
+      display(e.getMessage(), false);
     }
     if (result) {
-      display("Map loaded successfully");
+      display("Map loaded successfully", false);
       if (gameMap.getPlayersList().size() != 0) {
         newGameMap.setPlayersList(gameMap.getPlayersList());
       }
       GameMap.modifyInstance(newGameMap);
       GameMap.getGameMap().setCurrentContext(Context.GAME_SETUP);
     } else {
-      display("Invalid map");
+      display("Invalid map", false);
     }
     return result;
   }
@@ -100,17 +100,17 @@ public class MainController {
       if (subCommandType.equals("add")) {
         result = gameMap.addGamePlayer(playerName);
         if (result) {
-          display(String.format("Added %s", playerName));
+          display(String.format("Added %s", playerName),false);
         } else {
-          display(String.format("%s already exists", playerName));
+          display(String.format("%s already exists", playerName), false);
           break;
         }
       } else {
         result = gameMap.removeGamePlayer(playerName);
         if (result) {
-          display(String.format("Removed %s", playerName));
+          display(String.format("Removed %s", playerName), false);
         } else {
-          display(String.format("%s does not exist", playerName));
+          display(String.format("%s does not exist", playerName), false);
           break;
         }
       }
@@ -126,7 +126,7 @@ public class MainController {
    * @return status
    */
   public static boolean exitGame(GameMap gameMap, String command) {
-    display("Closing Risk Game");
+    display("Closing Risk Game", false);
     System.exit(0);
     return true;
   }
@@ -142,7 +142,7 @@ public class MainController {
     Command[] validCommands = gameMap.getCurrentContext().getValidCommands();
     System.out.println("Available Commands:");
     for (Command validCommand : validCommands) {
-      display("\t" + validCommand.getUsage());
+      display("\t" + validCommand.getUsage(), false);
     }
     return true;
   }

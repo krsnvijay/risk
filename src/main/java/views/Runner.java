@@ -32,9 +32,7 @@ public class Runner extends Application {
   public Runner() {
     rootPlayerLabel = new Label("Game Not Started!");
     rootPhaseNameLabel = new Label("Setup Phase");
-    rootPhaseInfoLabel = new Label("Siddhant rolled 2 dice and attacked Albania (Owned by Sabari).\n" +
-        "Siddhant lost 3 armies.\n" +
-        "Sabari lost 2 armies\nAttack Phase ends...\n");
+    rootPhaseInfoLabel = new Label("Game has not started yet!");
 
     rootTitleLabel = new Label("World Domination Information");
     rootControlLabel = new Label("Controlled territory:");
@@ -51,6 +49,12 @@ public class Runner extends Application {
     });
   }
 
+  public void updatePhaseInfoLabel(String labelValue) {
+    Platform.runLater(() -> {
+      rootPhaseInfoLabel.setText(labelValue);
+    });
+  }
+
   public void updatePhaseLabel(String labelValue) {
     Platform.runLater(() -> {
       rootPhaseNameLabel.setText(labelValue);
@@ -61,13 +65,13 @@ public class Runner extends Application {
     CLI cli = CLI.getInstance();
     GameMap gameMap = GameMap.getGameMap();
     gameMap.setCurrentContext(Context.MAIN_MENU);
-    display("Welcome to risk game");
-    display("Type help to see available commands");
+    display("Welcome to risk game", false);
+    display("Type help to see available commands", false);
     while (true) {
       String command = CLI.input.nextLine();
       boolean commandStatus = gameMap.getCurrentContext().runCommand(gameMap, command.trim());
       if (!commandStatus) {
-        display("Invalid command, use help to check the list of available commands");
+        display("Invalid command, use help to check the list of available commands", false);
       }
     }
   }
