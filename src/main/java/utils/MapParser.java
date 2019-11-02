@@ -6,9 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Function;
-import models.Continent;
-import models.Country;
-import models.GameMap;
+import models.*;
 
 import static java.util.stream.Collectors.*;
 
@@ -268,5 +266,15 @@ public class MapParser {
     return String.format(
         "%s\n\n[files]\n%s\n\n[continents]\n%s\n\n[countries]\n%s\n\n[borders]\n%s\n",
         gameMap.getFileName(), files, continents, countries, borders);
+  }
+
+  public static void cardsToCountries(GameMap gameMap){
+    Map<String, Country> countriesWithCards = gameMap.getCountries().values().stream().map((country) -> {
+      ArrayList<Player> filteredPlayer = gameMap.getPlayersList().stream().filter((player) -> player.getPlayerName()
+              .equals(country.getOwnerName())).collect(toCollection(ArrayList::new));
+      country.setCard(new Card(filteredPlayer.get(0),country));
+      return country;
+    }).collect(toMap(Country::getName, country -> country));
+    gameMap.setCountries(countriesWithCards);
   }
 }

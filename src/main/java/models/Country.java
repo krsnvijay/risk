@@ -26,6 +26,18 @@ public class Country {
   /** Maintains the number of armies currently in a country. */
   private int numberOfArmies;
 
+ /** Joins the cards to the countries */
+  private Card card;
+
+  /** Getter and setter for the Card object */
+  public Card getCard() {
+    return card;
+  }
+
+  public void setCard(Card card) {
+    this.card = card;
+  }
+
   /**
    * The constructor for the Country class.
    *

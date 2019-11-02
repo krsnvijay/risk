@@ -1,16 +1,17 @@
 package models;
 
-import static java.util.stream.Collectors.toMap;
-import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
+import utils.MapParser;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.junit.Before;
-import org.junit.Test;
-import utils.MapParser;
+
+import static java.util.stream.Collectors.toMap;
+import static org.junit.Assert.assertEquals;
 
 /**
  * test class to check the functionalities of Player.java {@link Player}

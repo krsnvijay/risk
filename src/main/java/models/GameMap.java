@@ -3,6 +3,7 @@ package models;
 import java.util.*;
 
 import static java.util.stream.Collectors.*;
+import static utils.MapParser.cardsToCountries;
 
 /**
  * GameMap stores map data i.e borders, countries, files, continents The class is a singleton.
@@ -27,7 +28,6 @@ public class GameMap extends Observable {
 
   /** Stores a map of all countries. */
   private Map<String, Country> countries;
-
   /** The name of the map file. */
   private String fileName;
 
@@ -505,6 +505,8 @@ public class GameMap extends Observable {
       p.setNumberOfArmies(armiesPerPlayer);
     }
     this.setCountries(populateCountries(playersList));
+    //assigns countries to cards
+    cardsToCountries(this);
     return true;
   }
 
