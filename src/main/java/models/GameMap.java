@@ -1,9 +1,23 @@
 package models;
 
-import java.util.*;
-
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 import static utils.MapParser.cardsToCountries;
+import static views.ConsoleView.display;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Observable;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * GameMap stores map data i.e borders, countries, files, continents The class is a singleton.
@@ -39,7 +53,6 @@ public class GameMap extends Observable {
 
   /** This maintains a list of players currently in the game. */
   public ArrayList<Player> playersList = new ArrayList<>();
-
 
   /** This maintains a log of phase-wise activity in the game */
   public String phaseLog = "";
@@ -465,8 +478,13 @@ public class GameMap extends Observable {
     Collections.shuffle(countries);
     int countrySize = countries.size();
     int playerCount = playerList.size();
+
     for (int i = 0; i < countrySize; i++) {
-      countries.get(i).setOwnerName(playerList.get(i % playerCount).getPlayerName());
+      Country currentCountry = countries.get(i);
+      Player currentPlayer = playerList.get(i % playerCount);
+      currentPlayer.subtractArmies(1);
+      currentCountry.addArmies(1);
+      currentCountry.setOwnerName(currentPlayer.getPlayerName());
     }
     return countries.stream().collect(toMap(Country::getName, c -> c));
   }
@@ -505,7 +523,7 @@ public class GameMap extends Observable {
       p.setNumberOfArmies(armiesPerPlayer);
     }
     this.setCountries(populateCountries(playersList));
-    //assigns countries to cards
+    // assigns countries to cards
     cardsToCountries(this);
     return true;
   }
@@ -672,20 +690,30 @@ public class GameMap extends Observable {
    */
   public boolean fortify(String fromCountry, String toCountry, int armyToMove) {
     boolean result = false;
+    ArrayList<Country> playerOwnedCountries =
+        Player.getCountriesByOwnership(getCurrentPlayer().getPlayerName(), this);
     boolean isOwnershipValid =
-        Player.getCountriesByOwnership(getCurrentPlayer().getPlayerName(), this).stream()
-            .anyMatch(c -> c.getName().equals(fromCountry))
-            && Player.getCountriesByOwnership(getCurrentPlayer().getPlayerName(), this).stream()
-            .anyMatch(c -> c.getName().equals(toCountry));
+        playerOwnedCountries.stream().anyMatch(c -> c.getName().equals(fromCountry))
+            && playerOwnedCountries.stream().anyMatch(c -> c.getName().equals(toCountry));
     if (isOwnershipValid) {
       boolean isAdjacent = borders.get(fromCountry).contains(toCountry);
       if (isAdjacent) {
+        if (armyToMove >= countries.get(fromCountry).getNumberOfArmies()) {
+          display(
+              "Error: entered fortify army count is greater than available armies", false);
+          return false;
+        }
         boolean isArmyRemoved = countries.get(fromCountry).removeArmies(armyToMove);
         if (isArmyRemoved) {
           countries.get(toCountry).addArmies(armyToMove);
           result = true;
         }
       }
+    } else {
+      display(
+          String.format(
+              "%s doesnt own the country(s) %s, %s or does not exist",
+              gameMap.getCurrentPlayer().getPlayerName(), fromCountry, toCountry), false);
     }
     return result;
   }
@@ -729,8 +757,10 @@ public class GameMap extends Observable {
   }
 
   public void setPhaseLog(String phaseLog, boolean flushLog) {
-    if(flushLog) this.phaseLog = "";
-    else this.phaseLog += phaseLog + "\n";
+    if (flushLog) {
+      this.phaseLog = "";
+    } else
+      this.phaseLog += phaseLog + "\n";
 
     setChanged();
     notifyObservers("PHASE_LOG");

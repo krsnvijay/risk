@@ -4,6 +4,7 @@ import static controllers.GameController.startPhaseLoop;
 import static views.ConsoleView.display;
 
 import models.GameMap;
+import models.Player;
 
 /**
  * Controller for StartUp context
@@ -30,7 +31,13 @@ public class StartUpController {
         return true;
       } else {
         gameMap.updatePlayerIndex();
-        display(String.format("%s's turn", gameMap.getCurrentPlayer().getPlayerName()), false);
+        Player currentPlayer = gameMap.getCurrentPlayer();
+        display(String.format("%s's turn to place an army", currentPlayer.getPlayerName()), false);
+        display(
+            String.format(
+                "%s has %d armies left to place",
+                currentPlayer.getPlayerName(), currentPlayer.getNumberOfArmies()),
+            false);
       }
     } else {
       display(

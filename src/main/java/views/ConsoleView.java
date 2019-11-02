@@ -13,8 +13,9 @@ public class ConsoleView {
    * @param text string to display
    */
   public static void display(String text, boolean writeLog) {
-    if(writeLog) getGameMap().setPhaseLog(String.format("-> " + text + "\n"), false);
+    if (writeLog) {
+      getGameMap().setPhaseLog(String.format("-> %s\n", text), false);
+    }
     System.out.println("-> " + text);
   }
-
 }

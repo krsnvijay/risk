@@ -1,7 +1,10 @@
 package models;
 
-import controllers.*;
-
+import controllers.EditorController;
+import controllers.GameController;
+import controllers.MainController;
+import controllers.SetupController;
+import controllers.StartUpController;
 import java.util.function.BiPredicate;
 
 /**
@@ -40,15 +43,15 @@ public enum Command {
       GameController::reinforce,
       "reinforce <countryName> <armyCount>"),
   EXCHANGE_CARDS(
-          "^exchangecards (\\d+ ){3}|-(none))",
-          GameController::reinforce,
-          "exchangecards <num> <num> <num> -none"),
+      "^exchangecards ((\\d+) (\\d+) (\\d+)|-none)$",
+      GameController::reinforce,
+      "exchangecards <num> <num> <num> -none"),
   FORTIFY(
-      "^fortify( ([^ ]+) ([^ ]+) (\\d+))?( -none)?$",
+      "^fortify (([^ ]+) ([^ ]+) (\\d+)|-none)?$",
       GameController::fortify,
       "fortify <fromCountryName> <toCountryName> <armyCount> -none"),
   ATTACK(
-      "^attack( ([^ ]+) ([^ ]+) (\\d+))?( (-allout|-noattack))?$",
+      "^attack (([^ ]+) ([^ ]+) (\\d+|-allout)|-noattack)$",
       GameController::attack,
       "attack <fromCountryName> <toCountryName> <numOfDice> -allout -noattack"),
   DEFEND("^defend (\\d+)$", GameController::defend, "defend <numOfDice>"),
