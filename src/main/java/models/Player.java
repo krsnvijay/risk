@@ -4,8 +4,12 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toMap;
 
-import java.util.*;
+import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * This is the Player class which handles every player.
@@ -57,6 +61,17 @@ public class Player {
 	public static boolean checkPlayerOwnsAtleastOneCountry(String playerName, GameMap gameMap) {
 		return getCountriesByOwnership(playerName, gameMap).size() > 0;
 	}
+
+  /**
+   * Utility method to check whether the player owns all the countries
+   *
+   * @param playerName String with the player's name.
+   * @param gameMap    The GameMap object.
+   * @return boolean true if player is still in the game, false otherwise.
+   */
+  public static boolean checkPlayerOwnsAllTheCountries(String playerName, GameMap gameMap) {
+    return getCountriesByOwnership(playerName, gameMap).size() == gameMap.getCountries().size();
+  }
 
 	/**
 	 * Calculates bonus armies if a player owns a continent

@@ -291,7 +291,7 @@ public class BattleController {
       }
 
       // Check Game Victory condition
-      if (!Player.checkPlayerOwnsAtleastOneCountry(attackerName, gameMap)) {
+      if (Player.checkPlayerOwnsAllTheCountries(attackerName, gameMap)) {
         // Player Won the Game, Exit
         display(String.format("%s(attacker) won the game!", attackerName), true);
         System.exit(0);
