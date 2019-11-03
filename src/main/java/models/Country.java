@@ -29,6 +29,13 @@ public class Country {
  /** Joins the cards to the countries */
   private Card card;
 
+  /**
+   * This boolean checks whether the player needs to get a country's card.
+   * When the player captures the country, it is set to true.
+   * It won't be set to true in any other scenario.
+   */
+  private boolean playerNeedsCardAdded = false;
+
   /** Getter and setter for the Card object */
   public Card getCard() {
     return card;

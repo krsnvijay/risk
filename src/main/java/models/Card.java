@@ -11,7 +11,7 @@ public class Card {
     /** The owner of the card */
     private Player owner;
 
-   /** Stores the Card object */
+    /** Stores the Card object */
     private typeOfCard type;
 
     /** Country of the card */
@@ -27,6 +27,24 @@ public class Card {
      */
     public Player getOwner() {
         return owner;
+    }
+
+    /**
+     * Returns the type of the card.
+     *
+     * @return typeOfCard with the type.
+     */
+    public typeOfCard getType() {
+        return type;
+    }
+
+    /**
+     * Returns the Card's name.
+     *
+     * @return A string with name.
+     */
+    public String getName() {
+        return getCountry() + getType().name();
     }
 
     /**

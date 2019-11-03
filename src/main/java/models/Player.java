@@ -29,6 +29,11 @@ public class Player {
 	private int numberOfArmies = 0;
 
 	/**
+	 * Stores the cards currently held by the player.
+	 */
+	private List<Card> cardsInHand = new ArrayList<>();
+
+	/**
 	 * This constructor initializes the class.
 	 *
 	 * @param playerName name of the player
@@ -148,6 +153,38 @@ public class Player {
 	@Override
 	public String toString() {
 		return String.format("%s", this.playerName);
+	}
+
+	/**
+	 * Returns the player's hand.
+	 *
+	 * @return List with the Cards
+	 */
+	public List<Card> getCardsInHand() {
+		return cardsInHand;
+	}
+
+	/**
+	 * Adds a card to this player's hand.
+	 *
+	 * @param card The Card object to be added.
+	 */
+	public void addCard(Card card) {
+		this.cardsInHand.add(card);
+	}
+
+	/**
+	 * Exchange the card for armies.
+	 *
+	 * @param indices the positions of the cards in the list.
+	 */
+	public void exchangeCards(int[] indices) {
+		for(int index: indices) {
+			Card card = cardsInHand.get(index);
+			int numOfArmies = card.getType().value;
+			giveArmies(numOfArmies);
+			cardsInHand.remove(index);
+		}
 	}
 
 	/**

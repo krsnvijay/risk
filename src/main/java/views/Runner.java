@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -89,43 +90,22 @@ public class Runner extends Application {
     }
   }
 
-  @Override
-  public void start(Stage primaryStage) throws Exception {
-    GameMap gameMap = GameMap.getGameMap();
+  private void addCardView(BorderPane WDSection) {
+    HBox cardSection = new HBox();
+    cardSection.setPadding(new Insets(10, 0, 10, 0));
+    cardSection.setAlignment(Pos.CENTER);
+    cardSection.setStyle("-fx-background-color: grey;");
+    Label sampleCard2 = new Label("Toronto Cavalry");
+    sampleCard2.setPadding(new Insets(10, 10, 10, 10));
+    sampleCard2.setStyle("-fx-border-color: black; -fx-border-radius: 2px; -fx-border-insets: 5");
+    Label sampleCard3 = new Label("Vancouver Infantry");
+    sampleCard3.setPadding(new Insets(10, 10, 10, 10));
+    sampleCard3.setStyle("-fx-border-color: black; -fx-border-radius: 2px; -fx-border-insets: 5");
+    cardSection.getChildren().addAll(sampleCard2, sampleCard3);
+    WDSection.setBottom(cardSection);
+  }
 
-    CLI cli = CLI.getInstance();
-
-    PhaseView phaseView = new PhaseView(this);
-    WDView wdView = new WDView(this);
-
-    gameMap.addObserver(phaseView);
-    gameMap.addObserver(wdView);
-
-    ObserverList.add(phaseView);
-    ObserverList.add(wdView);
-
-    // TODO refactor this entirely (modularize)
-
-    // Declarations
-    primaryStage.setTitle("Risk by Group 2");
-
-    // Parent layout
-    VBox vbox = new VBox();
-    vbox.setFillWidth(true);
-
-    // World Domination View Section
-    BorderPane WDSection = new BorderPane();
-    WDSection.setStyle("-fx-background-color: #cecece;");
-    WDSection.setPadding(new Insets(0, 0, 0, 0));
-    WDSection.setMinHeight(300);
-
-    // WD: title label
-    rootTitleLabel.setStyle("-fx-font-size: 18px; -fx-alignment: center;");
-    WDSection.setTop(rootTitleLabel);
-    BorderPane.setAlignment(rootTitleLabel, Pos.CENTER);
-    BorderPane.setMargin(rootTitleLabel, new Insets(25, 0, 0, 0));
-
-    // WD: control % label
+  private void addControlSection(BorderPane WDSection) {
     VBox controlSection = new VBox();
     controlSection.setAlignment(Pos.CENTER_LEFT);
     controlSection.setPadding(new Insets(0, 0, 0, 25));
@@ -134,13 +114,15 @@ public class Runner extends Application {
     Label player2 = new Label("Warren: 10%");
     controlSection.getChildren().addAll(rootControlLabel, player1, player2);
     WDSection.setLeft(controlSection);
+  }
 
-    // WD: TODO map here...
+  private void addMapSection(BorderPane WDSection) {
     HBox placeholder = new HBox();
     placeholder.setStyle("-fx-background-color: darkgrey");
     WDSection.setCenter(placeholder);
+  }
 
-    // WD: army counts
+  private void addArmySection(BorderPane WDSection) {
     VBox armySection = new VBox();
     armySection.setAlignment(Pos.CENTER_RIGHT);
     armySection.setPadding(new Insets(0, 25, 0, 0));
@@ -149,29 +131,27 @@ public class Runner extends Application {
     Label army2 = new Label("Warren: 14");
     armySection.getChildren().addAll(rootArmyLabel, army1, army2);
     WDSection.setRight(armySection);
+  }
 
-    // CardView
-    HBox cardSection = new HBox();
-    cardSection.setPadding(new Insets(10, 0, 10, 0));
-    cardSection.setAlignment(Pos.CENTER);
-    cardSection.setStyle("-fx-background-color: coral;");
-    Label sampleCard = new Label("Quebec Artillery");
-    sampleCard.setPadding(new Insets(10, 10, 10, 10));
-    sampleCard.setStyle("-fx-border-color: black; -fx-border-radius: 2px; -fx-border-insets: 5");
-    Label sampleCard2 = new Label("Toronto Cavalry");
-    sampleCard2.setPadding(new Insets(10, 10, 10, 10));
-    sampleCard2.setStyle("-fx-border-color: black; -fx-border-radius: 2px; -fx-border-insets: 5");
-    Label sampleCard3 = new Label("Vancouver Infantry");
-    sampleCard3.setPadding(new Insets(10, 10, 10, 10));
-    sampleCard3.setStyle("-fx-border-color: black; -fx-border-radius: 2px; -fx-border-insets: 5");
-    cardSection.getChildren().addAll(sampleCard, sampleCard2, sampleCard3);
-    WDSection.setBottom(cardSection);
+  private void populateWDView(BorderPane WDSection) {
+    WDSection.setStyle("-fx-background-color: #cecece;");
+    WDSection.setPadding(new Insets(0, 0, 0, 0));
+    WDSection.setMinHeight(300);
 
-    // Phase View Section
-    VBox phaseSection = new VBox();
+    // Sets the title at the top.
+    rootTitleLabel.setStyle("-fx-font-size: 18px; -fx-alignment: center;");
+    WDSection.setTop(rootTitleLabel);
+    BorderPane.setAlignment(rootTitleLabel, Pos.CENTER);
+    BorderPane.setMargin(rootTitleLabel, new Insets(25, 0, 0, 0));
+
+    addControlSection(WDSection);
+    addMapSection(WDSection);
+    addArmySection(WDSection);
+  }
+
+  private void populatePhaseView(VBox phaseSection) {
     phaseSection.setPadding(new Insets(25, 0, 0, 40));
 
-    // PV: components
     rootPhaseNameLabel.setStyle("-fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 18px");
     rootPhaseNameLabel.setPadding(new Insets(0, 0, 10, 0));
 
@@ -179,6 +159,40 @@ public class Runner extends Application {
     rootPlayerLabel.setPadding(new Insets(0, 0, 10, 0));
 
     phaseSection.getChildren().addAll(rootPhaseNameLabel, rootPlayerLabel, rootPhaseInfoLabel);
+  }
+
+  private VBox spawnCardView(String name) {
+    Label sampleCard = new Label(name);
+    sampleCard.setPadding(new Insets(10, 10, 10, 10));
+    sampleCard.setStyle("-fx-border-color: black; -fx-border-radius: 2px; -fx-border-insets: 5");
+
+    return new VBox();
+  }
+
+  @Override
+  public void start(Stage primaryStage) throws Exception {
+    GameMap gameMap = GameMap.getGameMap();
+    CLI cli = CLI.getInstance();
+    PhaseView phaseView = new PhaseView(this);
+    WDView wdView = new WDView(this);
+
+    gameMap.addObserver(phaseView);
+    gameMap.addObserver(wdView);
+    ObserverList.add(phaseView);
+    ObserverList.add(wdView);
+
+    primaryStage.setTitle("Risk by Group 2");
+    VBox vbox = new VBox();
+    vbox.setFillWidth(true);
+
+    BorderPane WDSection = new BorderPane();
+    populateWDView(WDSection);
+    // TODO call conditionally
+    addCardView(WDSection);
+    // TODO to "clear" the view, use WDSection.setBottom(null)
+
+    VBox phaseSection = new VBox();
+    populatePhaseView(phaseSection);
 
     vbox.getChildren().addAll(WDSection, phaseSection);
     Scene scene = new Scene(vbox, 800, 600);
