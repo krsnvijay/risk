@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Map;
+
 /**
  * This class maintains information for the cards
  *
@@ -8,26 +10,17 @@ package models;
 
 public class Card {
 
-    /** The owner of the card */
-    private Player owner;
+    String owner;
 
     /** Stores the Card object */
     private typeOfCard type;
 
     /** Country of the card */
-    private Country country;
+    private String country;
 
     /** Total cards introduced in the game */
     private static int cardCount = 0;
 
-    /**
-     * Returns the Player who owns the card.
-     *
-     * @return Details of player
-     */
-    public Player getOwner() {
-        return owner;
-    }
 
     /**
      * Returns the type of the card.
@@ -39,7 +32,7 @@ public class Card {
     }
 
     /**
-     * Returns the Card's name.
+     * Returns the Card's and country's name.
      *
      * @return A string with name.
      */
@@ -48,20 +41,19 @@ public class Card {
     }
 
     /**
-     * Sets Player for the card
+     * Returns the Card's and country's name.
      *
-     * @param owner String with the name.
+     * @return A string with name.
      */
-    public void setOwner(Player owner) {
-        this.owner = owner;
-    }
+    public String getCardValue() { return getType().value;    }
+
 
     /**
      * Returns the Country associated with the card
      *
      * @return Country object
      */
-    public Country getCountry() {
+    public String getCountry() {
         return country;
     }
 
@@ -70,7 +62,7 @@ public class Card {
      *
      * @param country Details of the country
      */
-    public void setCountry(Country country) {
+    public void setCountry(String country) {
         this.country = country;
     }
 
@@ -81,18 +73,18 @@ public class Card {
     public enum typeOfCard {
 
         /** The type of card (Artillery, Cavalry or Infantry) */
-        INFANTRY(1),
-        CAVALRY(5),
-        ARTILLERY(10);
+        INFANTRY("Infantry"),
+        CAVALRY("Cavalry"),
+        ARTILLERY("Artillery");
 
-        public int value;
+        public String value;
 
         /**
          * The constructor for a typeOfCard object
          *
          * @param value Number of armies for each card
          */
-        private typeOfCard(int value) {
+        private typeOfCard(String value) {
             this.value = value;
         }
     }
@@ -100,13 +92,13 @@ public class Card {
     /**
      * The constructor for a Card object.
      *
-     * @param owner Player who owns the card
      * @param country Country associated with the card
      *
      */
-    public Card(Player owner, Country country) {
+    public Card(String country) {
         super();
-        this.owner = owner;
+        //change the owner to deck during the start of the game
+        this.owner = null;
         this.country = country;
         this.type = typeOfCard.values()[cardCount%3];
         cardCount++;

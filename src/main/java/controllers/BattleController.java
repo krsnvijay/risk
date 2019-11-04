@@ -21,6 +21,7 @@ public class BattleController {
   private String attackerName;
   private String defenderName;
   private GameMap gameMap;
+  private Card topCard;
   private int numOfDiceDefender;
   private boolean isAllOutEnabled = false;
 
@@ -174,7 +175,7 @@ public class BattleController {
     ArrayList<Boolean> results = compareDiceRolls(attackerDiceRoll, defenderDiceRoll);
     for (boolean result : results) {
       if (result) {
-        successfulAttack();
+          successfulAttack();
       } else {
         successfulDefence();
       }

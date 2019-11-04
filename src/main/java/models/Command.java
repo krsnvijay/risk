@@ -44,7 +44,7 @@ public enum Command {
       "reinforce <countryName> <armyCount>"),
   EXCHANGE_CARDS(
       "^exchangecards ((\\d+) (\\d+) (\\d+)|-none)$",
-      GameController::reinforce,
+      GameController::exchangeCards,
       "exchangecards <num> <num> <num> -none"),
   FORTIFY(
       "^fortify (([^ ]+) ([^ ]+) (\\d+)|-none)?$",

@@ -6,6 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import models.*;
 
 import static java.util.stream.Collectors.*;
@@ -268,6 +270,7 @@ public class MapParser {
         gameMap.getFileName(), files, continents, countries, borders);
   }
 
+  /*
   public static void cardsToCountries(GameMap gameMap){
     Map<String, Country> countriesWithCards = gameMap.getCountries().values().stream().map((country) -> {
       ArrayList<Player> filteredPlayer = gameMap.getPlayersList().stream().filter((player) -> player.getPlayerName()
@@ -276,5 +279,16 @@ public class MapParser {
       return country;
     }).collect(toMap(Country::getName, country -> country));
     gameMap.setCountries(countriesWithCards);
+  }
+*/
+
+  public static void buildDeck(GameMap gameMap) {
+    ArrayList<Country> countriesInMap = new ArrayList<>(gameMap.getCountries().values());
+    ArrayList<Card> cardsInDeck = new ArrayList<>();
+    for (Country country : countriesInMap) {
+      cardsInDeck.add(new Card(country.getName()));
+    }
+    Collections.shuffle(cardsInDeck);
+    gameMap.setDeck(cardsInDeck);
   }
 }

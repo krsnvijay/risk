@@ -54,6 +54,23 @@ public class GameController {
     return result;
   }
 
+  public static boolean exchangeCards(GameMap gameMap, String command){
+    if(command.contains("-none")){
+      display(
+              String.format("%s doesn't want to exchange cards", gameMap.getCurrentPlayer().getPlayerName()),
+              true);
+      changeToNextPhase(gameMap);
+      return true;
+    }
+    String[] commandSplit = command.split(" ");
+    int[] positionOfCards = new int[3];
+    for(int i = 1; i<commandSplit.length;i++)
+      positionOfCards[i] = Integer.parseInt(commandSplit[i]);
+    //exchange cards method implementation
+    gameMap.getCurrentPlayer().exchangeCardsForArmies(positionOfCards);
+    return true;
+  }
+
   /**
    * Processes fortify command from the cli
    *

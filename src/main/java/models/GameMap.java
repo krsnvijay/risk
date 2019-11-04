@@ -5,7 +5,7 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
-import static utils.MapParser.cardsToCountries;
+import static utils.MapParser.buildDeck;
 import static views.ConsoleView.display;
 
 import java.util.ArrayList;
@@ -56,6 +56,18 @@ public class GameMap extends Observable {
 
   /** This maintains a log of phase-wise activity in the game */
   public String phaseLog = "";
+
+  public ArrayList<Card> deck = null;
+
+  public ArrayList<Card> getDeck() {
+    return deck;
+  }
+
+  public void setDeck(ArrayList<Card> deck) {
+    this.deck = deck;
+  }
+
+  static int positionOfCard = 0;
 
   /**
    * This is the constructor for the GameMap class.
@@ -524,10 +536,18 @@ public class GameMap extends Observable {
     }
     this.setCountries(populateCountries(playersList));
     // assigns countries to cards
-    cardsToCountries(this);
+    buildDeck(this);
     return true;
   }
 
+  public void assignCard(){
+    Player currentPlayer = getCurrentPlayer();
+    if(positionOfCard < deck.size()) {
+      currentPlayer.addCard(deck.get(positionOfCard));
+      deck.remove(positionOfCard);
+      positionOfCard++;
+    }
+  }
   /**
    * This method places an army in a country that the player owns
    *
@@ -559,6 +579,7 @@ public class GameMap extends Observable {
   public boolean checkGameReady() {
     return playersList.stream().mapToInt(Player::getNumberOfArmies).allMatch(count -> count == 0);
   }
+
 
   /**
    * Places army one at a time randomly to each player owned countries in round robin fashion

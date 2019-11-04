@@ -4,12 +4,9 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toMap;
 
-import java.util.AbstractMap;
+import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This is the Player class which handles every player.
@@ -26,12 +23,18 @@ public class Player {
 	/**
 	 * Stores the number of armies a player has.
 	 */
-	private int numberOfArmies = 0;
+	private int numberOfArmies;
 
 	/**
 	 * Stores the cards currently held by the player.
 	 */
 	private List<Card> cardsInHand = new ArrayList<>();
+
+	/** Maintains the number of sets traded in game*/
+	private static int numberOfTradedSet = 0;
+
+	/** Number of armies traded in for each set*/
+	private static int armiesTradedForSet = 0;
 
 	/**
 	 * This constructor initializes the class.
@@ -173,19 +176,31 @@ public class Player {
 		this.cardsInHand.add(card);
 	}
 
+	public Card drawRandomCard()
+	{
+		Random generator = new Random();
+		int index = generator.nextInt(cardsInHand.size());
+		return cardsInHand.remove(index);
+	}
+
 	/**
 	 * Exchange the card for armies.
 	 *
 	 * @param indices the positions of the cards in the list.
 	 */
-	public void exchangeCards(int[] indices) {
+	public void exchangeCardsForArmies(int[] indices) {
+		Set<String> cardSet = new HashSet<>();
 		for(int index: indices) {
-			Card card = cardsInHand.get(index);
-			int numOfArmies = card.getType().value;
-			giveArmies(numOfArmies);
-			cardsInHand.remove(index);
+			if(index >= 0 && index < cardsInHand.size() ) {
+					cardSet.add(cardsInHand.get(index).getCardValue());
+			}
+		}
+		if(cardSet.size() == 1 || cardSet.size() == 3){
+			numberOfTradedSet++;
+			numberOfArmies += giveArmies();
 		}
 	}
+
 
 	/**
 	 * Getter for number of armies the player owns.
@@ -193,7 +208,7 @@ public class Player {
 	 * @return int with number of armies
 	 */
 	public int getNumberOfArmies() {
-		return numberOfArmies;
+		return this.numberOfArmies;
 	}
 
 	/**
@@ -208,10 +223,18 @@ public class Player {
 	/**
 	 * This method gives armies to the player
 	 *
-	 * @param count armies to add to the player
 	 */
-	public void giveArmies(int count) {
-		this.numberOfArmies += count;
+	public int giveArmies() {
+		if(numberOfTradedSet == 1)
+			armiesTradedForSet += 4;
+		else if(numberOfTradedSet <6)
+			armiesTradedForSet += 2;
+		else if(numberOfTradedSet == 6)
+			armiesTradedForSet += 3;
+		else
+			armiesTradedForSet += 5;
+
+		return armiesTradedForSet;
 	}
 
 	/**
