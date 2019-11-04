@@ -1,20 +1,17 @@
 package controllers;
 
-import static java.util.Collections.reverseOrder;
-import static java.util.stream.Collectors.toCollection;
-import static views.ConsoleView.display;
+import models.*;
+import utils.CLI;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import models.Command;
-import models.Context;
-import models.Country;
-import models.GameMap;
-import models.Player;
-import utils.CLI;
+
+import static java.util.Collections.reverseOrder;
+import static java.util.stream.Collectors.toCollection;
+import static views.ConsoleView.display;
 
 public class BattleController {
 
@@ -33,7 +30,8 @@ public class BattleController {
     attackingCountry = gameMap.getCountries().get(commandSplit[1]);
     attackerName = gameMap.getCurrentPlayer().getPlayerName();
     defendingCountry = gameMap.getCountries().get(commandSplit[2]);
-    numOfDiceAttacker = Integer.parseInt(commandSplit[3]);
+    if (!command.contains("-allout"))
+      numOfDiceAttacker = Integer.parseInt(commandSplit[3]);
     defenderName = defendingCountry.getOwnerName();
     isAllOutEnabled = command.contains("-allout");
   }

@@ -1,11 +1,11 @@
 package controllers;
 
-import static views.ConsoleView.display;
-
 import models.Context;
 import models.Country;
 import models.GameMap;
 import models.Player;
+
+import static views.ConsoleView.display;
 
 /**
  * Controller for Game loop and phases
@@ -205,16 +205,18 @@ public class GameController {
           false);
       return false;
     }
-    int numOfDiceAttacker = Integer.parseInt(commandSplit[3]);
-    // numOfDice for attacker can't be > 3
-    if (numOfDiceAttacker > 3 || numOfDiceAttacker < 1) {
-      display("Error: numOfDice must be between 1-3", false);
-      return false;
-    }
-    // for numOfDice allowed value is one less than the numOfArmies
-    if (!(numOfDiceAttacker < attackingCountry.getNumberOfArmies())) {
-      display("Error: numOfDice should always be one less than numOfArmies", false);
-      return false;
+    if (!command.contains("-allout")) {
+      int numOfDiceAttacker = Integer.parseInt(commandSplit[3]);
+      // numOfDice for attacker can't be > 3
+      if (numOfDiceAttacker > 3 || numOfDiceAttacker < 1) {
+        display("Error: numOfDice must be between 1-3", false);
+        return false;
+      }
+      // for numOfDice allowed value is one less than the numOfArmies
+      if (!(numOfDiceAttacker < attackingCountry.getNumberOfArmies())) {
+        display("Error: numOfDice should always be one less than numOfArmies", false);
+        return false;
+      }
     }
 
     // Player can only attack if he has atleast two armies in a country he owns

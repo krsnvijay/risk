@@ -26,13 +26,14 @@ public class Country {
   /** Maintains the number of armies currently in a country. */
   private int numberOfArmies;
 
- /** Joins the cards to the countries */
+  /**
+   * Joins the cards to the countries
+   */
   private Card card;
 
   /**
-   * This boolean checks whether the player needs to get a country's card.
-   * When the player captures the country, it is set to true.
-   * It won't be set to true in any other scenario.
+   * This boolean checks whether the player needs to get a country's card. When the player captures
+   * the country, it is set to true. It won't be set to true in any other scenario.
    */
   private boolean playerNeedsCardAdded = false;
 
@@ -162,6 +163,7 @@ public class Country {
    * @param ownerName String with the name.
    */
   public void setOwnerName(String ownerName) {
+    WorldDomination.getInstance().recomputeAttributes();
     this.ownerName = ownerName;
   }
 
@@ -193,6 +195,7 @@ public class Country {
    */
   public void setNumberOfArmies(int numberOfArmies) {
     this.numberOfArmies = numberOfArmies;
+    WorldDomination.getInstance().recomputeAttributes();
   }
 
   /**
@@ -204,6 +207,7 @@ public class Country {
   public boolean addArmies(int count) {
     if (numberOfArmies + count > 0) {
       this.numberOfArmies += count;
+      WorldDomination.getInstance().recomputeAttributes();
       return true;
     }
     return false;
@@ -218,6 +222,7 @@ public class Country {
   public boolean removeArmies(int count) {
     if (numberOfArmies - count > 0) {
       this.numberOfArmies -= count;
+      WorldDomination.getInstance().recomputeAttributes();
       return true;
     }
     return false;

@@ -6,13 +6,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.Context;
 import models.GameMap;
+import models.WorldDomination;
 import utils.CLI;
 
 import java.util.ArrayList;
@@ -30,6 +30,7 @@ public class Runner extends Application {
 
   Label rootTitleLabel, rootControlLabel, rootArmyLabel;
   Label rootPhaseNameLabel, rootPlayerLabel, rootPhaseInfoLabel;
+  Label rootContinentLabel;
 
   public Runner() {
     rootPlayerLabel = new Label("Game Not Started!");
@@ -39,6 +40,7 @@ public class Runner extends Application {
     rootControlLabel = new Label("Controlled territory:");
     rootControlLabel.setStyle("-fx-font-weight: bold;");
     rootArmyLabel = new Label("Total armies:");
+    rootArmyLabel.setPadding(new Insets(15, 150, 0, 0));
     rootArmyLabel.setStyle("-fx-font-weight: bold;");
   }
 
@@ -61,6 +63,25 @@ public class Runner extends Application {
   public void updatePhaseLabel(String labelValue) {
     Platform.runLater(() -> {
       rootPhaseNameLabel.setText(labelValue);
+    });
+  }
+
+
+  public void updateArmyLabel(String labelValue) {
+    Platform.runLater(() -> {
+      rootArmyLabel.setText("Total Armies by Player:\n" + labelValue);
+    });
+  }
+
+  public void updateControlLabel(String labelValue) {
+    Platform.runLater(() -> {
+      rootControlLabel.setText("%ge Control by Player:\n" + labelValue);
+    });
+  }
+
+  public void updateContinentControlLabel(String labelValue) {
+    Platform.runLater(() -> {
+      rootContinentLabel.setText("Continents Controlled By Player:\n" + labelValue);
     });
   }
 
@@ -94,7 +115,7 @@ public class Runner extends Application {
     HBox cardSection = new HBox();
     cardSection.setPadding(new Insets(10, 0, 10, 0));
     cardSection.setAlignment(Pos.CENTER);
-    cardSection.setStyle("-fx-background-color: grey;");
+    cardSection.setStyle("-fx-background-color: #cecece;");
     Label sampleCard2 = new Label("Toronto Cavalry");
     sampleCard2.setPadding(new Insets(10, 10, 10, 10));
     sampleCard2.setStyle("-fx-border-color: black; -fx-border-radius: 2px; -fx-border-insets: 5");
@@ -105,31 +126,28 @@ public class Runner extends Application {
     WDSection.setBottom(cardSection);
   }
 
-  private void addControlSection(BorderPane WDSection) {
-    VBox controlSection = new VBox();
-    controlSection.setAlignment(Pos.CENTER_LEFT);
-    controlSection.setPadding(new Insets(0, 0, 0, 25));
-    // TODO dynamically add labels for players...
-    Label player1 = new Label("Siddhant: 30%");
-    Label player2 = new Label("Warren: 10%");
-    controlSection.getChildren().addAll(rootControlLabel, player1, player2);
-    WDSection.setLeft(controlSection);
-  }
+//  private void addControlSection(BorderPane WDSection) {
+//    Label controlSection = new Label();
+//    controlSection.setAlignment(Pos.TOP_CENTER);
+//    controlSection.setPadding(new Insets(10, 0, 0, 0));
+//    WDSection.setLeft(controlSection);
+//  }
 
   private void addMapSection(BorderPane WDSection) {
-    HBox placeholder = new HBox();
-    placeholder.setStyle("-fx-background-color: darkgrey");
-    WDSection.setCenter(placeholder);
+    VBox mapSection = new VBox();
+    mapSection.setStyle("-fx-background-color: #cecece");
+    mapSection.setAlignment(Pos.TOP_CENTER);
+    mapSection.setPadding(new Insets(25, 0, 0, -10));
+    rootContinentLabel = new Label("Continents Controlled By Players");
+    mapSection.getChildren().add(rootContinentLabel);
+    WDSection.setCenter(mapSection);
   }
 
   private void addArmySection(BorderPane WDSection) {
     VBox armySection = new VBox();
-    armySection.setAlignment(Pos.CENTER_RIGHT);
-    armySection.setPadding(new Insets(0, 25, 0, 0));
-    // TODO dynamically add labels for players...
-    Label army1 = new Label("Siddhant: 34");
-    Label army2 = new Label("Warren: 14");
-    armySection.getChildren().addAll(rootArmyLabel, army1, army2);
+    armySection.setAlignment(Pos.TOP_CENTER);
+    armySection.setPadding(new Insets(10, 0, 0, 0));
+    armySection.getChildren().addAll(rootArmyLabel);
     WDSection.setRight(armySection);
   }
 
@@ -141,10 +159,11 @@ public class Runner extends Application {
     // Sets the title at the top.
     rootTitleLabel.setStyle("-fx-font-size: 18px; -fx-alignment: center;");
     WDSection.setTop(rootTitleLabel);
+    WDSection.setLeft(rootControlLabel);
+    rootControlLabel.setPadding(new Insets(25, 0, 0, 125));
     BorderPane.setAlignment(rootTitleLabel, Pos.CENTER);
     BorderPane.setMargin(rootTitleLabel, new Insets(25, 0, 0, 0));
-
-    addControlSection(WDSection);
+    BorderPane.setAlignment(rootControlLabel, Pos.TOP_RIGHT);
     addMapSection(WDSection);
     addArmySection(WDSection);
   }
@@ -177,9 +196,8 @@ public class Runner extends Application {
     WDView wdView = new WDView(this);
 
     gameMap.addObserver(phaseView);
-    gameMap.addObserver(wdView);
+    WorldDomination.getInstance().addObserver(wdView);
     ObserverList.add(phaseView);
-    ObserverList.add(wdView);
 
     primaryStage.setTitle("Risk by Group 2");
     VBox vbox = new VBox();
