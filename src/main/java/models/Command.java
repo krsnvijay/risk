@@ -1,10 +1,7 @@
 package models;
 
-import controllers.EditorController;
-import controllers.GameController;
-import controllers.MainController;
-import controllers.SetupController;
-import controllers.StartUpController;
+import controllers.*;
+
 import java.util.function.BiPredicate;
 
 /**

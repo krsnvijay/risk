@@ -1,7 +1,11 @@
 package utils;
 
 import models.Context;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 /**
  * This singleton utility class handles all the text commands for the game.

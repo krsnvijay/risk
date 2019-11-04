@@ -2,13 +2,19 @@ package views;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import models.Context;
 import models.GameMap;
@@ -20,6 +26,7 @@ import java.util.List;
 import java.util.Observer;
 
 import static views.ConsoleView.display;
+
 /**
  * Runs the project and handles the initial commands.
  *
@@ -27,10 +34,12 @@ import static views.ConsoleView.display;
  */
 public class Runner extends Application {
   public static List<Observer> ObserverList = new ArrayList<>();
-
-  Label rootTitleLabel, rootControlLabel, rootArmyLabel;
-  Label rootPhaseNameLabel, rootPlayerLabel, rootPhaseInfoLabel;
-  Label rootContinentLabel;
+  private Label rootTitleLabel, rootControlLabel, rootArmyLabel;
+  private Label rootPhaseNameLabel, rootPlayerLabel, rootPhaseInfoLabel;
+  private Label rootContinentLabel;
+  private BorderPane WDSection;
+  private HBox cardSection = new HBox();
+  private ScrollPane cardScroller = new ScrollPane();
 
   public Runner() {
     rootPlayerLabel = new Label("Game Not Started!");
@@ -49,40 +58,45 @@ public class Runner extends Application {
   }
 
   public void updatePlayerLabel(String labelValue) {
-    Platform.runLater(() -> {
-      rootPlayerLabel.setText(labelValue);
-    });
+    Platform.runLater(
+        () -> {
+          rootPlayerLabel.setText(labelValue);
+        });
   }
 
   public void updatePhaseInfoLabel(String labelValue) {
-    Platform.runLater(() -> {
-      rootPhaseInfoLabel.setText(labelValue);
-    });
+    Platform.runLater(
+        () -> {
+          rootPhaseInfoLabel.setText(labelValue);
+        });
   }
 
   public void updatePhaseLabel(String labelValue) {
-    Platform.runLater(() -> {
-      rootPhaseNameLabel.setText(labelValue);
-    });
+    Platform.runLater(
+        () -> {
+          rootPhaseNameLabel.setText(labelValue);
+        });
   }
 
-
   public void updateArmyLabel(String labelValue) {
-    Platform.runLater(() -> {
-      rootArmyLabel.setText("Total Armies by Player:\n" + labelValue);
-    });
+    Platform.runLater(
+        () -> {
+          rootArmyLabel.setText("Total Armies by Player:\n" + labelValue);
+        });
   }
 
   public void updateControlLabel(String labelValue) {
-    Platform.runLater(() -> {
-      rootControlLabel.setText("%ge Control by Player:\n" + labelValue);
-    });
+    Platform.runLater(
+        () -> {
+          rootControlLabel.setText("%ge Control by Player:\n" + labelValue);
+        });
   }
 
   public void updateContinentControlLabel(String labelValue) {
-    Platform.runLater(() -> {
-      rootContinentLabel.setText("Continents Controlled By Player:\n" + labelValue);
-    });
+    Platform.runLater(
+        () -> {
+          rootContinentLabel.setText("Continents Controlled By Player:\n" + labelValue);
+        });
   }
 
   public static void processCommandline() {
@@ -102,36 +116,53 @@ public class Runner extends Application {
 
   // TODO move to a decent place
   public static String getPhaseName(Context context) {
-    switch(context) {
-      case GAME_ATTACK: return "Attack Phase";
-      case GAME_FORTIFY: return "Fortify Phase";
-      case GAME_REINFORCE: return "Reinforcement Phase";
-      case GAME_SETUP: return "Setup Phase";
-      default: return "Game not started...";
+    switch (context) {
+      case GAME_ATTACK:
+        return "Attack Phase";
+      case GAME_FORTIFY:
+        return "Fortify Phase";
+      case GAME_REINFORCE:
+        return "Reinforcement Phase";
+      case GAME_SETUP:
+        return "Setup Phase";
+      default:
+        return "Game not started...";
     }
   }
 
   private void addCardView(BorderPane WDSection) {
-    HBox cardSection = new HBox();
+    cardScroller.setContent(cardSection);
+    cardScroller.setStyle("-fx-background-color: #b0b0b0;");
+    cardScroller.addEventFilter(
+        ScrollEvent.SCROLL,
+        new EventHandler<ScrollEvent>() {
+          @Override
+          public void handle(ScrollEvent event) {
+            if (event.getDeltaY() != 0) {
+              event.consume();
+            }
+          }
+        });
     cardSection.setPadding(new Insets(10, 0, 10, 0));
     cardSection.setAlignment(Pos.CENTER);
-    cardSection.setStyle("-fx-background-color: #cecece;");
-    Label sampleCard2 = new Label("Toronto Cavalry");
-    sampleCard2.setPadding(new Insets(10, 10, 10, 10));
-    sampleCard2.setStyle("-fx-border-color: black; -fx-border-radius: 2px; -fx-border-insets: 5");
-    Label sampleCard3 = new Label("Vancouver Infantry");
-    sampleCard3.setPadding(new Insets(10, 10, 10, 10));
-    sampleCard3.setStyle("-fx-border-color: black; -fx-border-radius: 2px; -fx-border-insets: 5");
-    cardSection.getChildren().addAll(sampleCard2, sampleCard3);
-    WDSection.setBottom(cardSection);
+    Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+
+    cardSection.setStyle("-fx-background-color: #b0b0b0;");
+    addCardToView("1. British Columbia Artillary");
+    addCardToView("2. Ontario Cavalry");
+    cardScroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+    HBox.setHgrow(cardScroller, Priority.ALWAYS);
+
+    WDSection.setBottom(cardScroller);
   }
 
-//  private void addControlSection(BorderPane WDSection) {
-//    Label controlSection = new Label();
-//    controlSection.setAlignment(Pos.TOP_CENTER);
-//    controlSection.setPadding(new Insets(10, 0, 0, 0));
-//    WDSection.setLeft(controlSection);
-//  }
+  //  private void addControlSection(BorderPane WDSection) {
+  //    Label controlSection = new Label();
+  //    controlSection.setAlignment(Pos.TOP_CENTER);
+  //    controlSection.setPadding(new Insets(10, 0, 0, 0));
+  //    WDSection.setLeft(controlSection);
+  //  }
 
   private void addMapSection(BorderPane WDSection) {
     VBox mapSection = new VBox();
@@ -171,7 +202,8 @@ public class Runner extends Application {
   private void populatePhaseView(VBox phaseSection) {
     phaseSection.setPadding(new Insets(25, 0, 0, 40));
 
-    rootPhaseNameLabel.setStyle("-fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 18px");
+    rootPhaseNameLabel.setStyle(
+        "-fx-font-weight: bold; -fx-font-style: italic; -fx-font-size: 18px");
     rootPhaseNameLabel.setPadding(new Insets(0, 0, 10, 0));
 
     rootPlayerLabel.setStyle("-fx-font-weight: bold");
@@ -180,12 +212,15 @@ public class Runner extends Application {
     phaseSection.getChildren().addAll(rootPhaseNameLabel, rootPlayerLabel, rootPhaseInfoLabel);
   }
 
-  private VBox spawnCardView(String name) {
-    Label sampleCard = new Label(name);
-    sampleCard.setPadding(new Insets(10, 10, 10, 10));
-    sampleCard.setStyle("-fx-border-color: black; -fx-border-radius: 2px; -fx-border-insets: 5");
+  private void addCardToView(String name) {
+    Label cardView = new Label(name);
+    cardView.setPadding(new Insets(10, 10, 10, 10));
+    cardView.setStyle("-fx-border-color: black; -fx-border-radius: 2px; -fx-border-insets: 5");
+    cardSection.getChildren().add(cardView);
+  }
 
-    return new VBox();
+  private void clearCardView() {
+    WDSection.setBottom(null);
   }
 
   @Override
@@ -203,11 +238,13 @@ public class Runner extends Application {
     VBox vbox = new VBox();
     vbox.setFillWidth(true);
 
-    BorderPane WDSection = new BorderPane();
+    WDSection = new BorderPane();
     populateWDView(WDSection);
     // TODO call conditionally
     addCardView(WDSection);
-    // TODO to "clear" the view, use WDSection.setBottom(null)
+    clearCardView();
+    addCardView(WDSection);
+    addCardView(WDSection);
 
     VBox phaseSection = new VBox();
     populatePhaseView(phaseSection);

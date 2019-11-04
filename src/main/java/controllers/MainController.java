@@ -1,17 +1,16 @@
 package controllers;
 
-import static views.ConsoleView.display;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import models.Command;
 import models.Context;
 import models.GameMap;
 import models.Player;
-import utils.CLI;
 import utils.MapParser;
+
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static views.ConsoleView.display;
 
 /**
  * Controller for Main Menu Context

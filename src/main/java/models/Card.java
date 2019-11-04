@@ -1,7 +1,5 @@
 package models;
 
-import java.util.Map;
-
 /**
  * This class maintains information for the cards
  *

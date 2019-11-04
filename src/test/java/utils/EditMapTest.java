@@ -1,11 +1,12 @@
 package utils;
 
-import static org.junit.Assert.assertFalse;
-
-import java.io.File;
 import models.GameMap;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
+
+import static org.junit.Assert.assertFalse;
 
 /**
  * test class to check the functionalities of EditMap.java

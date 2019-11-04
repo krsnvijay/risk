@@ -1,20 +1,21 @@
 package models;
 
-import static java.util.stream.Collectors.toSet;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertFalse;
+import org.junit.Before;
+import org.junit.Test;
+import utils.EditMap;
+import utils.MapParser;
 
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import org.junit.Before;
-import org.junit.Test;
-import utils.EditMap;
-import utils.MapParser;
+
+import static java.util.stream.Collectors.toSet;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
 
 /**
  * test class to check the functionalities of GameMap.java
