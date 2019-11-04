@@ -12,6 +12,8 @@ import static views.ConsoleView.display;
  */
 public class GameController {
 
+  public static boolean assignedCard = false;
+
   /**
    * Processes reinforce command from the cli
    *
@@ -42,7 +44,9 @@ public class GameController {
           false);
     }
     if (gameMap.getCurrentPlayer().getNumberOfArmies() == 0) {
-      changeToNextPhase(gameMap);
+      if (gameMap.getCurrentPlayer().getCardsInHand().size() < 5) {
+        changeToNextPhase(gameMap);
+      }
     } else {
       display(
           String.format(
@@ -54,19 +58,19 @@ public class GameController {
     return result;
   }
 
-  public static boolean exchangeCards(GameMap gameMap, String command){
-    if(command.contains("-none")){
+  public static boolean exchangeCards(GameMap gameMap, String command) {
+    if (command.contains("-none")) {
       display(
-              String.format("%s doesn't want to exchange cards", gameMap.getCurrentPlayer().getPlayerName()),
-              true);
-      changeToNextPhase(gameMap);
+          String.format(
+              "%s doesn't want to exchange cards", gameMap.getCurrentPlayer().getPlayerName()),
+          true);
       return true;
     }
     String[] commandSplit = command.split(" ");
     int[] positionOfCards = new int[3];
-    for(int i = 1; i<commandSplit.length;i++)
+    for (int i = 1; i < commandSplit.length; i++)
       positionOfCards[i] = Integer.parseInt(commandSplit[i]);
-    //exchange cards method implementation
+    // exchange cards method implementation
     gameMap.getCurrentPlayer().exchangeCardsForArmies(positionOfCards);
     return true;
   }
@@ -178,6 +182,7 @@ public class GameController {
       display(
           String.format("%s chose not to attack", gameMap.getCurrentPlayer().getPlayerName()),
           true);
+      if (GameController.assignedCard) GameController.assignedCard = false;
       changeToNextPhase(gameMap);
       return true;
     }
@@ -234,6 +239,10 @@ public class GameController {
         display("Error: numOfDice should always be one less than numOfArmies", false);
         return false;
       }
+    }
+    if (attackingCountry.getNumberOfArmies() < 2) {
+      display("Need atleast 2 armies to attack", false);
+      return false;
     }
 
     // Player can only attack if he has atleast two armies in a country he owns

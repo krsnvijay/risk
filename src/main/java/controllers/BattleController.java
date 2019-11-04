@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.reverseOrder;
@@ -93,7 +94,7 @@ public class BattleController {
     gameMap.setCurrentContext(Context.GAME_ATTACK_BATTLE_DEFENDER);
     if (isAllOutEnabled) {
       display("Attacker enabled allout, will always choose max dice", true);
-      while (gameMap.getCurrentContext() != Context.GAME_ATTACK) {
+      while (gameMap.getCurrentContext() != Context.GAME_ATTACK && attackingCountry.getNumberOfArmies() > 1) {
         performAttack();
       }
     } else {
@@ -244,6 +245,10 @@ public class BattleController {
               attackingCountry.getName()),
           true);
       display("Remaining armies in defendingCountry " + defendingCountry.getNumberOfArmies(), true);
+      if (attackingCountry.getNumberOfArmies() == 1) {
+        display("Ending battle, choose another attack move", true);
+        gameMap.setCurrentContext(Context.GAME_ATTACK);
+      }
     } else if (attackingCountry.getNumberOfArmies() == 1) {
       display(
           String.format(
@@ -280,8 +285,20 @@ public class BattleController {
           true);
       // Change context to Battle victory
       gameMap.setCurrentContext(Context.GAME_ATTACK_BATTLE_VICTORY);
+
       // Move armies to the new territory
       successfulBattle();
+      if (!GameController.assignedCard) {
+        gameMap.assignCard();
+        GameController.assignedCard = true;
+        display(
+            gameMap.getCurrentPlayer().getPlayerName()
+                + " "
+                + gameMap.getCurrentPlayer().getCardsInHand().stream().map(Card::getName)
+                .collect(Collectors.joining(" ")),
+            false);
+      }
+
       boolean isDefenderHavingCountries =
           Player.checkPlayerOwnsAtleastOneCountry(defenderName, gameMap);
       if (!isDefenderHavingCountries) {

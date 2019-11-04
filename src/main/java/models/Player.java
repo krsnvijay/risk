@@ -1,12 +1,9 @@
 package models;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toMap;
-
 import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.concurrent.atomic.AtomicInteger;
+
+import static java.util.stream.Collectors.*;
 
 /**
  * This is the Player class which handles every player.
@@ -24,6 +21,10 @@ public class Player {
 	 * Stores the number of armies a player has.
 	 */
 	private int numberOfArmies;
+
+	public void setCardsInHand(List<Card> cardsInHand) {
+		this.cardsInHand = cardsInHand;
+	}
 
 	/**
 	 * Stores the cards currently held by the player.
@@ -174,13 +175,6 @@ public class Player {
 	 */
 	public void addCard(Card card) {
 		this.cardsInHand.add(card);
-	}
-
-	public Card drawRandomCard()
-	{
-		Random generator = new Random();
-		int index = generator.nextInt(cardsInHand.size());
-		return cardsInHand.remove(index);
 	}
 
 	/**
