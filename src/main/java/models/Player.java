@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
 
 import static java.util.stream.Collectors.*;
+import static views.ConsoleView.display;
 
 /**
  * This is the Player class which handles every player.
@@ -187,11 +188,16 @@ public class Player {
 		for(int index: indices) {
 			if(index >= 0 && index < cardsInHand.size() ) {
 					cardSet.add(cardsInHand.get(index).getCardValue());
+			} else{
+				display("One OR more of your card indices are INCORRECT", false);
+				break;
 			}
 		}
 		if(cardSet.size() == 1 || cardSet.size() == 3){
 			numberOfTradedSet++;
-			numberOfArmies += giveArmies();
+			int armiesAcquired = giveArmies();
+			numberOfArmies += armiesAcquired;
+			display("Acquired " + armiesAcquired + " through card exchange", false);
 		}
 	}
 

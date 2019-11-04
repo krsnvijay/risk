@@ -69,7 +69,7 @@ public class GameController {
     String[] commandSplit = command.split(" ");
     int[] positionOfCards = new int[3];
     for (int i = 1; i < commandSplit.length; i++)
-      positionOfCards[i] = Integer.parseInt(commandSplit[i]);
+      positionOfCards[i-1] = Integer.parseInt(commandSplit[i]);
     // exchange cards method implementation
     gameMap.getCurrentPlayer().exchangeCardsForArmies(positionOfCards);
     return true;

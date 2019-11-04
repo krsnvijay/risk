@@ -35,7 +35,7 @@ public class Card {
      * @return A string with name.
      */
     public String getName() {
-        return getCountry() + getType().name();
+        return getCountry() + " " + getType().value;
     }
 
     /**
