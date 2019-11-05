@@ -2,8 +2,7 @@ package controllers;
 
 import models.GameMap;
 import org.junit.Before;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import utils.MapParser;
 
 import java.io.File;
@@ -12,7 +11,7 @@ import java.util.Scanner;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.either;
 import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+
 
 class MainControllerTest {
 
@@ -25,7 +24,7 @@ class MainControllerTest {
     private String reason;
 
 
-    @BeforeEach
+    @Before
     public void setUp() throws Exception {
         // Load Risk map from resource folder
         File riskMap = new File("src/test/resources/risk.map");

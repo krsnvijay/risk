@@ -1,8 +1,7 @@
 package controllers;
 
-import static java.util.Collections.reverseOrder;
-import static java.util.stream.Collectors.toCollection;
-import static views.ConsoleView.display;
+import models.*;
+import utils.CLI;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,13 +9,10 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import models.Card;
-import models.Command;
-import models.Context;
-import models.Country;
-import models.GameMap;
-import models.Player;
-import utils.CLI;
+
+import static java.util.Collections.reverseOrder;
+import static java.util.stream.Collectors.toCollection;
+import static views.ConsoleView.display;
 
 public class BattleController {
 
@@ -130,7 +126,7 @@ public class BattleController {
     return true;
   }
 
-  public int getNumOfDiceAttacker() {
+  public int getNumOfDiceFromAttacker() {
     if (isAllOutEnabled) {
       return calculateMaxDiceForAttacker();
     } else {
@@ -188,7 +184,7 @@ public class BattleController {
 
   public void attemptAttack() {
     numOfDiceDefender = getNumOfDiceFromDefender();
-    numOfDiceAttacker = getNumOfDiceAttacker();
+    numOfDiceAttacker = getNumOfDiceFromAttacker();
 
     // Simulate Dice Roll
     display(String.format("Rolling %d dice for attacker", numOfDiceAttacker), false);

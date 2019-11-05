@@ -1,21 +1,20 @@
 package controllers;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Before;
+import org.junit.Test;
 
 class StartUpControllerTest {
 
-    @BeforeEach
-    void setUp() {
-    }
+  @Before
+  void setUp() {
+  }
 
-    @Test
-    void placeArmy() {
-    }
+  @Test
+  void placeArmy() {
+  }
 
-    @Test
-    void placeAll() {
-    }
+  @Test
+  void placeAll() {
+  }
 }

@@ -2,8 +2,7 @@ package controllers;
 
 import models.GameMap;
 import org.junit.Before;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import utils.EditMap;
 import utils.MapParser;
 
@@ -14,7 +13,7 @@ import java.nio.file.Paths;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.*;
+
 
 class EditorControllerTest {
     private GameMap gameMap;
