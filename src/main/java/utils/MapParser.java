@@ -284,6 +284,11 @@ public class MapParser {
   }
 */
 
+    /**
+     * Builds the deck of RISK cards
+     *
+     * @param gameMap The GameMap object to save.
+     */
   public static void buildDeck(GameMap gameMap) {
     ArrayList<Country> countriesInMap = new ArrayList<>(gameMap.getCountries().values());
     ArrayList<Card> cardsInDeck = new ArrayList<>();

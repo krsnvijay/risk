@@ -47,6 +47,13 @@ public class GameController {
       if (gameMap.getCurrentPlayer().getCardsInHand().size() < 5) {
         changeToNextPhase(gameMap);
       }
+      else {
+          display(
+                  String.format(
+                          "%s has more than 5 cards. Please exchange cards to continue.",
+                          gameMap.getCurrentPlayer().getPlayerName()),
+                  true);
+      }
     } else {
       display(
           String.format(
@@ -57,6 +64,14 @@ public class GameController {
     }
     return result;
   }
+
+ /**
+   * Processes exchangecards command from CLI
+   *
+   * @param gameMap contains game state
+   * @param command cli command from the user
+   * @return true if successfully exchanged cards
+   */
 
   public static boolean exchangeCards(GameMap gameMap, String command) {
     if (command.contains("-none")) {

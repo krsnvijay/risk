@@ -293,9 +293,10 @@ public class BattleController {
         GameController.assignedCard = true;
         display(
             gameMap.getCurrentPlayer().getPlayerName()
-                + " "
+                + " currently has "
                 + gameMap.getCurrentPlayer().getCardsInHand().stream().map(Card::getName)
-                .collect(Collectors.joining(" ")),
+                .collect(Collectors.joining(" "))
+                + " card(s).",
             false);
       }
 

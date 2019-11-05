@@ -197,7 +197,13 @@ public class Player {
 			numberOfTradedSet++;
 			int armiesAcquired = giveArmies();
 			numberOfArmies += armiesAcquired;
+			for(int index: indices){
+                cardsInHand.remove(index);
+            }
 			display("Acquired " + armiesAcquired + " through card exchange", false);
+		}
+		else{
+			display("The set provided is not valid. Valid set: 3 cards of same type or 3 cards of different type", false);
 		}
 	}
 

@@ -44,6 +44,7 @@ public class GameMap extends Observable {
   /** This maintains a log of phase-wise activity in the game */
   public String phaseLog = "";
 
+  /** This maintains a list of RISK cards in the deck. */
   public ArrayList<Card> deck = null;
 
   public ArrayList<Card> getDeck() {
@@ -54,6 +55,7 @@ public class GameMap extends Observable {
     this.deck = deck;
   }
 
+  /** The position of the card in the deck */
   static int positionOfCard = 0;
 
   /**
@@ -526,6 +528,11 @@ public class GameMap extends Observable {
     return true;
   }
 
+  /**
+   * Assigns a random card to the player from the deck
+   *
+   */
+
   public void assignCard(){
     Player currentPlayer = getCurrentPlayer();
     if(positionOfCard < deck.size()) {
@@ -534,6 +541,7 @@ public class GameMap extends Observable {
       positionOfCard++;
     }
   }
+
   /**
    * This method places an army in a country that the player owns
    *
