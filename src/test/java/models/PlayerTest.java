@@ -59,7 +59,7 @@ public class PlayerTest {
     ArrayList<Country> noOfCountries = new ArrayList<Country>();
     noOfCountries = Player.getCountriesByOwnership(playerName, gameMap);
     int ownedCountries = Player.getCountriesByOwnership("Player2", gameMap).size();
-    reason = "Number of countries should be zero";
+    reason = "Number of countries should be 21";
     assertEquals(reason, 21, ownedCountries);
   }
 
@@ -97,10 +97,10 @@ public class PlayerTest {
     int actualBonusArmiesAfrica = Player.getBonusArmiesIfPlayerOwnsContinents("Player2", gameMap);
 
     // Assert
-    reason = "Numer of bonus armies expected is " + actualBonusArmiesAsia;
+    reason = "Number of bonus armies expected is " + actualBonusArmiesAsia;
     assertEquals(reason, bonusArmyAsia, actualBonusArmiesAsia);
 
-    reason = "Numer of bonus armies expected is " + actualBonusArmiesAfrica;
+    reason = "Number of bonus armies expected is " + actualBonusArmiesAfrica;
     assertEquals(reason, bonusArmyAfrica, actualBonusArmiesAfrica);
   }
 

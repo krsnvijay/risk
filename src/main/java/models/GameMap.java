@@ -613,7 +613,7 @@ public class GameMap extends Observable {
    *     phases
    */
   public String showMapByOwnershipByCurrentPlayer(String currentPlayer) {
-    ArrayList<Country> countriesOwnedByCurrPlayer =
+      ArrayList<Country> countriesOwnedByCurrPlayer =
         this.countries.values().stream()
             .filter(country -> country.getOwnerName().equals(currentPlayer))
             .collect(toCollection(ArrayList::new));
