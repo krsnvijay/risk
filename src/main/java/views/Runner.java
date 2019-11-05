@@ -209,7 +209,11 @@ public class Runner extends Application {
     rootPlayerLabel.setStyle("-fx-font-weight: bold");
     rootPlayerLabel.setPadding(new Insets(0, 0, 10, 0));
 
-    phaseSection.getChildren().addAll(rootPhaseNameLabel, rootPlayerLabel, rootPhaseInfoLabel);
+    ScrollPane phaseScroller = new ScrollPane();
+    phaseScroller.setFitToWidth(true);
+    phaseScroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+    phaseScroller.setContent(rootPhaseInfoLabel);
+    phaseSection.getChildren().addAll(rootPhaseNameLabel, rootPlayerLabel, phaseScroller);
   }
 
   private void addCardToView(String name) {
