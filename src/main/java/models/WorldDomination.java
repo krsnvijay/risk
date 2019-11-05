@@ -27,8 +27,8 @@ public class WorldDomination extends Observable {
   }
 
   public void recomputeAttributes() {
-    List<String> excludedContexts = Arrays.asList("MAIN_MENU", "MAP_EDITOR", "GAME_SETUP");
-    if (!excludedContexts.contains(gameMap.getCurrentContext().name())) {
+    List<Context> excludedContexts = Arrays.asList(Context.MAIN_MENU,Context.MAP_EDITOR,Context.GAME_SETUP);
+    if (!excludedContexts.contains(gameMap.getCurrentContext())) {
       worldDomination.computeArmyCounts();
       worldDomination.computeContinentsOwnedByPlayers();
       worldDomination.computeOwnershipPercentage();
