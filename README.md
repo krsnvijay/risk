@@ -32,12 +32,37 @@ Our main method resides in the `Runner` class which allows the players to type i
 ```java
 // Handle the various phases for validation
 public enum Context {
-  MAIN_MENU,
-  GAME_SETUP,
-  GAME_REINFORCE,
-  GAME_ATTACK,
-  GAME_FORTIFY,
-  EDITOR
+  MAIN_MENU(EDIT_MAP, GAME_PLAYER, LOAD_MAP),
+  MAP_EDITOR(SHOW_MAP, EDIT_CONTINENT, EDIT_COUNTRY, EDIT_NEIGHBOR, VALIDATE_MAP, SAVE_MAP),
+  GAME_SETUP(GAME_HELP, SHOW_MAP, EXIT_GAME, GAME_PLAYER, POPULATE_COUNTRIES),
+  GAME_STARTUP(SHOW_MAP_OWNERSHIP, PLACE_ARMY, PLACE_ALL),
+  GAME_REINFORCE(SHOW_MAP_OWNERSHIP, REINFORCE, EXCHANGE_CARDS),
+  GAME_ATTACK(SHOW_MAP_OWNERSHIP, ATTACK),
+  GAME_ATTACK_BATTLE_DEFENDER(DEFEND),
+  GAME_ATTACK_BATTLE_VICTORY(ATTACK_MOVE),
+  GAME_FORTIFY(SHOW_MAP_OWNERSHIP, FORTIFY);
+  Command[] validCommands;
+  Command[] defaultCommands = {GAME_HELP, EXIT_GAME};
+
+  Context(Command... validCommands) {
+    ...
+  }
+
+  public boolean validate(String riskCommand) {
+    ...
+  }
+
+  public Optional<Command> getMatchedCommand(String riskCommand) {
+    ...
+  }
+
+  public boolean runCommand(GameMap gameMap, String riskCommand) {
+    ...
+  }
+
+  public Command[] getValidCommands() {
+    ...
+  }
 }
 ```
 
