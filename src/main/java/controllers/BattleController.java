@@ -1,7 +1,8 @@
 package controllers;
 
-import models.*;
-import utils.CLI;
+import static java.util.Collections.reverseOrder;
+import static java.util.stream.Collectors.toCollection;
+import static views.ConsoleView.display;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,10 +10,13 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.util.Collections.reverseOrder;
-import static java.util.stream.Collectors.toCollection;
-import static views.ConsoleView.display;
+import models.Card;
+import models.Command;
+import models.Context;
+import models.Country;
+import models.GameMap;
+import models.Player;
+import utils.CLI;
 
 public class BattleController {
 
@@ -32,20 +36,24 @@ public class BattleController {
     attackingCountry = gameMap.getCountries().get(commandSplit[1]);
     attackerName = gameMap.getCurrentPlayer().getPlayerName();
     defendingCountry = gameMap.getCountries().get(commandSplit[2]);
-    if (!command.contains("-allout"))
+    if (!command.contains("-allout")) {
       numOfDiceAttacker = Integer.parseInt(commandSplit[3]);
+    }
     defenderName = defendingCountry.getOwnerName();
     isAllOutEnabled = command.contains("-allout");
   }
 
-  public int calculateMaxDiceForAttacker() {
-    int armies = attackingCountry.getNumberOfArmies();
-    if (armies > 3) {
-      return 3;
-    } else if (armies > 1)
-      return armies - 1;
-    else
-      return 0;
+  /**
+   * Checks if player has atleast 2 armies in any of the countries they own
+   *
+   * @param attackerName name of the player that's attacking
+   * @param gameMap      contains game state
+   * @return true if attack move is possible otherwise returns false
+   */
+  public static boolean isAttackPossible(String attackerName, GameMap gameMap) {
+    return Player.getCountriesByOwnership(attackerName, gameMap).stream()
+        .mapToInt(Country::getNumberOfArmies)
+        .anyMatch(armyCount -> armyCount > 1);
   }
 
   public int calculateMaxDiceForDefender() {
@@ -54,6 +62,17 @@ public class BattleController {
       return 2;
     } else if (armies == 1) {
       return 1;
+    } else {
+      return 0;
+    }
+  }
+
+  public int calculateMaxDiceForAttacker() {
+    int armies = attackingCountry.getNumberOfArmies();
+    if (armies > 3) {
+      return 3;
+    } else if (armies > 1) {
+      return armies - 1;
     } else {
       return 0;
     }
@@ -94,13 +113,19 @@ public class BattleController {
     gameMap.setCurrentContext(Context.GAME_ATTACK_BATTLE_DEFENDER);
     if (isAllOutEnabled) {
       display("Attacker enabled allout, will always choose max dice", true);
-      while (gameMap.getCurrentContext() != Context.GAME_ATTACK && attackingCountry.getNumberOfArmies() > 1) {
+      while (gameMap.getCurrentContext() != Context.GAME_ATTACK
+          && attackingCountry.getNumberOfArmies() > 1) {
         performAttack();
       }
     } else {
       performAttack();
       display("Choose another attack move or move to next phase", true);
       gameMap.setCurrentContext(Context.GAME_ATTACK);
+    }
+
+    if (attackingCountry.getNumberOfArmies() == 1 && isAttackPossible(attackerName, gameMap)) {
+      display("Moving to next phase, No attack move possible", true);
+      GameController.changeToNextPhase(gameMap);
     }
     return true;
   }
@@ -176,7 +201,7 @@ public class BattleController {
     ArrayList<Boolean> results = compareDiceRolls(attackerDiceRoll, defenderDiceRoll);
     for (boolean result : results) {
       if (result) {
-          successfulAttack();
+        successfulAttack();
       } else {
         successfulDefence();
       }
@@ -208,8 +233,8 @@ public class BattleController {
         String[] commandSplit = inputCommand.split(" ");
         numOfArmies = Integer.parseInt(commandSplit[1]);
         // num of armies should be > 0 and < available armies
-        if (numOfArmies < numOfDiceAttacker || numOfArmies >= attackingCountry
-            .getNumberOfArmies()) {
+        if (numOfArmies < numOfDiceAttacker
+            || numOfArmies >= attackingCountry.getNumberOfArmies()) {
           display(
               String.format(
                   "Error: Num of armies to move should be >= %d (num of dice used in attack) and < available armies",
@@ -237,7 +262,7 @@ public class BattleController {
   }
 
   public void successfulDefence() {
-    if (attackingCountry.getNumberOfArmies() > 1) {
+    if (attackingCountry.getNumberOfArmies() > 2) {
       attackingCountry.removeArmies(1);
       display(
           String.format(
@@ -245,17 +270,13 @@ public class BattleController {
               attackingCountry.getName()),
           true);
       display("Remaining armies in defendingCountry " + defendingCountry.getNumberOfArmies(), true);
-      if (attackingCountry.getNumberOfArmies() == 1) {
-        display("Ending battle, choose another attack move", true);
-        gameMap.setCurrentContext(Context.GAME_ATTACK);
-      }
-    } else if (attackingCountry.getNumberOfArmies() == 1) {
+    } else if (attackingCountry.getNumberOfArmies() == 2) {
+      attackingCountry.removeArmies(1);
       display(
           String.format(
               "Defend successful: %s(attackingCountry) has only one army and can't attack",
               attackingCountry.getName()),
           true);
-
       display("Ending battle, choose another attack move", true);
       gameMap.setCurrentContext(Context.GAME_ATTACK);
     }
@@ -294,7 +315,8 @@ public class BattleController {
         display(
             gameMap.getCurrentPlayer().getPlayerName()
                 + " currently has "
-                + gameMap.getCurrentPlayer().getCardsInHand().stream().map(Card::getName)
+                + gameMap.getCurrentPlayer().getCardsInHand().stream()
+                .map(Card::getName)
                 .collect(Collectors.joining(" "))
                 + " card(s).",
             false);

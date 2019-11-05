@@ -1,10 +1,10 @@
 package controllers;
 
+import static views.ConsoleView.display;
+
 import models.Context;
 import models.GameMap;
 import models.Player;
-
-import static views.ConsoleView.display;
 
 /**
  * Controller for Setup Context
@@ -13,7 +13,7 @@ public class SetupController {
 
   /**
    * Processes populatecountries command from the cli Randomly assigns players to countries in a
-   * round robin manner
+   * round robin fashion
    *
    * @param gameMap contains game state
    * @param command cli command from the user

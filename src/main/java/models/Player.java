@@ -1,10 +1,19 @@
 package models;
 
-import java.util.*;
-import java.util.AbstractMap.SimpleEntry;
-
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toMap;
 import static views.ConsoleView.display;
+
+import controllers.BattleController;
+import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * This is the Player class which handles every player.
@@ -13,265 +22,300 @@ import static views.ConsoleView.display;
  */
 public class Player {
 
-	/**
-	 * This instance variable holds the name of the player.
-	 */
-	private String playerName;
+  /**
+   * Maintains the number of sets traded in game
+   */
+  private static int numberOfTradedSet = 0;
+  /**
+   * Number of armies traded in for each set
+   */
+  private static int armiesTradedForSet = 0;
+  /**
+   * This instance variable holds the name of the player.
+   */
+  private String playerName;
+  /**
+   * Stores the number of armies a player has.
+   */
+  private int numberOfArmies;
+  /**
+   * Stores the cards currently held by the player.
+   */
+  private List<Card> cardsInHand = new ArrayList<>();
 
-	/**
-	 * Stores the number of armies a player has.
-	 */
-	private int numberOfArmies;
+  /**
+   * This constructor initializes the class.
+   *
+   * @param playerName name of the player
+   */
+  public Player(String playerName) {
+    super();
+    this.playerName = playerName;
+  }
 
-	public void setCardsInHand(List<Card> cardsInHand) {
-		this.cardsInHand = cardsInHand;
-	}
+  /**
+   * This method returns all countries owned by a player.
+   *
+   * @param playerName The name of the player.
+   * @param gameMap    the entire map graph
+   * @return a list of countries owned by this player.
+   */
+  public static ArrayList<Country> getCountriesByOwnership(String playerName, GameMap gameMap) {
+    return gameMap.getCountries().values().stream()
+        .filter(c -> c.getOwnerName().equals(playerName))
+        .collect(toCollection(ArrayList::new));
+  }
 
-	/**
-	 * Stores the cards currently held by the player.
-	 */
-	private List<Card> cardsInHand = new ArrayList<>();
-
-	/** Maintains the number of sets traded in game*/
-	private static int numberOfTradedSet = 0;
-
-	/** Number of armies traded in for each set*/
-	private static int armiesTradedForSet = 0;
-
-	/**
-	 * This constructor initializes the class.
-	 *
-	 * @param playerName name of the player
-	 */
-	public Player(String playerName) {
-		super();
-		this.playerName = playerName;
-	}
-
-	/**
-	 * This method returns all countries owned by a player.
-	 *
-	 * @param playerName The name of the player.
-	 * @param gameMap    the entire map graph
-	 * @return a list of countries owned by this player.
-	 */
-	public static ArrayList<Country> getCountriesByOwnership(String playerName, GameMap gameMap) {
-		return gameMap.getCountries().values().stream()
-				.filter(c -> c.getOwnerName().equals(playerName))
-				.collect(toCollection(ArrayList::new));
-	}
-
-	/**
-	 * Utility method to check whether the player has lost the game.
-	 *
-	 * @param playerName String with the player's name.
-	 * @param gameMap    The GameMap object.
-	 * @return boolean true if player is still in the game, false otherwise.
-	 */
-	public static boolean checkPlayerOwnsAtleastOneCountry(String playerName, GameMap gameMap) {
-		return getCountriesByOwnership(playerName, gameMap).size() > 0;
-	}
+  /**
+   * Utility method to check whether the player has lost the game.
+   *
+   * @param playerName String with the player's name.
+   * @param gameMap    The GameMap object.
+   * @return boolean true if player is still in the game, false otherwise.
+   */
+  public static boolean checkPlayerOwnsAtleastOneCountry(String playerName, GameMap gameMap) {
+    return getCountriesByOwnership(playerName, gameMap).size() > 0;
+  }
 
   /**
    * Utility method to check whether the player owns all the countries
    *
    * @param playerName String with the player's name.
-   * @param gameMap    The GameMap object.
+   * @param gameMap The GameMap object.
    * @return boolean true if player is still in the game, false otherwise.
    */
   public static boolean checkPlayerOwnsAllTheCountries(String playerName, GameMap gameMap) {
     return getCountriesByOwnership(playerName, gameMap).size() == gameMap.getCountries().size();
   }
 
-	/**
-	 * Calculates bonus armies if a player owns a continent
-	 *
-	 * @param playerName current player name
-	 * @param gameMap    contains map state
-	 * @return bonus armies
-	 */
-	public static int getBonusArmiesIfPlayerOwnsContinents(String playerName, GameMap gameMap) {
-		int bonusArmies = 0;
-		Map<String, List<Country>> mapByContinents =
-				gameMap.getCountries().values().stream().collect(groupingBy(Country::getContinent));
-		Map<String, List<Country>> mapByPlayersOwnership =
-				gameMap.getCountries().values().stream()
-						.filter(c -> c.getOwnerName().equals(playerName))
-						.collect(groupingBy(Country::getContinent));
-		Map<String, Integer> continentsSize =
-				mapByContinents.entrySet().stream()
-						.map(e -> new AbstractMap.SimpleEntry<String, Integer>(e.getKey(), e.getValue().size()))
-						.collect(toMap(SimpleEntry::getKey, SimpleEntry::getValue));
-		Map<String, Integer> continentsOwnership =
-				mapByPlayersOwnership.entrySet().stream()
-						.map(e -> new AbstractMap.SimpleEntry<String, Integer>(e.getKey(), e.getValue().size()))
-						.collect(toMap(SimpleEntry::getKey, SimpleEntry::getValue));
-		for (Map.Entry<String, Integer> entry : continentsOwnership.entrySet()) {
-			int fullOwnerShip = continentsSize.get(entry.getKey());
-			int currentOwnerShip = entry.getValue();
-			if (fullOwnerShip == currentOwnerShip) {
-				int controlValue = gameMap.getContinents().get(entry.getKey()).getValue();
-				bonusArmies += controlValue;
-			}
-		}
-		return bonusArmies;
-	}
+  /**
+   * Calculates bonus armies if a player owns a continent
+   *
+   * @param playerName current player name
+   * @param gameMap    contains map state
+   * @return bonus armies
+   */
+  public static int getBonusArmiesIfPlayerOwnsContinents(String playerName, GameMap gameMap) {
+    int bonusArmies = 0;
+    Map<String, List<Country>> mapByContinents =
+        gameMap.getCountries().values().stream().collect(groupingBy(Country::getContinent));
+    Map<String, List<Country>> mapByPlayersOwnership =
+        gameMap.getCountries().values().stream()
+            .filter(c -> c.getOwnerName().equals(playerName))
+            .collect(groupingBy(Country::getContinent));
+    Map<String, Integer> continentsSize =
+        mapByContinents.entrySet().stream()
+            .map(e -> new AbstractMap.SimpleEntry<String, Integer>(e.getKey(), e.getValue().size()))
+            .collect(toMap(SimpleEntry::getKey, SimpleEntry::getValue));
+    Map<String, Integer> continentsOwnership =
+        mapByPlayersOwnership.entrySet().stream()
+            .map(e -> new AbstractMap.SimpleEntry<String, Integer>(e.getKey(), e.getValue().size()))
+            .collect(toMap(SimpleEntry::getKey, SimpleEntry::getValue));
+    for (Map.Entry<String, Integer> entry : continentsOwnership.entrySet()) {
+      int fullOwnerShip = continentsSize.get(entry.getKey());
+      int currentOwnerShip = entry.getValue();
+      if (fullOwnerShip == currentOwnerShip) {
+        int controlValue = gameMap.getContinents().get(entry.getKey()).getValue();
+        bonusArmies += controlValue;
+      }
+    }
+    return bonusArmies;
+  }
 
-	/**
-	 * Calculate armies for reinforcement phase
-	 *
-	 * @param gameMap contains map state
-	 * @return armies count
-	 */
-	public int calculateReinforcements(GameMap gameMap) {
-		int ownedCountries = getCountriesByOwnership(this.playerName, gameMap).size();
-		int allReinforcementArmies = getBonusArmiesIfPlayerOwnsContinents(playerName, gameMap);
+  /**
+   * Calculate armies for reinforcement phase
+   *
+   * @param gameMap contains map state
+   * @return armies count
+   */
+  public int calculateReinforcements(GameMap gameMap) {
+    int ownedCountries = getCountriesByOwnership(this.playerName, gameMap).size();
+    int allReinforcementArmies = getBonusArmiesIfPlayerOwnsContinents(playerName, gameMap);
 
-		if (ownedCountries < 9) {
-			allReinforcementArmies += 3;
-		}
-		allReinforcementArmies += ownedCountries / 3;
-		return allReinforcementArmies;
-	}
+    if (ownedCountries < 9) {
+      allReinforcementArmies += 3;
+    }
+    allReinforcementArmies += ownedCountries / 3;
+    return allReinforcementArmies;
+  }
 
-	/**
-	 * This method returns the name of the player.
-	 *
-	 * @return playerName the name of the player.
-	 */
-	public String getPlayerName() {
-		return playerName;
-	}
+  /**
+   * This method returns the name of the player.
+   *
+   * @return playerName the name of the player.
+   */
+  public String getPlayerName() {
+    return playerName;
+  }
 
-	/**
-	 * This method sets the name of the player.
-	 *
-	 * @param playername the name of the player.
-	 */
-	public void setPlayerName(String playername) {
-		this.playerName = playername;
-	}
+  /**
+   * This method sets the name of the player.
+   *
+   * @param playername the name of the player.
+   */
+  public void setPlayerName(String playername) {
+    this.playerName = playername;
+  }
 
-	/**
-	 * This is an override for pretty printing the name.
-	 */
-	@Override
-	public String toString() {
-		return String.format("%s", this.playerName);
-	}
+  /**
+   * This is an override for pretty printing the name.
+   */
+  @Override
+  public String toString() {
+    return String.format("%s", this.playerName);
+  }
 
-	/**
-	 * Returns the player's hand.
-	 *
-	 * @return List with the Cards
-	 */
-	public List<Card> getCardsInHand() {
-		return cardsInHand;
-	}
+  /**
+   * Returns the player's hand.
+   *
+   * @return List with the Cards
+   */
+  public List<Card> getCardsInHand() {
+    return cardsInHand;
+  }
 
-	/**
-	 * Adds a card to this player's hand.
-	 *
-	 * @param card The Card object to be added.
-	 */
-	public void addCard(Card card) {
-		this.cardsInHand.add(card);
-	}
+  public void setCardsInHand(List<Card> cardsInHand) {
+    this.cardsInHand = cardsInHand;
+  }
 
-	/**
-	 * Exchange the card for armies.
-	 *
-	 * @param indices the positions of the cards in the list.
-	 */
-	public void exchangeCardsForArmies(int[] indices) {
-		Set<String> cardSet = new HashSet<>();
-		for(int index: indices) {
-			if(index >= 0 && index < cardsInHand.size() ) {
-					cardSet.add(cardsInHand.get(index).getCardValue());
-			} else{
-				display("One OR more of your card indices are INCORRECT", false);
-				break;
-			}
-		}
-		if(cardSet.size() == 1 || cardSet.size() == 3){
-			numberOfTradedSet++;
-			int armiesAcquired = giveArmies();
-			numberOfArmies += armiesAcquired;
-			for(int index: indices){
-                cardsInHand.remove(index);
-            }
-			display("Acquired " + armiesAcquired + " through card exchange", false);
-		}
-		else{
-			display("The set provided is not valid. Valid set: 3 cards of same type or 3 cards of different type", false);
-		}
-	}
+  /**
+   * Adds a card to this player's hand.
+   *
+   * @param card The Card object to be added.
+   */
+  public void addCard(Card card) {
+    this.cardsInHand.add(card);
+  }
 
+  /**
+   * Exchange the card for armies.
+   *
+   * @param indices the positions of the cards in the list.
+   */
+  public void exchangeCardsForArmies(int[] indices) {
+    Set<String> cardSet = new HashSet<>();
+    for (int index : indices) {
+      if (index >= 0 && index < cardsInHand.size()) {
+        cardSet.add(cardsInHand.get(index).getCardValue());
+      } else {
+        display("One OR more of your card indices are INCORRECT", false);
+        break;
+      }
+    }
+    if (cardSet.size() == 1 || cardSet.size() == 3) {
+      numberOfTradedSet++;
+      int armiesAcquired = giveArmies();
+      numberOfArmies += armiesAcquired;
+      for (int index : indices) {
+        cardsInHand.remove(index);
+      }
+      display("Acquired " + armiesAcquired + " through card exchange", false);
+    } else {
+      display(
+          "The set provided is not valid. Valid set: 3 cards of same type or 3 cards of different type",
+          false);
+    }
+  }
 
-	/**
-	 * Getter for number of armies the player owns.
-	 *
-	 * @return int with number of armies
-	 */
-	public int getNumberOfArmies() {
-		return this.numberOfArmies;
-	}
+  /**
+   * Reinforce a currently owned country with an army
+   *
+   * @param countryToPlace name of country
+   * @param armiesToPlace  count of armies to place
+   * @return boolean to indicate success or failure
+   */
+  public boolean reinforce(GameMap gameMap, String countryToPlace, int armiesToPlace) {
+    return gameMap.placeArmy(countryToPlace, armiesToPlace);
+  }
 
-	/**
-	 * Setter for number of armies the player owns.
-	 *
-	 * @param numberOfArmies int with the number of armies.
-	 */
-	public void setNumberOfArmies(int numberOfArmies) {
-		this.numberOfArmies = numberOfArmies;
-	}
+  /**
+   * Moves armies from one adjacent country to the other
+   *
+   * @param fromCountry country name to move from
+   * @param toCountry   contry name to move to
+   * @param armyToMove  no of armies to move
+   * @return boolean to indicate status
+   */
+  public boolean fortify(GameMap gameMap, String fromCountry, String toCountry, int armyToMove) {
+    boolean result = false;
+    boolean isArmyRemoved = gameMap.getCountries().get(fromCountry).removeArmies(armyToMove);
+    if (isArmyRemoved) {
+      gameMap.getCountries().get(toCountry).addArmies(armyToMove);
+      result = true;
+    }
+    return result;
+  }
 
-	/**
-	 * This method gives armies to the player
-	 *
-	 */
-	public int giveArmies() {
-		if(numberOfTradedSet == 1)
-			armiesTradedForSet += 4;
-		else if(numberOfTradedSet <6)
-			armiesTradedForSet += 2;
-		else if(numberOfTradedSet == 6)
-			armiesTradedForSet += 3;
-		else
-			armiesTradedForSet += 5;
+  /**
+   * Getter for number of armies the player owns.
+   *
+   * @return int with number of armies
+   */
+  public int getNumberOfArmies() {
+    return this.numberOfArmies;
+  }
 
-		return armiesTradedForSet;
-	}
+  /**
+   * Setter for number of armies the player owns.
+   *
+   * @param numberOfArmies int with the number of armies.
+   */
+  public void setNumberOfArmies(int numberOfArmies) {
+    this.numberOfArmies = numberOfArmies;
+  }
 
-	/**
-	 * This method removes armies from the player
-	 *
-	 * @param count armies to subtract from the player
-	 */
-	public void subtractArmies(int count) {
-		this.numberOfArmies -= count;
-	}
+  /**
+   * This method gives armies to the player
+   */
+  public int giveArmies() {
+    if (numberOfTradedSet == 1) {
+      armiesTradedForSet += 4;
+    } else if (numberOfTradedSet < 6) {
+      armiesTradedForSet += 2;
+    } else if (numberOfTradedSet == 6) {
+      armiesTradedForSet += 3;
+    } else {
+      armiesTradedForSet += 5;
+    }
 
-	/**
-	 * Check whether one Player object is equal to another.
-	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		Player player = (Player) o;
-		return numberOfArmies == player.numberOfArmies && playerName.equals(player.playerName);
-	}
+    return armiesTradedForSet;
+  }
 
-	/**
-	 * @return int hash code of the Player object.
-	 */
-	@Override
-	public int hashCode() {
-		return Objects.hash(playerName, numberOfArmies);
-	}
+  /**
+   * This method removes armies from the player
+   *
+   * @param count armies to subtract from the player
+   */
+  public void subtractArmies(int count) {
+    this.numberOfArmies -= count;
+  }
+
+  /**
+   * Check whether one Player object is equal to another.
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Player player = (Player) o;
+    return numberOfArmies == player.numberOfArmies && playerName.equals(player.playerName);
+  }
+
+  /**
+   * @return int hash code of the Player object.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(playerName, numberOfArmies);
+  }
+
+  public boolean attack(GameMap gameMap, String command) {
+    // Start battle loop
+    BattleController battleController = new BattleController(gameMap, command);
+    return battleController.startBattle();
+  }
 }

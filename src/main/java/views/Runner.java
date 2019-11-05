@@ -1,5 +1,10 @@
 package views;
 
+import static views.ConsoleView.display;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observer;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -20,12 +25,6 @@ import models.Context;
 import models.GameMap;
 import models.WorldDomination;
 import utils.CLI;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observer;
-
-import static views.ConsoleView.display;
 
 /**
  * Runs the project and handles the initial commands.
@@ -100,7 +99,6 @@ public class Runner extends Application {
   }
 
   public static void processCommandline() {
-    CLI cli = CLI.getInstance();
     GameMap gameMap = GameMap.getGameMap();
     gameMap.setCurrentContext(Context.MAIN_MENU);
     display("Welcome to risk game", false);

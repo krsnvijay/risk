@@ -1,16 +1,15 @@
 package controllers;
 
+import static views.ConsoleView.display;
+
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import models.Command;
 import models.Context;
 import models.GameMap;
 import models.Player;
 import utils.MapParser;
-
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import static views.ConsoleView.display;
 
 /**
  * Controller for Main Menu Context
@@ -21,6 +20,7 @@ public class MainController {
    * Process editmap command from the user loads a map and changes the context to allow the user to
    * execute map editor commands
    *
+   * Creates a map file if it doesn't exist
    * @param gameMap contains game state
    * @param command cli command from the user
    * @return true if loaded map successfully

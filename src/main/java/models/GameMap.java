@@ -1,10 +1,22 @@
 package models;
 
-import java.util.*;
-
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 import static utils.MapParser.buildDeck;
-import static views.ConsoleView.display;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Observable;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * GameMap stores map data i.e borders, countries, files, continents The class is a singleton.
@@ -532,7 +544,6 @@ public class GameMap extends Observable {
    * Assigns a random card to the player from the deck
    *
    */
-
   public void assignCard(){
     Player currentPlayer = getCurrentPlayer();
     if(positionOfCard < deck.size()) {
@@ -596,22 +607,6 @@ public class GameMap extends Observable {
     return true;
   }
 
-  /**
-   * Reinforce a currently owned country with an army
-   *
-   * @param countryToPlace name of country
-   * @param armiesToPlace count of armies to place
-   * @return boolean to indicate success or failure
-   */
-  public boolean reinforce(String countryToPlace, int armiesToPlace) {
-    Player currentPlayer = getCurrentPlayer();
-    if (Player.getCountriesByOwnership(currentPlayer.getPlayerName(), this).stream()
-        .noneMatch(c -> c.getName().equals(countryToPlace))) {
-      return false;
-    }
-    placeArmy(countryToPlace, armiesToPlace);
-    return true;
-  }
 
   /**
    * This method shows the map for the fortify and reinforce phases
@@ -695,57 +690,13 @@ public class GameMap extends Observable {
         && fileName.equals(gameMap.fileName);
   }
 
-  /**
-   * Moves armies from one adjacent country to the other
-   *
-   * @param fromCountry country name to move from
-   * @param toCountry contry name to move to
-   * @param armyToMove no of armies to move
-   * @return boolean to indicate status
-   */
-  public boolean fortify(String fromCountry, String toCountry, int armyToMove) {
-    boolean result = false;
-    ArrayList<Country> playerOwnedCountries =
-        Player.getCountriesByOwnership(getCurrentPlayer().getPlayerName(), this);
-    boolean isOwnershipValid =
-        playerOwnedCountries.stream().anyMatch(c -> c.getName().equals(fromCountry))
-            && playerOwnedCountries.stream().anyMatch(c -> c.getName().equals(toCountry));
-    if (isOwnershipValid) {
-      boolean isAdjacent = borders.get(fromCountry).contains(toCountry);
-      if (isAdjacent) {
-        if (armyToMove >= countries.get(fromCountry).getNumberOfArmies()) {
-          display(
-              "Error: entered fortify army count is greater than available armies", false);
-          return false;
-        }
-        boolean isArmyRemoved = countries.get(fromCountry).removeArmies(armyToMove);
-        if (isArmyRemoved) {
-          countries.get(toCountry).addArmies(armyToMove);
-          result = true;
-        }
-      }
-    } else {
-      display(
-          String.format(
-              "%s doesnt own the country(s) %s, %s or does not exist",
-              gameMap.getCurrentPlayer().getPlayerName(), fromCountry, toCountry), false);
-    }
-    return result;
-  }
+
   /** @return int hash code for the GameMap object. */
   @Override
   public int hashCode() {
     return Objects.hash(fileSectionData, borders, continents, countries, fileName);
   }
 
-  /**
-   * Check Game Win Condition
-   *
-   * @return True if there's only one player left
-   */
-  public boolean checkGameVictory() {
-    return getPlayersList().size() == 1;
-  }
 
   /**
    * Returns the current context
@@ -776,7 +727,6 @@ public class GameMap extends Observable {
       this.phaseLog = "";
     } else
       this.phaseLog += phaseLog + "\n";
-
     setChanged();
     notifyObservers("PHASE_LOG");
   }
