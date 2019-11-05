@@ -1,7 +1,10 @@
 package models;
 
-import controllers.*;
-
+import controllers.EditorController;
+import controllers.GameController;
+import controllers.MainController;
+import controllers.SetupController;
+import controllers.StartUpController;
 import java.util.function.BiPredicate;
 
 /**
@@ -9,52 +12,53 @@ import java.util.function.BiPredicate;
  * and calling relevant controller function
  */
 public enum Command {
-  GAME_HELP("^help$", MainController::gameHelp, "help"),
-  EXIT_GAME("^exitgame$", MainController::exitGame, "exitgame"),
-  EDIT_MAP("^editmap (.+)$", MainController::editMap, "editmap <fileLocation>"),
+  GAME_HELP("^help$", MainController::processGameHelpCommand, "help"),
+  EXIT_GAME("^exitgame$", MainController::processExitGameCommand, "exitgame"),
+  EDIT_MAP("^editmap (.+)$", MainController::processEditMapCommand, "editmap <fileLocation>"),
   EDIT_CONTINENT(
       "^editcontinent( -(add ([^ ]+) (\\d+)|remove ([^ ]+)))+$",
-      EditorController::editContinent,
+      EditorController::processEditContinentCommand,
       "editcontinent -add <continentName> <controlValue> -remove <continentName>"),
   EDIT_COUNTRY(
       "^editcountry( -(add ([^ ]+) ([^ ]+)|remove ([^ ]+)))+$",
-      EditorController::editCountry,
+      EditorController::processEditCountryCommand,
       "editcountry -add <countryName> <continentName> -remove <countryName>"),
   EDIT_NEIGHBOR(
       "^editneighbor( -(add|remove) ([^ ]+) ([^ ]+))+$",
-      EditorController::editNeighbor,
+      EditorController::processEditNeighborCommand,
       "editneighbor -add <countryName1> <countryName2> -remove <countryName1> <countryName2>"),
-  VALIDATE_MAP("^validatemap$", EditorController::validateMap, "validatemap"),
-  SAVE_MAP("^savemap (.+)$", EditorController::saveMap, "savemap <fileLocation>"),
+  VALIDATE_MAP("^validatemap$", EditorController::processValidateMapCommand, "validatemap"),
+  SAVE_MAP("^savemap (.+)$", EditorController::processSaveMapCommand, "savemap <fileLocation>"),
   GAME_PLAYER(
       "^gameplayer( -(add|remove) ([^ ]+))+$",
-      MainController::gamePlayer,
+      MainController::processGamePlayerCommand,
       "gameplayer -add <playerName> -remove <playerName>"),
-  LOAD_MAP("^loadmap (.+)$", MainController::loadMap, "loadmap <fileLocation>"),
+  LOAD_MAP("^loadmap (.+)$", MainController::processLoadMapCommand, "loadmap <fileLocation>"),
   POPULATE_COUNTRIES(
-      "^populatecountries$", SetupController::populateCountries, "populatecountries"),
-  PLACE_ARMY("^placearmy ([^ ]+)$", StartUpController::placeArmy, "placearmy <countryName>"),
-  PLACE_ALL("^placeall$", StartUpController::placeAll, "placeall"),
+      "^populatecountries$", SetupController::processPopulateCountriesCommand, "populatecountries"),
+  PLACE_ARMY(
+      "^placearmy ([^ ]+)$", StartUpController::processPlaceArmyCommand, "placearmy <countryName>"),
+  PLACE_ALL("^placeall$", StartUpController::processPlaceAllCommand, "placeall"),
   REINFORCE(
       "^reinforce ([^ ]+) (\\d+)$",
-      GameController::reinforce,
+      GameController::processReinforceCommand,
       "reinforce <countryName> <armyCount>"),
   EXCHANGE_CARDS(
       "^exchangecards ((\\d+) (\\d+) (\\d+)|-none)$",
-      GameController::exchangeCards,
+      GameController::processExchangeCardsCommand,
       "exchangecards <num> <num> <num> -none"),
   FORTIFY(
       "^fortify (([^ ]+) ([^ ]+) (\\d+)|-none)?$",
-      GameController::fortify,
+      GameController::processFortifyCommand,
       "fortify <fromCountryName> <toCountryName> <armyCount> -none"),
   ATTACK(
       "^attack (([^ ]+) ([^ ]+) (\\d+|-allout)|-noattack)$",
-      GameController::attack,
+      GameController::processAttackCommand,
       "attack <fromCountryName> <toCountryName> <numOfDice> -allout -noattack"),
-  DEFEND("^defend (\\d+)$", GameController::defend, "defend <numOfDice>"),
-  ATTACK_MOVE("^attackmove (\\d+)$", GameController::attackMove, "attackmove <armyCount>"),
-  SHOW_MAP("^showmap$", EditorController::showMap, "showmap"),
-  SHOW_MAP_OWNERSHIP("^showmap$", GameController::showMap, "showmap");
+  DEFEND("^defend (\\d+)$", null, "defend <numOfDice>"),
+  ATTACK_MOVE("^attackmove (\\d+)$", null, "attackmove <armyCount>"),
+  SHOW_MAP("^showmap$", EditorController::processShowMapCommand, "showmap"),
+  SHOW_MAP_OWNERSHIP("^showmap$", GameController::processShowMapCommand, "showmap");
   String regex;
   BiPredicate<GameMap, String> operation;
   String usage;

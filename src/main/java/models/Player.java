@@ -26,21 +26,13 @@ public class Player {
    * Maintains the number of sets traded in game
    */
   private static int numberOfTradedSet = 0;
-  /**
-   * Number of armies traded in for each set
-   */
+  /** Number of armies traded in for each set */
   private static int armiesTradedForSet = 0;
-  /**
-   * This instance variable holds the name of the player.
-   */
+  /** This instance variable holds the name of the player. */
   private String playerName;
-  /**
-   * Stores the number of armies a player has.
-   */
+  /** Stores the number of armies a player has. */
   private int numberOfArmies;
-  /**
-   * Stores the cards currently held by the player.
-   */
+  /** Stores the cards currently held by the player. */
   private List<Card> cardsInHand = new ArrayList<>();
 
   /**
@@ -57,7 +49,7 @@ public class Player {
    * This method returns all countries owned by a player.
    *
    * @param playerName The name of the player.
-   * @param gameMap    the entire map graph
+   * @param gameMap the entire map graph
    * @return a list of countries owned by this player.
    */
   public static ArrayList<Country> getCountriesByOwnership(String playerName, GameMap gameMap) {
@@ -70,7 +62,7 @@ public class Player {
    * Utility method to check whether the player has lost the game.
    *
    * @param playerName String with the player's name.
-   * @param gameMap    The GameMap object.
+   * @param gameMap The GameMap object.
    * @return boolean true if player is still in the game, false otherwise.
    */
   public static boolean checkPlayerOwnsAtleastOneCountry(String playerName, GameMap gameMap) {
@@ -92,7 +84,7 @@ public class Player {
    * Calculates bonus armies if a player owns a continent
    *
    * @param playerName current player name
-   * @param gameMap    contains map state
+   * @param gameMap contains map state
    * @return bonus armies
    */
   public static int getBonusArmiesIfPlayerOwnsContinents(String playerName, GameMap gameMap) {
@@ -157,9 +149,7 @@ public class Player {
     this.playerName = playername;
   }
 
-  /**
-   * This is an override for pretty printing the name.
-   */
+  /** This is an override for pretty printing the name. */
   @Override
   public String toString() {
     return String.format("%s", this.playerName);
@@ -221,7 +211,7 @@ public class Player {
    * Reinforce a currently owned country with an army
    *
    * @param countryToPlace name of country
-   * @param armiesToPlace  count of armies to place
+   * @param armiesToPlace count of armies to place
    * @return boolean to indicate success or failure
    */
   public boolean reinforce(GameMap gameMap, String countryToPlace, int armiesToPlace) {
@@ -232,8 +222,8 @@ public class Player {
    * Moves armies from one adjacent country to the other
    *
    * @param fromCountry country name to move from
-   * @param toCountry   contry name to move to
-   * @param armyToMove  no of armies to move
+   * @param toCountry contry name to move to
+   * @param armyToMove no of armies to move
    * @return boolean to indicate status
    */
   public boolean fortify(GameMap gameMap, String fromCountry, String toCountry, int armyToMove) {
@@ -264,9 +254,7 @@ public class Player {
     this.numberOfArmies = numberOfArmies;
   }
 
-  /**
-   * This method gives armies to the player
-   */
+  /** This method gives armies to the player */
   public int giveArmies() {
     if (numberOfTradedSet == 1) {
       armiesTradedForSet += 4;
@@ -290,9 +278,7 @@ public class Player {
     this.numberOfArmies -= count;
   }
 
-  /**
-   * Check whether one Player object is equal to another.
-   */
+  /** Check whether one Player object is equal to another. */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -305,9 +291,7 @@ public class Player {
     return numberOfArmies == player.numberOfArmies && playerName.equals(player.playerName);
   }
 
-  /**
-   * @return int hash code of the Player object.
-   */
+  /** @return int hash code of the Player object. */
   @Override
   public int hashCode() {
     return Objects.hash(playerName, numberOfArmies);

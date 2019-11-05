@@ -5,101 +5,102 @@ package models;
  *
  * @author Siddharth Singh
  */
-
 public class Card {
 
-    String owner;
+  /**
+   * Total cards introduced in the game
+   */
+  private static int cardCount = 0;
+  String owner;
+  /**
+   * Stores the Card object
+   */
+  private typeOfCard type;
+  /**
+   * Country of the card
+   */
+  private String country;
 
-    /** Stores the Card object */
-    private typeOfCard type;
+  /**
+   * The constructor for a Card object.
+   *
+   * @param country Country associated with the card
+   */
+  public Card(String country) {
+    super();
+    // change the owner to deck during the start of the game
+    this.owner = null;
+    this.country = country;
+    this.type = typeOfCard.values()[cardCount % 3];
+    cardCount++;
+  }
 
-    /** Country of the card */
-    private String country;
+  /**
+   * Returns the type of the card.
+   *
+   * @return typeOfCard with the type.
+   */
+  public typeOfCard getType() {
+    return type;
+  }
 
-    /** Total cards introduced in the game */
-    private static int cardCount = 0;
+  /**
+   * Returns the Card's and country's name.
+   *
+   * @return A string with name.
+   */
+  public String getName() {
+    return getCountry() + " " + getType().value;
+  }
 
+  /**
+   * Returns the Card's and country's name.
+   *
+   * @return A string with name.
+   */
+  public String getCardValue() {
+    return getType().value;
+  }
+
+  /**
+   * Returns the Country associated with the card
+   *
+   * @return Country object
+   */
+  public String getCountry() {
+    return country;
+  }
+
+  /**
+   * Sets the Country associated with the Card
+   *
+   * @param country Details of the country
+   */
+  public void setCountry(String country) {
+    this.country = country;
+  }
+
+  /**
+   * Enum class to maintain the cards and its values
+   */
+  public enum typeOfCard {
 
     /**
-     * Returns the type of the card.
-     *
-     * @return typeOfCard with the type.
+     * The type of card (Artillery, Cavalry or Infantry)
      */
-    public typeOfCard getType() {
-        return type;
+    INFANTRY("Infantry"),
+    CAVALRY("Cavalry"),
+    ARTILLERY("Artillery");
+
+    public String value;
+
+    /**
+     * The constructor for a typeOfCard object
+     *
+     * @param value Number of armies for each card
+     */
+    typeOfCard(String value) {
+      this.value = value;
     }
-
-    /**
-     * Returns the Card's and country's name.
-     *
-     * @return A string with name.
-     */
-    public String getName() {
-        return getCountry() + " " + getType().value;
-    }
-
-    /**
-     * Returns the Card's and country's name.
-     *
-     * @return A string with name.
-     */
-    public String getCardValue() { return getType().value;    }
-
-
-    /**
-     * Returns the Country associated with the card
-     *
-     * @return Country object
-     */
-    public String getCountry() {
-        return country;
-    }
-
-    /**
-     * Sets the Country associated with the Card
-     *
-     * @param country Details of the country
-     */
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    /**
-     * Enum class to maintain the cards and its values
-     *
-     */
-    public enum typeOfCard {
-
-        /** The type of card (Artillery, Cavalry or Infantry) */
-        INFANTRY("Infantry"),
-        CAVALRY("Cavalry"),
-        ARTILLERY("Artillery");
-
-        public String value;
-
-        /**
-         * The constructor for a typeOfCard object
-         *
-         * @param value Number of armies for each card
-         */
-        private typeOfCard(String value) {
-            this.value = value;
-        }
-    }
-
-    /**
-     * The constructor for a Card object.
-     *
-     * @param country Country associated with the card
-     *
-     */
-    public Card(String country) {
-        super();
-        //change the owner to deck during the start of the game
-        this.owner = null;
-        this.country = country;
-        this.type = typeOfCard.values()[cardCount%3];
-        cardCount++;
-    }
-
+  }
 }

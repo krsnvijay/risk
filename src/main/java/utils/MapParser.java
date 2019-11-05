@@ -1,18 +1,27 @@
 package utils;
 
-import models.Card;
-import models.Continent;
-import models.Country;
-import models.GameMap;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
 import java.util.function.Function;
-
-import static java.util.stream.Collectors.*;
+import models.Card;
+import models.Continent;
+import models.Country;
+import models.GameMap;
 
 /**
  * The Map Parser utility parses the whole map file from disk.
@@ -228,9 +237,15 @@ public class MapParser {
    */
   public static String serializeMap(GameMap gameMap, String filename) {
     // Get required data to serialize
-    String files = gameMap.getFileName().isEmpty() ?
-        String.join("\n", "pic placeholder_pic.png" ,"map placeholder_map.gif" ,"crd placeholder.cards" ,"prv placeholder.jpg") :
-        String.join("\n", gameMap.getFileSectionData());
+    String files =
+        gameMap.getFileName().isEmpty()
+            ? String.join(
+            "\n",
+            "pic placeholder_pic.png",
+            "map placeholder_map.gif",
+            "crd placeholder.cards",
+            "prv placeholder.jpg")
+            : String.join("\n", gameMap.getFileSectionData());
 
     Map<String, Country> gameCountries = gameMap.getCountries();
     Map<String, Continent> gameContinents = gameMap.getContinents();
@@ -262,7 +277,7 @@ public class MapParser {
             .map(c -> serializeBorder(c, countriesOrder, gameBorders))
             .collect(joining("\n"));
 
-    if(gameMap.getFileName().isEmpty()) {
+    if (gameMap.getFileName().isEmpty()) {
       gameMap.setFileName(String.format("name %s map", filename));
     }
 
@@ -273,22 +288,22 @@ public class MapParser {
   }
 
   /*
-  public static void cardsToCountries(GameMap gameMap){
-    Map<String, Country> countriesWithCards = gameMap.getCountries().values().stream().map((country) -> {
-      ArrayList<Player> filteredPlayer = gameMap.getPlayersList().stream().filter((player) -> player.getPlayerName()
-              .equals(country.getOwnerName())).collect(toCollection(ArrayList::new));
-      country.setCard(new Card(filteredPlayer.get(0),country));
-      return country;
-    }).collect(toMap(Country::getName, country -> country));
-    gameMap.setCountries(countriesWithCards);
-  }
-*/
+    public static void cardsToCountries(GameMap gameMap){
+      Map<String, Country> countriesWithCards = gameMap.getCountries().values().stream().map((country) -> {
+        ArrayList<Player> filteredPlayer = gameMap.getPlayersList().stream().filter((player) -> player.getPlayerName()
+                .equals(country.getOwnerName())).collect(toCollection(ArrayList::new));
+        country.setCard(new Card(filteredPlayer.get(0),country));
+        return country;
+      }).collect(toMap(Country::getName, country -> country));
+      gameMap.setCountries(countriesWithCards);
+    }
+  */
 
-    /**
-     * Builds the deck of RISK cards
-     *
-     * @param gameMap The GameMap object to save.
-     */
+  /**
+   * Builds the deck of RISK cards
+   *
+   * @param gameMap The GameMap object to save.
+   */
   public static void buildDeck(GameMap gameMap) {
     ArrayList<Country> countriesInMap = new ArrayList<>(gameMap.getCountries().values());
     ArrayList<Card> cardsInDeck = new ArrayList<>();

@@ -542,11 +542,10 @@ public class GameMap extends Observable {
 
   /**
    * Assigns a random card to the player from the deck
-   *
    */
-  public void assignCard(){
+  public void assignCard() {
     Player currentPlayer = getCurrentPlayer();
-    if(positionOfCard < deck.size()) {
+    if (positionOfCard < deck.size()) {
       currentPlayer.addCard(deck.get(positionOfCard));
       deck.remove(positionOfCard);
       positionOfCard++;
@@ -585,7 +584,6 @@ public class GameMap extends Observable {
     return playersList.stream().mapToInt(Player::getNumberOfArmies).allMatch(count -> count == 0);
   }
 
-
   /**
    * Places army one at a time randomly to each player owned countries in round robin fashion
    *
@@ -606,7 +604,6 @@ public class GameMap extends Observable {
     }
     return true;
   }
-
 
   /**
    * This method shows the map for the fortify and reinforce phases
@@ -690,13 +687,11 @@ public class GameMap extends Observable {
         && fileName.equals(gameMap.fileName);
   }
 
-
   /** @return int hash code for the GameMap object. */
   @Override
   public int hashCode() {
     return Objects.hash(fileSectionData, borders, continents, countries, fileName);
   }
-
 
   /**
    * Returns the current context
@@ -725,8 +720,9 @@ public class GameMap extends Observable {
   public void setPhaseLog(String phaseLog, boolean flushLog) {
     if (flushLog) {
       this.phaseLog = "";
-    } else
+    } else {
       this.phaseLog += phaseLog + "\n";
+    }
     setChanged();
     notifyObservers("PHASE_LOG");
   }

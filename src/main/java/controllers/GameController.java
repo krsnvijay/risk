@@ -15,26 +15,6 @@ public class GameController {
 
   public static boolean assignedCard = false;
 
-  public static boolean validateReinforce(GameMap gameMap, String command) {
-    Player currentPlayer = gameMap.getCurrentPlayer();
-
-    String[] commandSplit = command.split(" ");
-    String countryName = commandSplit[1];
-    int armiesToPlace = Integer.parseInt(commandSplit[2]);
-
-    if (Player.getCountriesByOwnership(currentPlayer.getPlayerName(), gameMap).stream()
-        .noneMatch(c -> c.getName().equals(countryName))) {
-      display("Player doesnt own the country or it doesnt exist", false);
-      return false;
-    }
-
-    if (armiesToPlace < 1 || armiesToPlace > currentPlayer.getNumberOfArmies()) {
-      display("numOfArmy should be > 0 and < available armies", false);
-      return false;
-    }
-
-    return true;
-  }
   /**
    * Processes reinforce command from the cli
    *
@@ -42,45 +22,46 @@ public class GameController {
    * @param command cli command from the user
    * @return true if successfully reinforced
    */
-  public static boolean reinforce(GameMap gameMap, String command) {
-    Player currentPlayer = gameMap.getCurrentPlayer();
-    String[] commandSplit = command.split(" ");
-    String countryName = commandSplit[1];
-    int armiesToPlace = Integer.parseInt(commandSplit[2]);
-
+  public static boolean processReinforceCommand(GameMap gameMap, String command) {
     if (validateReinforce(gameMap, command)) {
-      boolean result = currentPlayer.reinforce(gameMap, countryName, armiesToPlace);
-      if (result) {
-        display(
-            String.format(
-                "%s has placed %d army(s) in %s",
-                currentPlayer.getPlayerName(), armiesToPlace, countryName),
-            true);
-      } else {
-        display(
-            String.format(
-                "%s doesnt own %s or it does not exist",
-                currentPlayer.getPlayerName(), countryName),
-            false);
-      }
-      if (currentPlayer.getNumberOfArmies() == 0) {
-        if (gameMap.getCurrentPlayer().getCardsInHand().size() < 5) {
-          changeToNextPhase(gameMap);
-        } else {
-          display(
-              String.format(
-                  "%s has more than 5 cards. Please exchange cards to continue.",
-                  currentPlayer.getPlayerName()),
-              true);
-        }
-      } else {
-        display(
-            String.format(
-                "%s has %d army(s) to reinforce",
-                currentPlayer.getPlayerName(), currentPlayer.getNumberOfArmies()),
-            true);
-      }
-      return result;
+      return performReinforce(gameMap, command);
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * process attack command from the cli
+   *
+   * @param gameMap contains game state
+   * @param command cli command from the user
+   * @return true to indicate status
+   */
+  public static boolean processAttackCommand(GameMap gameMap, String command) {
+    if (command.contains("-noattack")) {
+      return performAttackNone(gameMap);
+    }
+
+    if (validateAttack(gameMap, command)) {
+      return performAttack(gameMap, command);
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Processes fortify command from the cli
+   *
+   * @param gameMap contains game state
+   * @param command cli command from the user
+   * @return true if successfully fortified
+   */
+  public static boolean processFortifyCommand(GameMap gameMap, String command) {
+    if (command.contains("-none")) {
+      return performFortifyNone(gameMap);
+    }
+    if (validateFortify(gameMap, command)) {
+      return performFortify(gameMap, command);
     } else {
       return false;
     }
@@ -93,7 +74,7 @@ public class GameController {
    * @param command cli command from the user
    * @return true if successfully exchanged cards
    */
-  public static boolean exchangeCards(GameMap gameMap, String command) {
+  public static boolean processExchangeCardsCommand(GameMap gameMap, String command) {
     if (command.contains("-none")) {
       display(
           String.format(
@@ -109,6 +90,44 @@ public class GameController {
     // exchange cards method implementation
     gameMap.getCurrentPlayer().exchangeCardsForArmies(positionOfCards);
     return true;
+  }
+
+  public static boolean performReinforce(GameMap gameMap, String command) {
+    Player currentPlayer = gameMap.getCurrentPlayer();
+    String[] commandSplit = command.split(" ");
+    String countryName = commandSplit[1];
+    int armiesToPlace = Integer.parseInt(commandSplit[2]);
+    boolean result = currentPlayer.reinforce(gameMap, countryName, armiesToPlace);
+    if (result) {
+      display(
+          String.format(
+              "%s has placed %d army(s) in %s",
+              currentPlayer.getPlayerName(), armiesToPlace, countryName),
+          true);
+    } else {
+      display(
+          String.format(
+              "%s doesnt own %s or it does not exist", currentPlayer.getPlayerName(), countryName),
+          false);
+    }
+    if (currentPlayer.getNumberOfArmies() == 0) {
+      if (gameMap.getCurrentPlayer().getCardsInHand().size() < 5) {
+        changeToNextPhase(gameMap);
+      } else {
+        display(
+            String.format(
+                "%s has more than 5 cards. Please exchange cards to continue.",
+                currentPlayer.getPlayerName()),
+            true);
+      }
+    } else {
+      display(
+          String.format(
+              "%s has %d army(s) to reinforce",
+              currentPlayer.getPlayerName(), currentPlayer.getNumberOfArmies()),
+          true);
+    }
+    return result;
   }
 
   public static boolean validateFortify(GameMap gameMap, String command) {
@@ -154,45 +173,35 @@ public class GameController {
 
     return true;
   }
-  /**
-   * Processes fortify command from the cli
-   *
-   * @param gameMap contains game state
-   * @param command cli command from the user
-   * @return true if successfully fortified
-   */
-  public static boolean fortify(GameMap gameMap, String command) {
+
+  public static boolean performFortify(GameMap gameMap, String command) {
     Player currentPlayer = gameMap.getCurrentPlayer();
 
-    if (command.contains("-none")) {
-      display(String.format("%s chose not to fortify", currentPlayer.getPlayerName()), true);
+    String[] commandSplit = command.split(" ");
+    String fromCountry = commandSplit[1];
+    String toCountry = commandSplit[2];
+    int armyToMove = Integer.parseInt(commandSplit[3]);
+    boolean result = currentPlayer.fortify(gameMap, fromCountry, toCountry, armyToMove);
+    if (result) {
+      display(
+          String.format(
+              "%s Fortified %s with %d army(s) from %s",
+              currentPlayer.getPlayerName(), toCountry, armyToMove, fromCountry),
+          true);
       changeToNextPhase(gameMap);
-      return true;
-    }
-
-    if (validateFortify(gameMap, command)) {
-      String[] commandSplit = command.split(" ");
-      String fromCountry = commandSplit[1];
-      String toCountry = commandSplit[2];
-      int armyToMove = Integer.parseInt(commandSplit[3]);
-      boolean result = currentPlayer.fortify(gameMap, fromCountry, toCountry, armyToMove);
-      if (result) {
-        display(
-            String.format(
-                "%s Fortified %s with %d army(s) from %s",
-                currentPlayer.getPlayerName(), toCountry, armyToMove, fromCountry),
-            true);
-        changeToNextPhase(gameMap);
-      } else {
-        display(
-            String.format(
-                "unable to fortify %s country with armies from %s", toCountry, fromCountry),
-            false);
-      }
-      return result;
     } else {
-      return false;
+      display(
+          String.format("unable to fortify %s country with armies from %s", toCountry, fromCountry),
+          false);
     }
+    return result;
+  }
+
+  private static boolean performFortifyNone(GameMap gameMap) {
+    Player currentPlayer = gameMap.getCurrentPlayer();
+    display(String.format("%s chose not to fortify", currentPlayer.getPlayerName()), true);
+    changeToNextPhase(gameMap);
+    return true;
   }
 
   /**
@@ -202,7 +211,7 @@ public class GameController {
    * @param command cli command from the user
    * @return true to indicate status
    */
-  public static boolean showMap(GameMap gameMap, String command) {
+  public static boolean processShowMapCommand(GameMap gameMap, String command) {
     display(gameMap.showMapByOwnership(), false);
     return true;
   }
@@ -318,47 +327,49 @@ public class GameController {
     return true;
   }
 
-  /**
-   * process attack command from the cli
-   *
-   * @param gameMap contains game state
-   * @param command cli command from the user
-   * @return true to indicate status
-   */
-  public static boolean attack(GameMap gameMap, String command) {
+  public static boolean performAttack(GameMap gameMap, String command) {
     Player currentPlayer = gameMap.getCurrentPlayer();
-    if (command.contains("-noattack")) {
-      display(String.format("%s chose not to attack", currentPlayer.getPlayerName()), true);
-      if (GameController.assignedCard) {
-        GameController.assignedCard = false;
-      }
-      changeToNextPhase(gameMap);
-      return true;
-    }
-
-    if (validateAttack(gameMap, command)) {
-      String[] commandSplit = command.split(" ");
-      Country attackingCountry = gameMap.getCountries().get(commandSplit[1]);
-      String attackerName = attackingCountry.getOwnerName();
-      Country defendingCountry = gameMap.getCountries().get(commandSplit[2]);
-      String defenderName = defendingCountry.getOwnerName();
-      // Start battle
-      display(
-          String.format(
-              "%s owned by %s declared an attack on %s owned by %s",
-              attackingCountry.getName(), attackerName, defendingCountry.getName(), defenderName),
-          true);
-      return currentPlayer.attack(gameMap, command);
-    } else {
-      return false;
-    }
+    String[] commandSplit = command.split(" ");
+    Country attackingCountry = gameMap.getCountries().get(commandSplit[1]);
+    String attackerName = attackingCountry.getOwnerName();
+    Country defendingCountry = gameMap.getCountries().get(commandSplit[2]);
+    String defenderName = defendingCountry.getOwnerName();
+    // Start battle
+    display(
+        String.format(
+            "%s owned by %s declared an attack on %s owned by %s",
+            attackingCountry.getName(), attackerName, defendingCountry.getName(), defenderName),
+        true);
+    return currentPlayer.attack(gameMap, command);
   }
 
-  public static boolean defend(GameMap gameMap, String s) {
+  public static boolean performAttackNone(GameMap gameMap) {
+    Player currentPlayer = gameMap.getCurrentPlayer();
+    display(String.format("%s chose not to attack", currentPlayer.getPlayerName()), true);
+    if (GameController.assignedCard) {
+      GameController.assignedCard = false;
+    }
+    changeToNextPhase(gameMap);
     return true;
   }
 
-  public static boolean attackMove(GameMap gameMap, String s) {
+  public static boolean validateReinforce(GameMap gameMap, String command) {
+    Player currentPlayer = gameMap.getCurrentPlayer();
+
+    String[] commandSplit = command.split(" ");
+    String countryName = commandSplit[1];
+    int armiesToPlace = Integer.parseInt(commandSplit[2]);
+
+    if (Player.getCountriesByOwnership(currentPlayer.getPlayerName(), gameMap).stream()
+        .noneMatch(c -> c.getName().equals(countryName))) {
+      display("Player doesnt own the country or it doesnt exist", false);
+      return false;
+    }
+
+    if (armiesToPlace < 1 || armiesToPlace > currentPlayer.getNumberOfArmies()) {
+      display("numOfArmy should be > 0 and < available armies", false);
+      return false;
+    }
     return true;
   }
 }

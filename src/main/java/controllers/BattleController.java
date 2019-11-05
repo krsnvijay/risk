@@ -47,7 +47,7 @@ public class BattleController {
    * Checks if player has atleast 2 armies in any of the countries they own
    *
    * @param attackerName name of the player that's attacking
-   * @param gameMap      contains game state
+   * @param gameMap contains game state
    * @return true if attack move is possible otherwise returns false
    */
   public static boolean isAttackPossible(String attackerName, GameMap gameMap) {
@@ -115,15 +115,15 @@ public class BattleController {
       display("Attacker enabled allout, will always choose max dice", true);
       while (gameMap.getCurrentContext() != Context.GAME_ATTACK
           && attackingCountry.getNumberOfArmies() > 1) {
-        performAttack();
+        attemptAttack();
       }
     } else {
-      performAttack();
+      attemptAttack();
       display("Choose another attack move or move to next phase", true);
       gameMap.setCurrentContext(Context.GAME_ATTACK);
     }
 
-    if (attackingCountry.getNumberOfArmies() == 1 && isAttackPossible(attackerName, gameMap)) {
+    if (attackingCountry.getNumberOfArmies() == 1 && !isAttackPossible(attackerName, gameMap)) {
       display("Moving to next phase, No attack move possible", true);
       GameController.changeToNextPhase(gameMap);
     }
@@ -155,13 +155,17 @@ public class BattleController {
               "AttackingCountry %s owned by %s has %d armies",
               attackingCountry.getName(), attackerName, attackingCountry.getNumberOfArmies()),
           true);
+
       String inputCommand = CLI.input.nextLine().trim();
+
       Optional<Command> matchedCommand =
           Context.GAME_ATTACK_BATTLE_DEFENDER.getMatchedCommand(inputCommand);
+
       if (!matchedCommand.isPresent()) {
         display("Invalid command, use help to check the list of available commands", false);
         continue;
       }
+
       if (matchedCommand.get() == Command.DEFEND) {
         String[] commandSplit = inputCommand.split(" ");
         defenderNumOfDice = Integer.parseInt(commandSplit[1]);
@@ -182,22 +186,23 @@ public class BattleController {
     }
   }
 
-  public void performAttack() {
+  public void attemptAttack() {
     numOfDiceDefender = getNumOfDiceFromDefender();
     numOfDiceAttacker = getNumOfDiceAttacker();
 
+    // Simulate Dice Roll
     display(String.format("Rolling %d dice for attacker", numOfDiceAttacker), false);
     ArrayList<Integer> attackerDiceRoll = rollDice(numOfDiceAttacker);
     display(String.format("Rolling %d dice for defender", numOfDiceDefender), false);
     ArrayList<Integer> defenderDiceRoll = rollDice(numOfDiceDefender);
-    // Compare diceRoll results
-
     display(
         String.format("%s (attacker) rolled : %s", attackerName, attackerDiceRoll.toString()),
         true);
     display(
         String.format("%s (defender) rolled : %s", defenderName, defenderDiceRoll.toString()),
         true);
+
+    // Compare diceRoll results
     ArrayList<Boolean> results = compareDiceRolls(attackerDiceRoll, defenderDiceRoll);
     for (boolean result : results) {
       if (result) {

@@ -1,13 +1,12 @@
 package controllers;
 
+import static views.ConsoleView.display;
+
+import java.util.Arrays;
 import models.Context;
 import models.GameMap;
 import utils.EditMap;
 import utils.MapParser;
-
-import java.util.Arrays;
-
-import static views.ConsoleView.display;
 
 /**
  * Controller for Editor Context
@@ -21,7 +20,7 @@ public class EditorController {
    * @param command The command received from cli
    * @return A boolean with success or failure for the command.
    */
-  public static boolean editContinent(GameMap gameMap, String command) {
+  public static boolean processEditContinentCommand(GameMap gameMap, String command) {
     boolean result = false;
     String[] commandSplit = command.split(" -");
 
@@ -55,7 +54,7 @@ public class EditorController {
    * @param command The command received from cli
    * @return A boolean result for success or failure.
    */
-  public static boolean editCountry(GameMap gameMap, String command) {
+  public static boolean processEditCountryCommand(GameMap gameMap, String command) {
     boolean result = false;
     String[] commandSplit = command.split(" -");
     for (String subCommand : Arrays.copyOfRange(commandSplit, 1, commandSplit.length)) {
@@ -87,11 +86,11 @@ public class EditorController {
   /**
    * Processes the edit neighbour command.
    *
-   * @param command The command options.
    * @param gameMap The GameMap object to modify.
+   * @param command The command options.
    * @return A boolean with success or failure.
    */
-  public static boolean editNeighbor(GameMap gameMap, String command) {
+  public static boolean processEditNeighborCommand(GameMap gameMap, String command) {
     boolean result = false;
     String[] commandSplit = command.split(" -");
     for (String subCommand : Arrays.copyOfRange(commandSplit, 1, commandSplit.length)) {
@@ -109,7 +108,9 @@ public class EditorController {
         if (result) {
           display(String.format("Added border: %s - %s", country1, country2), false);
         } else {
-          display(String.format("One of the countries %s, %s does not exist", country2, country1), false);
+          display(
+              String.format("One of the countries %s, %s does not exist", country2, country1),
+              false);
           break;
         }
       } else if (commandType.equals("remove")) {
@@ -117,7 +118,9 @@ public class EditorController {
         if (result) {
           display("Removed border: " + country1 + " - " + country2, false);
         } else {
-          display(String.format("One of the countries %s, %s does not exist", country2, country1), false);
+          display(
+              String.format("One of the countries %s, %s does not exist", country2, country1),
+              false);
           break;
         }
       }
@@ -132,7 +135,7 @@ public class EditorController {
    * @param command cli command from the user
    * @return boolean to indicate map validity
    */
-  public static boolean validateMap(GameMap gameMap, String command) {
+  public static boolean processValidateMapCommand(GameMap gameMap, String command) {
     boolean result = EditMap.validateMap(gameMap);
     if (result) {
       display("Game map is valid", false);
@@ -149,10 +152,10 @@ public class EditorController {
    * @param command cli command from the user containing filelocation
    * @return boolean to indicate the status
    */
-  public static boolean saveMap(GameMap gameMap, String command) {
+  public static boolean processSaveMapCommand(GameMap gameMap, String command) {
     String fileLocation = command.split(" ", 2)[1];
     boolean result = false;
-    boolean isMapValid = validateMap(gameMap, command);
+    boolean isMapValid = processValidateMapCommand(gameMap, command);
     if (isMapValid) {
       result = MapParser.saveMap(gameMap, fileLocation);
       if (result) {
@@ -174,7 +177,7 @@ public class EditorController {
    * @param command command from the cli
    * @return true indicating status
    */
-  public static boolean showMap(GameMap gameMap, String command) {
+  public static boolean processShowMapCommand(GameMap gameMap, String command) {
     display(gameMap.toString(), false);
     return true;
   }

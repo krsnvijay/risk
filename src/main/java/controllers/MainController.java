@@ -20,12 +20,13 @@ public class MainController {
    * Process editmap command from the user loads a map and changes the context to allow the user to
    * execute map editor commands
    *
-   * Creates a map file if it doesn't exist
+   * <p>Creates a map file if it doesn't exist
+   *
    * @param gameMap contains game state
    * @param command cli command from the user
    * @return true if loaded map successfully
    */
-  public static boolean editMap(GameMap gameMap, String command) {
+  public static boolean processEditMapCommand(GameMap gameMap, String command) {
     String fileLocation = command.split(" ", 2)[1];
     boolean result = false;
     boolean newFile = false;
@@ -37,14 +38,15 @@ public class MainController {
       newGameMap = GameMap.getGameMap();
       result = true;
       newFile = true;
-    }
-    catch (Exception e) {
-      display(e.getMessage(),false);
+    } catch (Exception e) {
+      display(e.getMessage(), false);
     }
 
     if (result) {
-      if(newFile) display("File not found! Empty map object provided to edit.", false);
-      else display("Map loaded successfully", false);
+      if (newFile) {
+        display("File not found! Empty map object provided to edit.", false);
+      } else
+        display("Map loaded successfully", false);
       GameMap.modifyInstance(newGameMap);
       GameMap.getGameMap().setCurrentContext(Context.MAP_EDITOR);
     }
@@ -58,7 +60,7 @@ public class MainController {
    * @param command cli command from the user
    * @return true if loaded map successfully
    */
-  public static boolean loadMap(GameMap gameMap, String command) {
+  public static boolean processLoadMapCommand(GameMap gameMap, String command) {
     String fileLocation = command.split(" ", 2)[1];
     GameMap newGameMap = null;
     boolean result = false;
@@ -88,7 +90,7 @@ public class MainController {
    * @param command cli command from the user
    * @return boolean to indicate status
    */
-  public static boolean gamePlayer(GameMap gameMap, String command) {
+  public static boolean processGamePlayerCommand(GameMap gameMap, String command) {
     String[] commandSplit = command.split(" -");
     boolean result = false;
     for (String subCommand : Arrays.copyOfRange(commandSplit, 1, commandSplit.length)) {
@@ -99,7 +101,7 @@ public class MainController {
       if (subCommandType.equals("add")) {
         result = gameMap.addGamePlayer(playerName);
         if (result) {
-          display(String.format("Added %s", playerName),false);
+          display(String.format("Added %s", playerName), false);
         } else {
           display(String.format("%s already exists", playerName), false);
           break;
@@ -124,7 +126,7 @@ public class MainController {
    * @param command cli command from the user
    * @return status
    */
-  public static boolean exitGame(GameMap gameMap, String command) {
+  public static boolean processExitGameCommand(GameMap gameMap, String command) {
     display("Closing Risk Game", false);
     System.exit(0);
     return true;
@@ -137,7 +139,7 @@ public class MainController {
    * @param command cli command from the user
    * @return true to indicate status
    */
-  public static boolean gameHelp(GameMap gameMap, String command) {
+  public static boolean processGameHelpCommand(GameMap gameMap, String command) {
     Command[] validCommands = gameMap.getCurrentContext().getValidCommands();
     System.out.println("Available Commands:");
     for (Command validCommand : validCommands) {

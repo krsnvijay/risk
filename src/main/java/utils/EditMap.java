@@ -1,15 +1,14 @@
 package utils;
 
-import models.Continent;
-import models.Country;
-import models.GameMap;
+import static java.util.stream.Collectors.groupingBy;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static java.util.stream.Collectors.groupingBy;
+import models.Continent;
+import models.Country;
+import models.GameMap;
 
 /**
  * The Edit Map utility processes the editing commands.
@@ -64,6 +63,64 @@ public class EditMap extends MapParser {
       }
     }
     return visited;
+  }
+
+  /**
+   * Checks whether the current game map is a valid map or not.
+   *
+   * @param map The entire GameMap
+   * @return A boolean with success or failure.
+   */
+  public static boolean validateMap(GameMap map) {
+    Map<String, Set<String>> copyOfBorders = map.getBorders();
+    Map<String, Country> copyOfCountries = map.getCountries();
+    Map<String, Continent> copyOfContinents = map.getContinents();
+    Map<String, List<Country>> groupedByCountries =
+        copyOfCountries.values().stream().collect(groupingBy(Country::getContinent));
+    // PRELIMINARY CHECKS
+    if (copyOfContinents.keySet().size() != groupedByCountries.keySet().size()) {
+      return false; // CASE - No countries in continent OR countries in Continent that doesn't exist
+    }
+    if (copyOfBorders.keySet().size() != copyOfCountries.keySet().size()) {
+      return false; // CASE - No borderList entry for country OR borderList entry without
+    }
+    // countryList entry
+    for (String country : copyOfBorders.keySet()) {
+      if (copyOfBorders.get(country).size() == 0) {
+        return false; // CASE - Country has no borders
+      }
+    }
+    // CHECK CONNECTEDNESS OF SUBGRAPHS & WHOLE GRAPH
+    // RUN DFS ON CONTINENTS
+    if (!DFSCheckOnContinent(map)) {
+      return false;
+    }
+    // RUN DFS ON WHOLE MAP
+    HashSet<String> visited = new HashSet<>();
+    copyOfCountries.keySet().stream()
+        .findFirst()
+        .ifPresent(startCountry -> DFSUtilWholeMap(visited, startCountry, map));
+    return visited.size() == copyOfBorders.keySet().size();
+  }
+
+  /**
+   * Performs DFS check on a continent to check its connectivity
+   *
+   * @param map game state
+   * @return boolean to indicate status
+   */
+  public static boolean DFSCheckOnContinent(GameMap map) {
+    Map<String, List<Country>> groupedByCountries =
+        map.getCountries().values().stream().collect(groupingBy(Country::getContinent));
+    for (String continent : groupedByCountries.keySet()) {
+      List<Country> countriesInContinent = groupedByCountries.get(continent);
+      HashSet<Country> visited = new HashSet<>();
+      DFSUtilContinents(countriesInContinent, visited, countriesInContinent.get(0), map);
+      if (visited.size() != countriesInContinent.size()) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
@@ -142,60 +199,6 @@ public class EditMap extends MapParser {
         map.addBorder(country1, country2);
       } else if (commandType.equals("remove")) {
         map.removeBorder(country1, country2);
-      }
-    }
-    return true;
-  }
-
-  /**
-   * Checks whether the current game map is a valid map or not.
-   *
-   * @param map The entire GameMap
-   * @return A boolean with success or failure.
-   */
-  public static boolean validateMap(GameMap map) {
-    Map<String, Set<String>> copyOfBorders = map.getBorders();
-    Map<String, Country> copyOfCountries = map.getCountries();
-    Map<String, Continent> copyOfContinents = map.getContinents();
-    Map<String, List<Country>> groupedByCountries =
-        copyOfCountries.values().stream().collect(groupingBy(Country::getContinent));
-    // PRELIMINARY CHECKS
-    if (copyOfContinents.keySet().size() != groupedByCountries.keySet().size())
-      return false; // CASE - No countries in continent OR countries in Continent that doesn't exist
-    if (copyOfBorders.keySet().size() != copyOfCountries.keySet().size())
-      return false; // CASE - No borderList entry for country OR borderList entry without
-    // countryList entry
-    for (String country : copyOfBorders.keySet()) {
-      if (copyOfBorders.get(country).size() == 0) return false; // CASE - Country has no borders
-    }
-    // CHECK CONNECTEDNESS OF SUBGRAPHS & WHOLE GRAPH
-    // RUN DFS ON CONTINENTS
-    if (!DFSCheckOnContinent(map)) {
-      return false;
-    }
-    // RUN DFS ON WHOLE MAP
-    HashSet<String> visited = new HashSet<>();
-    copyOfCountries.keySet().stream()
-        .findFirst()
-        .ifPresent(startCountry -> DFSUtilWholeMap(visited, startCountry, map));
-    return visited.size() == copyOfBorders.keySet().size();
-  }
-
-  /**
-   * Performs DFS check on a continent to check its connectivity
-   *
-   * @param map game state
-   * @return boolean to indicate status
-   */
-  public static boolean DFSCheckOnContinent(GameMap map) {
-    Map<String, List<Country>> groupedByCountries =
-        map.getCountries().values().stream().collect(groupingBy(Country::getContinent));
-    for (String continent : groupedByCountries.keySet()) {
-      List<Country> countriesInContinent = groupedByCountries.get(continent);
-      HashSet<Country> visited = new HashSet<>();
-      DFSUtilContinents(countriesInContinent, visited, countriesInContinent.get(0), map);
-      if (visited.size() != countriesInContinent.size()) {
-        return false;
       }
     }
     return true;

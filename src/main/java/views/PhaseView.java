@@ -1,11 +1,10 @@
 package views;
 
-import models.GameMap;
-
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import models.GameMap;
 
 public class PhaseView implements Observer {
   private final ExecutorService service = Executors.newCachedThreadPool();
@@ -18,7 +17,7 @@ public class PhaseView implements Observer {
   @Override
   public void update(Observable o, Object changed) {
     GameMap gameMap = ((GameMap) o);
-    switch((String)changed){
+    switch ((String) changed) {
       case "PHASE_LOG":
         String phaseLog = gameMap.getPhaseLog();
         service.submit(() -> appInstance.updatePhaseInfoLabel(phaseLog));
@@ -30,7 +29,7 @@ public class PhaseView implements Observer {
       case "CURRENT_CONTEXT":
         String currentPhase = gameMap.getCurrentContext().name();
         // clear phase log
-        gameMap.setPhaseLog("",true);
+        gameMap.setPhaseLog("", true);
         service.submit(() -> appInstance.updatePhaseLabel(currentPhase));
         break;
     }

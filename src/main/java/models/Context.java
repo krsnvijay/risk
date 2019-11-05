@@ -1,10 +1,30 @@
 package models;
 
+import static models.Command.ATTACK;
+import static models.Command.ATTACK_MOVE;
+import static models.Command.DEFEND;
+import static models.Command.EDIT_CONTINENT;
+import static models.Command.EDIT_COUNTRY;
+import static models.Command.EDIT_MAP;
+import static models.Command.EDIT_NEIGHBOR;
+import static models.Command.EXCHANGE_CARDS;
+import static models.Command.EXIT_GAME;
+import static models.Command.FORTIFY;
+import static models.Command.GAME_HELP;
+import static models.Command.GAME_PLAYER;
+import static models.Command.LOAD_MAP;
+import static models.Command.PLACE_ALL;
+import static models.Command.PLACE_ARMY;
+import static models.Command.POPULATE_COUNTRIES;
+import static models.Command.REINFORCE;
+import static models.Command.SAVE_MAP;
+import static models.Command.SHOW_MAP;
+import static models.Command.SHOW_MAP_OWNERSHIP;
+import static models.Command.VALIDATE_MAP;
+
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
-
-import static models.Command.*;
 
 /**
  * This enum maintains the context the commands are being called in, i.e. if the command is valid
