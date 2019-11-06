@@ -66,6 +66,7 @@ public class GameControllerTest {
     gameMap.gameSetup();
     gameMap.placeAll();
     gameMap.setCurrentContext(Context.GAME_ATTACK);
+    GameMap.setCurrentPlayerIndex(0);
     countries = gameMap.getCountries();
   }
 
@@ -156,14 +157,14 @@ public class GameControllerTest {
   @Test
   public void fortifyTest() {
     Country sourceCountry = gameMap.getCountries().get(INDIA);
-    Country destCountry = gameMap.getCountries().get(CHINA);
+    Country destCountry = gameMap.getCountries().get(QUEBEC);
     sourceCountry.setOwnerName(PLAYER_1);
-    destCountry.setOwnerName(PLAYER_2);
+    destCountry.setOwnerName(PLAYER_1);
     sourceCountry.setNumberOfArmies(4);
     destCountry.setNumberOfArmies(2);
-    command = String.format("fortify %s %s 2", INDIA, CHINA);
-    boolean result = GameController.performFortify(gameMap, command);
+    command = String.format("fortify %s %s 2", INDIA, QUEBEC);
+    boolean result = GameController.processFortifyCommand(gameMap, command);
     reason = "Fortification within countries that aren't adjacent is not possible";
-    assertTrue(reason, result);
+    assertFalse(reason, result);
   }
 }

@@ -67,11 +67,11 @@ public class BattleControllerTest {
     China.setOwnerName(PLAYER_2);
     BattleController battleController =
         new BattleController(gameMap, "attack India China 3 -allout");
-    assertEquals(battleController.calculateMaxDiceForAttacker(), 3);
+    assertEquals(3, battleController.calculateMaxDiceForAttacker());
     India.setNumberOfArmies(2);
-    assertEquals(battleController.calculateMaxDiceForAttacker(), 1);
+    assertEquals(1, battleController.calculateMaxDiceForAttacker());
     India.setNumberOfArmies(1);
-    assertEquals(battleController.calculateMaxDiceForAttacker(), 0);
+    assertEquals(0, battleController.calculateMaxDiceForAttacker());
   }
 
   /** validate calculateMaxDice for Defender */
@@ -85,11 +85,11 @@ public class BattleControllerTest {
     China.setOwnerName(PLAYER_2);
     BattleController battleController =
         new BattleController(gameMap, "attack India China 3 -allout");
-    assertEquals(battleController.calculateMaxDiceForDefender(), 2);
+    assertEquals(2, battleController.calculateMaxDiceForDefender());
     China.setNumberOfArmies(1);
-    assertEquals(battleController.calculateMaxDiceForDefender(), 1);
+    assertEquals(1, battleController.calculateMaxDiceForDefender());
     China.setNumberOfArmies(0);
-    assertEquals(battleController.calculateMaxDiceForDefender(), 0);
+    assertEquals(0, battleController.calculateMaxDiceForDefender());
   }
 
   /** validate getNumberofDice for attacker */
@@ -110,9 +110,7 @@ public class BattleControllerTest {
     assertEquals(3, battleController.getNumOfDiceFromAttacker());
   }
 
-  /**
-   * validate getNumberofDice for defender
-   */
+  /** validate getNumberofDice for defender */
   @Test
   public void getNumberOfDiceDefender() {
     Country India = gameMap.getCountries().get(INDIA);
