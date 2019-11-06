@@ -31,48 +31,32 @@ import static views.ConsoleView.display;
  * @version 1.0
  */
 public class Runner extends Application {
-  /**
-   * Contains the list of Observers.
-   */
+  /** Contains the list of Observers. */
   public static List<Observer> ObserverList = new ArrayList<>();
 
-  /**
-   * Labels for WD View.
-   */
+  /** Labels for WD View. */
   private Label rootTitleLabel, rootControlLabel, rootArmyLabel;
 
-  /**
-   * Labels for the Phase View.
-   */
+  /** Labels for the Phase View. */
   private Label rootPhaseNameLabel, rootPlayerLabel, rootPhaseInfoLabel;
 
-  /**
-   * Label for the continent section.
-   */
+  /** Label for the continent section. */
   private Label rootContinentLabel;
 
-  /**
-   * BorderPane hosting the WD view.
-   */
+  /** BorderPane hosting the WD view. */
   private BorderPane WDSection;
 
-  /**
-   * HBox hosting the Card View.
-   */
+  /** HBox hosting the Card View. */
   private HBox cardSection = new HBox();
 
-  /**
-   * ScrollPane for scrollable cards in hand.
-   */
+  /** ScrollPane for scrollable cards in hand. */
   private ScrollPane cardScroller = new ScrollPane();
 
   private ArrayList<Label> cardLabels = new ArrayList<>();
 
   private Map<String, List<String>> cardLabelStringsTempMap = new HashMap<>();
 
-  /**
-   * Constructor for the runner class.
-   */
+  /** Constructor for the runner class. */
   public Runner() {
     rootPlayerLabel = new Label("Game Not Started!");
     rootPhaseNameLabel = new Label("...");
@@ -83,8 +67,8 @@ public class Runner extends Application {
     rootArmyLabel = new Label("Total armies:");
     rootArmyLabel.setPadding(new Insets(15, 150, 0, 0));
     rootArmyLabel.setStyle("-fx-font-weight: bold;");
-    for(int i = 0;i<5;i++) {
-      Label card= new Label("");
+    for (int i = 0; i < 5; i++) {
+      Label card = new Label("");
       card.setPadding(new Insets(10, 10, 10, 10));
       card.setStyle("-fx-border-color: black; -fx-border-radius: 2px; -fx-border-insets: 5");
       cardLabels.add(card);
@@ -93,6 +77,7 @@ public class Runner extends Application {
 
   /**
    * Launches the GUI and the program.
+   *
    * @param args command line arguments.
    */
   public static void main(String[] args) {
@@ -101,6 +86,7 @@ public class Runner extends Application {
 
   /**
    * Updates the player label on the GUI.
+   *
    * @param labelValue the name of the player.
    */
   public void updatePlayerLabel(String labelValue) {
@@ -112,6 +98,7 @@ public class Runner extends Application {
 
   /**
    * Updates the Phase Info label.
+   *
    * @param labelValue the new string to be logged.
    */
   public void updatePhaseInfoLabel(String labelValue) {
@@ -123,6 +110,7 @@ public class Runner extends Application {
 
   /**
    * Updates the phase label.
+   *
    * @param labelValue the new string for the phase.
    */
   public void updatePhaseLabel(String labelValue) {
@@ -134,6 +122,7 @@ public class Runner extends Application {
 
   /**
    * Updates the army label.
+   *
    * @param labelValue the new values for the armies.
    */
   public void updateArmyLabel(String labelValue) {
@@ -145,6 +134,7 @@ public class Runner extends Application {
 
   /**
    * Updates the control label.
+   *
    * @param labelValue the new values for the percentage controlled.
    */
   public void updateControlLabel(String labelValue) {
@@ -156,6 +146,7 @@ public class Runner extends Application {
 
   /**
    * Updates the continent control label.
+   *
    * @param labelValue the new values of the continents controlled.
    */
   public void updateContinentControlLabel(String labelValue) {
@@ -165,28 +156,28 @@ public class Runner extends Application {
         });
   }
 
-  public void updateCardView(){
+  public void updateCardView() {
     String currPlayer = GameMap.getGameMap().getCurrentPlayer().getPlayerName();
     if (cardLabelStringsTempMap.containsKey(currPlayer)) {
       List<String> cardInHandStrings = cardLabelStringsTempMap.get(currPlayer);
-        for (int i = 0; i < cardLabels.size(); i++) {
-          if (i < cardInHandStrings.size()) {
-            int finalI = i;
+      for (int i = 0; i < cardLabels.size(); i++) {
+        if (i < cardInHandStrings.size()) {
+          int finalI = i;
           Platform.runLater(
               () -> {
                 cardLabels.get(finalI).setText(cardInHandStrings.get(finalI));
                 cardLabels.get(finalI).setVisible(true);
               });
-          }
-          else {
-            int finalI1 = i;
-            Platform.runLater(()->{
+        } else {
+          int finalI1 = i;
+          Platform.runLater(
+              () -> {
                 cardLabels.get(finalI1).setVisible(false);
                 cardLabels.get(finalI1).setText("");
-            });
-          }
+              });
         }
-     }
+      }
+    }
   }
 
   public void updateCardLabelsTemp(List<String> cardsInHandStrings) {
@@ -194,9 +185,7 @@ public class Runner extends Application {
     cardLabelStringsTempMap.put(currPlayer, cardsInHandStrings);
   }
 
-  /**
-   * Initiates and processes the command line for the whole game.
-   */
+  /** Initiates and processes the command line for the whole game. */
   public static void processCommandline() {
     GameMap gameMap = GameMap.getGameMap();
     gameMap.setCurrentContext(Context.MAIN_MENU);
@@ -213,6 +202,7 @@ public class Runner extends Application {
 
   /**
    * Returns the name of a phase.
+   *
    * @param context the Context enum to get the name of the phase.
    * @return the String with a user-friendly name.
    */
@@ -233,6 +223,7 @@ public class Runner extends Application {
 
   /**
    * Adds the card view to the WD View.
+   *
    * @param WDSection The BorderPane hosting the WD View.
    */
   private void addCardView(BorderPane WDSection) {
@@ -252,10 +243,12 @@ public class Runner extends Application {
     cardSection.setAlignment(Pos.CENTER);
     Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
-    cardLabels.stream().forEach(cardLabel -> {
-      if(cardLabel.getText().equals("")) cardLabel.setVisible(false);
-      addCardToView(cardLabel);
-    });
+    cardLabels.stream()
+        .forEach(
+            cardLabel -> {
+              if (cardLabel.getText().equals("")) cardLabel.setVisible(false);
+              addCardToView(cardLabel);
+            });
 
     cardSection.setStyle("-fx-background-color: #b0b0b0;");
     cardScroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -267,6 +260,7 @@ public class Runner extends Application {
 
   /**
    * Adds the continent control section to the WD View.
+   *
    * @param WDSection the BorderPane hosting the WD View.
    */
   private void addMapSection(BorderPane WDSection) {
@@ -281,6 +275,7 @@ public class Runner extends Application {
 
   /**
    * Adds the total armies section to the WD View.
+   *
    * @param WDSection the BorderPane hosting the WD View.
    */
   private void addArmySection(BorderPane WDSection) {
@@ -293,6 +288,7 @@ public class Runner extends Application {
 
   /**
    * Populates the WD View.
+   *
    * @param WDSection the BorderPane hosting the WD View.
    */
   private void populateWDView(BorderPane WDSection) {
@@ -314,6 +310,7 @@ public class Runner extends Application {
 
   /**
    * Populates the Phase View.
+   *
    * @param phaseSection the VBox hosting the phase view.
    */
   private void populatePhaseView(VBox phaseSection) {
@@ -335,15 +332,14 @@ public class Runner extends Application {
 
   /**
    * Adds a card to the view.
+   *
    * @param name the complete name of the card.
    */
   private void addCardToView(Label card) {
     cardSection.getChildren().add(card);
   }
 
-  /**
-   * Removes the card view from the screen.
-   */
+  /** Removes the card view from the screen. */
   public void clearCardView() {
     cardLabels.forEach(cardLabel -> cardLabel.setVisible(false));
   }
@@ -376,7 +372,7 @@ public class Runner extends Application {
 
       // TODO call conditionally
       addCardView(WDSection);
-      //clearCardView();
+      // clearCardView();
 
       VBox phaseSection = new VBox();
       populatePhaseView(phaseSection);
@@ -389,8 +385,7 @@ public class Runner extends Application {
       Thread cliThread = new Thread(Runner::processCommandline);
       cliThread.setDaemon(true);
       cliThread.start();
-    }
-    catch(Exception e) {
+    } catch (Exception e) {
       System.out.println(e.getMessage());
     }
   }

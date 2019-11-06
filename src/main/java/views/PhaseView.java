@@ -14,18 +14,15 @@ import java.util.stream.Collectors;
  * @version 1.0
  */
 public class PhaseView implements Observer {
-  /**
-   * Service for thread handling.
-   */
+  /** Service for thread handling. */
   private final ExecutorService service = Executors.newCachedThreadPool();
 
-  /**
-   * Instance of the Runner class.
-   */
+  /** Instance of the Runner class. */
   private Runner appInstance;
 
   /**
    * Constructor that initializes the application.
+   *
    * @param app the Runner object.
    */
   public PhaseView(Runner app) {
@@ -53,17 +50,16 @@ public class PhaseView implements Observer {
       case "CURRENT_CONTEXT":
         String currentPhase = gameMap.getCurrentContext().name();
 
-        if(currentPhase.equals("GAME_STARTUP")) {
+        if (currentPhase.equals("GAME_STARTUP")) {
           gameMap
               .getPlayersList()
               .forEach(
                   player -> {
                     player.addObserver(CardExchangeView.getInstance());
-                    System.out.println("ADDED OBSERVER!");
                   });
         }
 
-        if(currentPhase.equals("GAME_REINFORCE")) {
+        if (currentPhase.equals("GAME_REINFORCE")) {
           service.submit(() -> appInstance.updateCardView());
         }
 

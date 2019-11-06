@@ -17,9 +17,7 @@ import static views.ConsoleView.display;
  */
 public class GameController {
 
-  /**
-   * This boolean is false if a card hasn't been assigned to the current player.
-   */
+  /** This boolean is false if a card hasn't been assigned to the current player. */
   public static boolean assignedCard = false;
 
   /**
@@ -146,6 +144,7 @@ public class GameController {
 
   /**
    * Checks whether fortification is valid.
+   *
    * @param gameMap The Game Map instance.
    * @param command The command entered by the user.
    * @return true if the fortification is valid.
@@ -226,6 +225,7 @@ public class GameController {
 
   /**
    * Handles the fortifynone logic.
+   *
    * @param gameMap The Game Map instance
    * @return the result of the command.
    */
@@ -291,6 +291,7 @@ public class GameController {
 
   /**
    * Validates the attack method.
+   *
    * @param gameMap The Game Map instance.
    * @param command The command entered by the user.
    * @return true if the attack is valid, false otherwise.

@@ -16,9 +16,7 @@ import static views.ConsoleView.display;
  */
 public class Player extends Observable {
 
-  /**
-   * Maintains the number of sets traded in game
-   */
+  /** Maintains the number of sets traded in game */
   private static int numberOfTradedSet = 0;
   /** Number of armies traded in for each set */
   private static int armiesTradedForSet = 0;
@@ -160,6 +158,7 @@ public class Player extends Observable {
 
   /**
    * Sets the cards in the player's hand.
+   *
    * @param cardsInHand A collection of Card objects.
    */
   public void setCardsInHand(List<Card> cardsInHand) {
@@ -303,6 +302,7 @@ public class Player extends Observable {
 
   /**
    * Starts the battle loop.
+   *
    * @param gameMap The Game Map instance.
    * @param command The command string.
    * @return a boolean with the result.

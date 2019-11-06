@@ -15,18 +15,15 @@ import java.util.stream.Collectors;
  * @version 1.0
  */
 public class WDView implements Observer {
-  /**
-   * Thread execution service.
-   */
+  /** Thread execution service. */
   private final ExecutorService service = Executors.newCachedThreadPool();
 
-  /**
-   * Instance of the Runner class.
-   */
+  /** Instance of the Runner class. */
   private Runner appInstance;
 
   /**
    * Constructor for the WorldDomination view.
+   *
    * @param app instance of the Runner class.
    */
   public WDView(Runner app) {

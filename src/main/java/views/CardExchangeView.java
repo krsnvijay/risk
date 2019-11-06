@@ -29,9 +29,13 @@ public class CardExchangeView implements Observer {
   public void update(Observable o, Object arg) {
     GameMap gameMap = GameMap.getGameMap();
     List<Card> cardsInHand = gameMap.getCurrentPlayer().getCardsInHand();
-    List<String> cardsInHandString = cardsInHand.stream().map((card) -> {
-      return String.format("%s %s", card.getCountry(), card.getType().name());
-    }).collect(Collectors.toList());
+    List<String> cardsInHandString =
+        cardsInHand.stream()
+            .map(
+                (card) -> {
+                  return String.format("%s %s", card.getCountry(), card.getType().name());
+                })
+            .collect(Collectors.toList());
 
     service.submit(() -> appInstance.updateCardLabelsTemp(cardsInHandString));
   }
