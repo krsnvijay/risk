@@ -1,16 +1,20 @@
 package controllers;
 
-import models.*;
-import org.junit.Before;
-import org.junit.Test;
-import utils.MapParser;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.*;
+import models.Card;
+import models.Context;
+import models.Country;
+import models.GameMap;
+import models.Player;
+import org.junit.Before;
+import org.junit.Test;
+import utils.MapParser;
 
 
 /**
@@ -24,6 +28,7 @@ public class GameControllerTest {
   public static final String PLAYER_2 = "Player2";
   public static final String INDIA = "India";
   public static final String CHINA = "China";
+  public static final String QUEBEC = "Quebec";
   /** list of players */
   private static ArrayList<Player> playersList = new ArrayList<>();
   /** player name */
@@ -83,26 +88,26 @@ public class GameControllerTest {
   public void attackArmiesTest() {
     Country attackingCountry = gameMap.getCountries().get(INDIA);
     Country defendingCountry = gameMap.getCountries().get(CHINA);
-    attackingCountry.setOwnerName(PLAYER_2);
-    defendingCountry.setOwnerName(PLAYER_1);
-    attackingCountry.setNumberOfArmies(3);
-    defendingCountry.setNumberOfArmies(2);
+    attackingCountry.setOwnerName(PLAYER_1);
+    defendingCountry.setOwnerName(PLAYER_2);
+    attackingCountry.setNumberOfArmies(1);
+    defendingCountry.setNumberOfArmies(3);
     command = String.format("attack %s %s -allout", INDIA, CHINA);
     boolean result = GameController.processAttackCommand(gameMap, command);
     reason = "Armies should be greater than 2 for the attacker country";
-    assertTrue(reason, result);
+    assertFalse(reason, result);
   }
 
   /** Test to check whether the attacking countries are adjacent*/
   @Test
   public void defendAdjacencyTest() {
     Country sourceCountry = gameMap.getCountries().get(INDIA);
-    Country destCountry = gameMap.getCountries().get(CHINA);
+    Country destCountry = gameMap.getCountries().get(QUEBEC);
     sourceCountry.setOwnerName(PLAYER_1);
     destCountry.setOwnerName(PLAYER_2);
     sourceCountry.setNumberOfArmies(4);
     destCountry.setNumberOfArmies(2);
-    command = String.format("attack %s %s -allout", INDIA, CHINA);
+    command = String.format("attack %s %s -allout", INDIA, QUEBEC);
     boolean result = GameController.processAttackCommand(gameMap, command);
     reason = "Countries should be adjacent for a valid attack";
     assertFalse(reason, result);
@@ -113,7 +118,7 @@ public class GameControllerTest {
   public void exchangeCardsTest() {
     Card card1 = new Card(INDIA);
     Card card2 = new Card(CHINA);
-    Card card3 = new Card("Quebec");
+    Card card3 = new Card(QUEBEC);
     List<Card> cardsInHand = new ArrayList<>();
     cardsInHand.add(card1);
     cardsInHand.add(card2);

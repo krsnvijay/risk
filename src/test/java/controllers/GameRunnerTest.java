@@ -1,18 +1,16 @@
 package controllers;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.util.ArrayList;
 import models.Country;
 import models.GameMap;
 import models.Player;
 import org.junit.Before;
 import org.junit.Test;
 import utils.MapParser;
-
-import java.io.File;
-import java.util.ArrayList;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 
 /**
  * test class to check the functionalities of GameRunner.java
@@ -21,9 +19,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class GameRunnerTest {
 
-  /**
-   * players in the game should either be more than 2 and less than 6
-   */
+  /** players in the game should either be more than 2 and less than 6 */
   /** list of playes */
   private static ArrayList<Player> playersList = new ArrayList<>();
   /** player name */
@@ -60,7 +56,7 @@ public class GameRunnerTest {
   /** Test to check whether the number of players are valid */
   @Test
   public void validatePlayerCount() {
-    gameMap = GameMap.getGameMap();
+    gameMap.setPlayersList(new ArrayList<>());
     gameMap.addGamePlayer("Player1");
     boolean result = gameMap.validatePlayerCount();
     reason = "Player count should be greater than 2";

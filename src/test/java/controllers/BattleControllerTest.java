@@ -1,18 +1,15 @@
 package controllers;
 
+import static junit.framework.TestCase.assertEquals;
+
+import java.io.File;
+import java.util.Map;
 import models.Context;
 import models.Country;
 import models.GameMap;
-import models.Player;
 import org.junit.Before;
 import org.junit.Test;
 import utils.MapParser;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Map;
-
-import static junit.framework.TestCase.assertEquals;
 
 /**
  * test class to check the functionalities of BattleController.java
@@ -20,7 +17,6 @@ import static junit.framework.TestCase.assertEquals;
  * @see controllers.BattleController
  * @author Sabari Venkadesh
  */
-
 public class BattleControllerTest {
 
   public static final String PLAYER_1 = "Player1";
@@ -28,39 +24,15 @@ public class BattleControllerTest {
   public static final String INDIA = "India";
   public static final String CHINA = "China";
   /**
-   * list of players
-   */
-  private static ArrayList<Player> playersList = new ArrayList<>();
-  /**
-   * player name
-   */
-  String playerName;
-  /**
    * reason for failure
    */
   String reason;
 
-  String command;
-
-  GameController gameController = new GameController();
-
-  /**
-   * list of countries
-   */
+  /** list of countries */
   Map<String, Country> countries;
 
-  /**
-   * store game state
-   */
+  /** store game state */
   private GameMap gameMap;
-  /**
-   * store player 1
-   */
-  private Player player1;
-  /**
-   * store player 2
-   */
-  private Player player2;
 
   /**
    * Sets up context for the test
@@ -72,10 +44,10 @@ public class BattleControllerTest {
     File riskMap = new File("src/test/resources/risk.map");
     gameMap = MapParser.loadMap(riskMap.getPath());
     reason = "";
-    command = "";
+
     gameMap.addGamePlayer(PLAYER_1);
     gameMap.addGamePlayer(PLAYER_2);
-    playersList = gameMap.getPlayersList();
+
     gameMap.setCurrentContext(Context.GAME_SETUP);
     gameMap.gameSetup();
     gameMap.placeAll();
@@ -83,10 +55,7 @@ public class BattleControllerTest {
     countries = gameMap.getCountries();
   }
 
-  /**
-   * validate calculateMaxDice for Attacker
-   */
-
+  /** validate calculateMaxDice for Attacker */
   @Test
   public void calculateMaxDiceForAttacker() {
 
@@ -96,20 +65,16 @@ public class BattleControllerTest {
     Country China = gameMap.getCountries().get(CHINA);
     China.setNumberOfArmies(3);
     China.setOwnerName(PLAYER_2);
-    BattleController battleController = new BattleController(gameMap, "attack India China 3 -allout");
+    BattleController battleController =
+        new BattleController(gameMap, "attack India China 3 -allout");
     assertEquals(battleController.calculateMaxDiceForAttacker(), 3);
     India.setNumberOfArmies(2);
     assertEquals(battleController.calculateMaxDiceForAttacker(), 1);
     India.setNumberOfArmies(1);
     assertEquals(battleController.calculateMaxDiceForAttacker(), 0);
-
-
   }
 
-  /**
-   * validate calculateMaxDice for Defender
-   */
-
+  /** validate calculateMaxDice for Defender */
   @Test
   public void calculateMaxDiceForDefender() {
     Country India = gameMap.getCountries().get(INDIA);
@@ -118,7 +83,8 @@ public class BattleControllerTest {
     Country China = gameMap.getCountries().get(CHINA);
     China.setNumberOfArmies(3);
     China.setOwnerName(PLAYER_2);
-    BattleController battleController = new BattleController(gameMap, "attack India China 3 -allout");
+    BattleController battleController =
+        new BattleController(gameMap, "attack India China 3 -allout");
     assertEquals(battleController.calculateMaxDiceForDefender(), 2);
     China.setNumberOfArmies(1);
     assertEquals(battleController.calculateMaxDiceForDefender(), 1);
@@ -126,10 +92,7 @@ public class BattleControllerTest {
     assertEquals(battleController.calculateMaxDiceForDefender(), 0);
   }
 
-  /**
-   * validate getNumberofDice for attacker
-   */
-
+  /** validate getNumberofDice for attacker */
   @Test
   public void getNumberOfDiceAttacker() {
     Country India = gameMap.getCountries().get(INDIA);
@@ -138,15 +101,40 @@ public class BattleControllerTest {
     Country China = gameMap.getCountries().get(CHINA);
     China.setNumberOfArmies(3);
     China.setOwnerName(PLAYER_2);
-    BattleController battleController = new BattleController(gameMap, "attack India China 3 -allout");
-    assertEquals(battleController.getNumOfDiceFromAttacker(), battleController.calculateMaxDiceForAttacker());
-    BattleController battleController2 = new BattleController(gameMap, "attack India China 3");
-    assertEquals(battleController2.getNumOfDiceFromAttacker(), 3);
+    BattleController battleController =
+        new BattleController(gameMap, "attack India China 3 -allout");
+    assertEquals(
+        battleController.calculateMaxDiceForAttacker(),
+        battleController.getNumOfDiceFromAttacker());
+    battleController = new BattleController(gameMap, "attack India China 3");
+    assertEquals(3, battleController.getNumOfDiceFromAttacker());
   }
 
   /**
-   * validate successful attack
+   * validate getNumberofDice for defender
    */
+  @Test
+  public void getNumberOfDiceDefender() {
+    Country India = gameMap.getCountries().get(INDIA);
+    India.setNumberOfArmies(4);
+    India.setOwnerName(PLAYER_1);
+    Country China = gameMap.getCountries().get(CHINA);
+    China.setNumberOfArmies(3);
+    China.setOwnerName(PLAYER_2);
+
+    BattleController battleController = new BattleController(gameMap, "attack India China 3");
+    // Stop input loop and manually set the numOfDiceDefender
+    battleController.setNoInputEnabled(true);
+    battleController.setNumOfDiceDefender(1);
+    assertEquals(1, battleController.getNumOfDiceFromDefender());
+
+    battleController = new BattleController(gameMap, "attack India China -allout");
+    assertEquals(
+        battleController.calculateMaxDiceForDefender(),
+        battleController.getNumOfDiceFromDefender());
+  }
+
+  /** validate successful attack */
   @Test
   public void successfulAttack() {
     Country India = gameMap.getCountries().get(INDIA);
@@ -155,14 +143,12 @@ public class BattleControllerTest {
     Country China = gameMap.getCountries().get(CHINA);
     China.setNumberOfArmies(3);
     China.setOwnerName(PLAYER_2);
-    BattleController battleController = new BattleController(gameMap, "attack India China 3 -allout");
+    BattleController battleController = new BattleController(gameMap, "attack India China 3");
     battleController.successfulAttack();
-    assertEquals(China.getNumberOfArmies(), 2);
+    assertEquals(2, China.getNumberOfArmies());
   }
 
-  /**
-   * validate successful defense
-   */
+  /** validate successful defense */
   @Test
   public void successfulDefense() {
     Country India = gameMap.getCountries().get(INDIA);
@@ -171,9 +157,8 @@ public class BattleControllerTest {
     Country China = gameMap.getCountries().get(CHINA);
     China.setNumberOfArmies(3);
     China.setOwnerName(PLAYER_2);
-    BattleController battleController = new BattleController(gameMap, "attack India China 3 -allout");
+    BattleController battleController = new BattleController(gameMap, "attack India China 3");
     battleController.successfulDefence();
-    assertEquals(India.getNumberOfArmies(), 3);
+    assertEquals(3, India.getNumberOfArmies());
   }
 }
-

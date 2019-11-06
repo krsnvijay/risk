@@ -1,7 +1,8 @@
 package controllers;
 
-import models.*;
-import utils.CLI;
+import static java.util.Collections.reverseOrder;
+import static java.util.stream.Collectors.toCollection;
+import static views.ConsoleView.display;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,13 +10,17 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.util.Collections.reverseOrder;
-import static java.util.stream.Collectors.toCollection;
-import static views.ConsoleView.display;
+import models.Card;
+import models.Command;
+import models.Context;
+import models.Country;
+import models.GameMap;
+import models.Player;
+import utils.CLI;
 
 /**
  * This is the controller that manages the Attack phase entirely.
+ *
  * @version 1.0
  * @author Vijay
  */
@@ -26,48 +31,41 @@ public class BattleController {
    */
   private int numOfDiceAttacker;
 
-  /**
-   * The number of dice for the defender.
-   */
+  /** The number of dice for the defender. */
   private int numOfDiceDefender;
 
-  /**
-   * The attacking Country object.
-   */
+  /** The attacking Country object. */
   private Country attackingCountry;
 
-  /**
-   * The defending Country object.
-   */
+  /** The defending Country object. */
   private Country defendingCountry;
 
-  /**
-   * The name of the attacking player.
-   */
+  /** The name of the attacking player. */
   private String attackerName;
 
-  /**
-   * The name of the defending player.
-   */
+  /** The name of the defending player. */
   private String defenderName;
 
-  /**
-   * An instance of the Game Map.
-   */
+  /** An instance of the Game Map. */
   private GameMap gameMap;
 
-  /**
-   * The topmost card on the deck.
-   */
+  /** The topmost card on the deck. */
   private Card topCard;
-
   /**
-   * Tracks if -allout is enabled.
+   * The number of armies to move after winning a battle
    */
+  private int numOfArmiesToMove = 0;
+
+  /** Tracks if -allout is enabled. */
   private boolean isAllOutEnabled = false;
+  /**
+   * Disable input from the user, flag used for unit tests
+   */
+  private boolean isNoInputEnabled = false;
 
   /**
    * Constructor for the Battle Controller
+   *
    * @param gameMap the Game Map object.
    * @param command the command to be processed.
    */
@@ -99,6 +97,7 @@ public class BattleController {
 
   /**
    * Calculates the maximum number of dice for a defender.
+   *
    * @return integer representing the number of dice.
    */
   public int calculateMaxDiceForDefender() {
@@ -114,6 +113,7 @@ public class BattleController {
 
   /**
    * Calculates the maximum number of dice for an attacker.
+   *
    * @return integer representing the number of dice.
    */
   public int calculateMaxDiceForAttacker() {
@@ -129,6 +129,7 @@ public class BattleController {
 
   /**
    * This is a utility method that compares the dice rolls according to the Risk rules.
+   *
    * @param attackerDiceRoll the rolls for the attacker
    * @param defenderDiceRoll the rolls for the defender
    * @return the winner of the dice roll.
@@ -144,7 +145,8 @@ public class BattleController {
       int maxAttacker = attackerDiceIterator.next();
       int maxDefender = defenderDiceIterator.next();
       display(
-          String.format("comparing dice %d (attacker) with %d (defender)", maxAttacker, maxDefender),
+          String.format(
+              "comparing dice %d (attacker) with %d (defender)", maxAttacker, maxDefender),
           true);
       boolean result = maxAttacker > maxDefender;
       display(String.format("%s won!", result ? "Attacker" : "Defender"), true);
@@ -166,6 +168,7 @@ public class BattleController {
 
   /**
    * Initiates the attack phase.
+   *
    * @return true when the attack finishes.
    */
   public boolean startBattle() {
@@ -191,6 +194,7 @@ public class BattleController {
 
   /**
    * Returns the number of dice for the attacker.
+   *
    * @return number of dice.
    */
   public int getNumOfDiceFromAttacker() {
@@ -203,12 +207,17 @@ public class BattleController {
 
   /**
    * Returns the number of dice for the defender.
+   *
    * @return number of dice.
    */
   public int getNumOfDiceFromDefender() {
-    int defenderNumOfDice = 0;
     if (isAllOutEnabled) {
       return calculateMaxDiceForDefender();
+    }
+    if (isNoInputEnabled) {
+      display("Skipping Input loop from defender", true);
+      isNoInputEnabled = false;
+      return numOfDiceDefender;
     }
     while (true) {
       display(String.format("%s(defender)'s turn", defenderName), true);
@@ -235,27 +244,25 @@ public class BattleController {
 
       if (matchedCommand.get() == Command.DEFEND) {
         String[] commandSplit = inputCommand.split(" ");
-        defenderNumOfDice = Integer.parseInt(commandSplit[1]);
+        numOfDiceDefender = Integer.parseInt(commandSplit[1]);
         // Defender can only use 1 or 2 dice
-        if (defenderNumOfDice != 1 && defenderNumOfDice != 2) {
+        if (numOfDiceDefender != 1 && numOfDiceDefender != 2) {
           display("Error: Defender can only defend with 1 or 2 Dice", false);
           continue;
         }
         // Need atleast 2 armies to use 2 Dice
-        if (defenderNumOfDice == 2 && defendingCountry.getNumberOfArmies() < 2) {
+        if (numOfDiceDefender == 2 && defendingCountry.getNumberOfArmies() < 2) {
           display("Error: Need atleast 2 armies to use 2 Dice", false);
           continue;
         }
-        return defenderNumOfDice;
+        return numOfDiceDefender;
       } else {
         matchedCommand.ifPresent(command -> command.runOperation(gameMap, inputCommand));
       }
     }
   }
 
-  /**
-   * Attempts an attack based on the command specified by the attacker.
-   */
+  /** Attempts an attack based on the command specified by the attacker. */
   public void attemptAttack() {
     numOfDiceDefender = getNumOfDiceFromDefender();
     numOfDiceAttacker = getNumOfDiceFromAttacker();
@@ -288,14 +295,18 @@ public class BattleController {
 
   /**
    * Returns the armies to be moved to a captured territory on successful attack.
+   *
    * @return number of armies as an integer.
    */
   public int getNumOfArmiesToMoveFromAttacker() {
-    int numOfArmies = 0;
+    if (isNoInputEnabled) {
+      isNoInputEnabled = false;
+      return numOfArmiesToMove;
+    }
     while (true) {
       display(
           String.format(
-              "%s has %d armies, Choose numOfArmies to move to new territory %s",
+              "%s has %d armies, Choose numOfArmiesToMove to move to new territory %s",
               attackingCountry.getName(),
               attackingCountry.getNumberOfArmies(),
               defendingCountry.getName()),
@@ -310,10 +321,10 @@ public class BattleController {
       }
       if (matchedCommand.get() == Command.ATTACK_MOVE) {
         String[] commandSplit = inputCommand.split(" ");
-        numOfArmies = Integer.parseInt(commandSplit[1]);
+        numOfArmiesToMove = Integer.parseInt(commandSplit[1]);
         // num of armies should be > 0 and < available armies
-        if (numOfArmies < numOfDiceAttacker
-            || numOfArmies >= attackingCountry.getNumberOfArmies()) {
+        if (numOfArmiesToMove < numOfDiceAttacker
+            || numOfArmiesToMove >= attackingCountry.getNumberOfArmies()) {
           display(
               String.format(
                   "Error: Num of armies to move should be >= %d (num of dice used in attack) and < available armies",
@@ -321,16 +332,14 @@ public class BattleController {
               false);
           continue;
         }
-        return numOfArmies;
+        return numOfArmiesToMove;
       } else {
         matchedCommand.ifPresent(command -> command.runOperation(gameMap, inputCommand));
       }
     }
   }
 
-  /**
-   * This method executes on successful capture of a country.
-   */
+  /** This method executes on successful capture of a country. */
   private void successfulBattle() {
     // move armies to new territory
     int numOfArmiesToMove = getNumOfArmiesToMoveFromAttacker();
@@ -343,9 +352,7 @@ public class BattleController {
         false);
   }
 
-  /**
-   * This method executes on successful defence of a country.
-   */
+  /** This method executes on successful defence of a country. */
   public void successfulDefence() {
     if (attackingCountry.getNumberOfArmies() > 2) {
       attackingCountry.removeArmies(1);
@@ -367,9 +374,7 @@ public class BattleController {
     }
   }
 
-  /**
-   * This method executes on a specific roll-win for attacker.
-   */
+  /** This method executes on a specific roll-win for attacker. */
   public void successfulAttack() {
     if (defendingCountry.getNumberOfArmies() > 1) {
       defendingCountry.removeArmies(1);
@@ -428,5 +433,32 @@ public class BattleController {
         gameMap.setCurrentContext(Context.GAME_ATTACK);
       }
     }
+  }
+
+  /**
+   * Setter for disabling or enabling user input
+   *
+   * @param isNoInputEnabled set to true to disable input
+   */
+  public void setNoInputEnabled(boolean isNoInputEnabled) {
+    this.isNoInputEnabled = isNoInputEnabled;
+  }
+
+  /**
+   * Setter for num of Dice for defender
+   *
+   * @param numOfDiceDefender number of dice to roll for the defender
+   */
+  public void setNumOfDiceDefender(int numOfDiceDefender) {
+    this.numOfDiceDefender = numOfDiceDefender;
+  }
+
+  /**
+   * Setter for num of Armies To Move
+   *
+   * @param numOfArmiesToMove number of armies to move after winning a battle
+   */
+  public void setNumOfArmiesToMove(int numOfArmiesToMove) {
+    this.numOfArmiesToMove = numOfArmiesToMove;
   }
 }
