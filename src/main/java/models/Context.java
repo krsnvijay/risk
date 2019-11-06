@@ -1,34 +1,17 @@
 package models;
 
-import static models.Command.ATTACK;
-import static models.Command.ATTACK_MOVE;
-import static models.Command.DEFEND;
-import static models.Command.EDIT_CONTINENT;
-import static models.Command.EDIT_COUNTRY;
-import static models.Command.EDIT_MAP;
-import static models.Command.EDIT_NEIGHBOR;
-import static models.Command.EXCHANGE_CARDS;
-import static models.Command.EXIT_GAME;
-import static models.Command.FORTIFY;
-import static models.Command.GAME_HELP;
-import static models.Command.GAME_PLAYER;
-import static models.Command.LOAD_MAP;
-import static models.Command.PLACE_ALL;
-import static models.Command.PLACE_ARMY;
-import static models.Command.POPULATE_COUNTRIES;
-import static models.Command.REINFORCE;
-import static models.Command.SAVE_MAP;
-import static models.Command.SHOW_MAP;
-import static models.Command.SHOW_MAP_OWNERSHIP;
-import static models.Command.VALIDATE_MAP;
-
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static models.Command.*;
+
 /**
  * This enum maintains the context the commands are being called in, i.e. if the command is valid
  * for the phase we're currently in.
+ *
+ * @author Vijay
+ * @version 1.0
  */
 public enum Context {
   MAIN_MENU(EDIT_MAP, GAME_PLAYER, LOAD_MAP),
@@ -43,19 +26,39 @@ public enum Context {
   Command[] validCommands;
   Command[] defaultCommands = {GAME_HELP, EXIT_GAME};
 
+  /**
+   * The constructor for the Context enum.
+   * @param validCommands All the valid commands as Command objects.
+   */
   Context(Command... validCommands) {
     this.validCommands =
         Stream.of(validCommands, defaultCommands).flatMap(Stream::of).toArray(Command[]::new);
   }
 
+  /**
+   * Validates a command.
+   * @param riskCommand The command string.
+   * @return boolean result of the validation.
+   */
   public boolean validate(String riskCommand) {
     return Arrays.stream(validCommands).map(Command::getRegex).anyMatch(riskCommand::matches);
   }
 
+  /**
+   * Returns the matching Command object from the string provided.
+   * @param riskCommand the command String.
+   * @return the Command object.
+   */
   public Optional<Command> getMatchedCommand(String riskCommand) {
     return Arrays.stream(validCommands).filter(c -> c.validate(riskCommand)).findFirst();
   }
 
+  /**
+   * Executes the command's behaviour.
+   * @param gameMap The Game Map instance.
+   * @param riskCommand the command entered by the user.
+   * @return boolean result of execution.
+   */
   public boolean runCommand(GameMap gameMap, String riskCommand) {
     for (Command commandValidator : validCommands) {
       if (commandValidator.validate(riskCommand)) {
@@ -65,6 +68,10 @@ public enum Context {
     return false;
   }
 
+  /**
+   * Returns a list of valid commands.
+   * @return Command object array with valid commands.
+   */
   public Command[] getValidCommands() {
     return validCommands;
   }

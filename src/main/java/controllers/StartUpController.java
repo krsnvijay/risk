@@ -1,13 +1,16 @@
 package controllers;
 
-import static controllers.GameController.startPhaseLoop;
-import static views.ConsoleView.display;
-
 import models.GameMap;
 import models.Player;
 
+import static controllers.GameController.startPhaseLoop;
+import static views.ConsoleView.display;
+
 /**
- * Controller for StartUp context
+ * Controller for Startup context
+ *
+ * @author Siddhant
+ * @version 1.0
  */
 public class StartUpController {
 

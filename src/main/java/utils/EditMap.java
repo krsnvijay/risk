@@ -1,19 +1,21 @@
 package utils;
 
-import static java.util.stream.Collectors.groupingBy;
+import models.Continent;
+import models.Country;
+import models.GameMap;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import models.Continent;
-import models.Country;
-import models.GameMap;
+
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * The Edit Map utility processes the editing commands.
  *
- * @author Warren White
+ * @author Warren
+ * @version 1.0
  */
 public class EditMap extends MapParser {
 

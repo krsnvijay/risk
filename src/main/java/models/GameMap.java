@@ -9,6 +9,8 @@ import static utils.MapParser.buildDeck;
  * GameMap stores map data i.e borders, countries, files, continents The class is a singleton.
  *
  * @author Vijay
+ * @author Siddhant
+ * @version 1.0
  */
 public class GameMap extends Observable {
 
@@ -28,6 +30,7 @@ public class GameMap extends Observable {
 
   /** Stores a map of all countries. */
   private Map<String, Country> countries;
+
   /** The name of the map file. */
   private String fileName;
 
@@ -46,10 +49,18 @@ public class GameMap extends Observable {
   /** This maintains a list of RISK cards in the deck. */
   public ArrayList<Card> deck = null;
 
+  /**
+   * Returns the Deck of cards.
+   * @return an ArrayList of Card objects -- the Deck.
+   */
   public ArrayList<Card> getDeck() {
     return deck;
   }
 
+  /**
+   * Sets the deck object.
+   * @param deck A collection of Card objects.
+   */
   public void setDeck(ArrayList<Card> deck) {
     this.deck = deck;
   }
@@ -79,6 +90,9 @@ public class GameMap extends Observable {
     this.fileName = fileName;
   }
 
+  /**
+   * The constructor for the GameMap.
+   */
   private GameMap() {
     super();
     this.borders = new HashMap<>();
@@ -699,10 +713,19 @@ public class GameMap extends Observable {
     notifyObservers("CURRENT_CONTEXT");
   }
 
+  /**
+   * Returns the messages logged for the phase.
+   * @return A string with the log.
+   */
   public String getPhaseLog() {
     return phaseLog;
   }
 
+  /**
+   * Sets the log.
+   * @param phaseLog the String to append to the log.
+   * @param flushLog whether the log should be cleared.
+   */
   public void setPhaseLog(String phaseLog, boolean flushLog) {
     if (flushLog) {
       this.phaseLog = "";

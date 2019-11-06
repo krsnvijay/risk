@@ -17,7 +17,8 @@ import static java.util.stream.Collectors.*;
 /**
  * The Map Parser utility parses the whole map file from disk.
  *
- * @author v_valla
+ * @author Vijay
+ * @version 1.0
  */
 public class MapParser {
 
@@ -107,7 +108,7 @@ public class MapParser {
   }
 
   /**
-   * This deserializes the country line from the file into a Country object.
+   * This de-serializes the country line from the file into a Country object.
    *
    * @param countryLine the raw line from the file.
    * @param continentNames the names of all continents
@@ -123,7 +124,7 @@ public class MapParser {
   }
 
   /**
-   * This deserializes the continent line from the file into a Continent object.
+   * This de-serializes the continent line from the file into a Continent object.
    *
    * @param continentLine the raw line from the file.
    * @return A continent object
@@ -137,7 +138,7 @@ public class MapParser {
   }
 
   /**
-   * This deserializes the border line from the file into a Border object.
+   * This de-serializes the border line from the file into a Border object.
    *
    * @param borderLine the raw line from the file.
    * @param countryNames A list of country names.

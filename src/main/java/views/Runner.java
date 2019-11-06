@@ -1,10 +1,5 @@
 package views;
 
-import static views.ConsoleView.display;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observer;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -26,20 +21,57 @@ import models.GameMap;
 import models.WorldDomination;
 import utils.CLI;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observer;
+
+import static views.ConsoleView.display;
+
 /**
  * Runs the project and handles the initial commands.
  *
  * @author Siddhant Bansal
+ * @version 1.0
  */
 public class Runner extends Application {
+  /**
+   * Contains the list of Observers.
+   */
   public static List<Observer> ObserverList = new ArrayList<>();
+
+  /**
+   * Labels for WD View.
+   */
   private Label rootTitleLabel, rootControlLabel, rootArmyLabel;
+
+  /**
+   * Labels for the Phase View.
+   */
   private Label rootPhaseNameLabel, rootPlayerLabel, rootPhaseInfoLabel;
+
+  /**
+   * Label for the continent section.
+   */
   private Label rootContinentLabel;
+
+  /**
+   * BorderPane hosting the WD view.
+   */
   private BorderPane WDSection;
+
+  /**
+   * HBox hosting the Card View.
+   */
   private HBox cardSection = new HBox();
+
+  /**
+   * ScrollPane for scrollable cards in hand.
+   */
   private ScrollPane cardScroller = new ScrollPane();
 
+  /**
+   * Constructor for the runner class.
+   */
   public Runner() {
     rootPlayerLabel = new Label("Game Not Started!");
     rootPhaseNameLabel = new Label("...");
@@ -52,10 +84,18 @@ public class Runner extends Application {
     rootArmyLabel.setStyle("-fx-font-weight: bold;");
   }
 
+  /**
+   * Launches the GUI and the program.
+   * @param args command line arguments.
+   */
   public static void main(String[] args) {
     launch(args);
   }
 
+  /**
+   * Updates the player label on the GUI.
+   * @param labelValue the name of the player.
+   */
   public void updatePlayerLabel(String labelValue) {
     Platform.runLater(
         () -> {
@@ -63,6 +103,10 @@ public class Runner extends Application {
         });
   }
 
+  /**
+   * Updates the Phase Info label.
+   * @param labelValue the new string to be logged.
+   */
   public void updatePhaseInfoLabel(String labelValue) {
     Platform.runLater(
         () -> {
@@ -70,6 +114,10 @@ public class Runner extends Application {
         });
   }
 
+  /**
+   * Updates the phase label.
+   * @param labelValue the new string for the phase.
+   */
   public void updatePhaseLabel(String labelValue) {
     Platform.runLater(
         () -> {
@@ -77,6 +125,10 @@ public class Runner extends Application {
         });
   }
 
+  /**
+   * Updates the army label.
+   * @param labelValue the new values for the armies.
+   */
   public void updateArmyLabel(String labelValue) {
     Platform.runLater(
         () -> {
@@ -84,6 +136,10 @@ public class Runner extends Application {
         });
   }
 
+  /**
+   * Updates the control label.
+   * @param labelValue the new values for the percentage controlled.
+   */
   public void updateControlLabel(String labelValue) {
     Platform.runLater(
         () -> {
@@ -91,6 +147,10 @@ public class Runner extends Application {
         });
   }
 
+  /**
+   * Updates the continent control label.
+   * @param labelValue the new values of the continents controlled.
+   */
   public void updateContinentControlLabel(String labelValue) {
     Platform.runLater(
         () -> {
@@ -98,6 +158,9 @@ public class Runner extends Application {
         });
   }
 
+  /**
+   * Initiates and processes the command line for the whole game.
+   */
   public static void processCommandline() {
     GameMap gameMap = GameMap.getGameMap();
     gameMap.setCurrentContext(Context.MAIN_MENU);
@@ -112,7 +175,11 @@ public class Runner extends Application {
     }
   }
 
-  // TODO move to a decent place
+  /**
+   * Returns the name of a phase.
+   * @param context the Context enum to get the name of the phase.
+   * @return the String with a user-friendly name.
+   */
   public static String getPhaseName(Context context) {
     switch (context) {
       case GAME_ATTACK:
@@ -128,6 +195,10 @@ public class Runner extends Application {
     }
   }
 
+  /**
+   * Adds the card view to the WD View.
+   * @param WDSection The BorderPane hosting the WD View.
+   */
   private void addCardView(BorderPane WDSection) {
     cardScroller.setContent(cardSection);
     cardScroller.setStyle("-fx-background-color: #b0b0b0;");
@@ -155,13 +226,10 @@ public class Runner extends Application {
     WDSection.setBottom(cardScroller);
   }
 
-  //  private void addControlSection(BorderPane WDSection) {
-  //    Label controlSection = new Label();
-  //    controlSection.setAlignment(Pos.TOP_CENTER);
-  //    controlSection.setPadding(new Insets(10, 0, 0, 0));
-  //    WDSection.setLeft(controlSection);
-  //  }
-
+  /**
+   * Adds the continent control section to the WD View.
+   * @param WDSection the BorderPane hosting the WD View.
+   */
   private void addMapSection(BorderPane WDSection) {
     VBox mapSection = new VBox();
     mapSection.setStyle("-fx-background-color: #cecece");
@@ -172,6 +240,10 @@ public class Runner extends Application {
     WDSection.setCenter(mapSection);
   }
 
+  /**
+   * Adds the total armies section to the WD View.
+   * @param WDSection the BorderPane hosting the WD View.
+   */
   private void addArmySection(BorderPane WDSection) {
     VBox armySection = new VBox();
     armySection.setAlignment(Pos.TOP_CENTER);
@@ -180,6 +252,10 @@ public class Runner extends Application {
     WDSection.setRight(armySection);
   }
 
+  /**
+   * Populates the WD View.
+   * @param WDSection the BorderPane hosting the WD View.
+   */
   private void populateWDView(BorderPane WDSection) {
     WDSection.setStyle("-fx-background-color: #cecece;");
     WDSection.setPadding(new Insets(0, 0, 0, 0));
@@ -197,6 +273,10 @@ public class Runner extends Application {
     addArmySection(WDSection);
   }
 
+  /**
+   * Populates the Phase View.
+   * @param phaseSection the VBox hosting the phase view.
+   */
   private void populatePhaseView(VBox phaseSection) {
     phaseSection.setPadding(new Insets(25, 0, 0, 40));
 
@@ -214,6 +294,10 @@ public class Runner extends Application {
     phaseSection.getChildren().addAll(rootPhaseNameLabel, rootPlayerLabel, phaseScroller);
   }
 
+  /**
+   * Adds a card to the view.
+   * @param name the complete name of the card.
+   */
   private void addCardToView(String name) {
     Label cardView = new Label(name);
     cardView.setPadding(new Insets(10, 10, 10, 10));
@@ -221,43 +305,56 @@ public class Runner extends Application {
     cardSection.getChildren().add(cardView);
   }
 
+  /**
+   * Removes the card view from the screen.
+   */
   private void clearCardView() {
     WDSection.setBottom(null);
   }
 
+  /**
+   * Starts the GUI.
+   *
+   * @param primaryStage The main Stage for the UI.
+   */
   @Override
-  public void start(Stage primaryStage) throws Exception {
-    GameMap gameMap = GameMap.getGameMap();
-    CLI cli = CLI.getInstance();
-    PhaseView phaseView = new PhaseView(this);
-    WDView wdView = new WDView(this);
+  public void start(Stage primaryStage) {
+    try {
+      GameMap gameMap = GameMap.getGameMap();
+      CLI cli = CLI.getInstance();
+      PhaseView phaseView = new PhaseView(this);
+      WDView wdView = new WDView(this);
 
-    gameMap.addObserver(phaseView);
-    WorldDomination.getInstance().addObserver(wdView);
-    ObserverList.add(phaseView);
+      gameMap.addObserver(phaseView);
+      WorldDomination.getInstance().addObserver(wdView);
+      ObserverList.add(phaseView);
 
-    primaryStage.setTitle("Risk by Group 2");
-    VBox vbox = new VBox();
-    vbox.setFillWidth(true);
+      primaryStage.setTitle("Risk by Group 2");
+      VBox vbox = new VBox();
+      vbox.setFillWidth(true);
 
-    WDSection = new BorderPane();
-    populateWDView(WDSection);
-    // TODO call conditionally
-    addCardView(WDSection);
-    clearCardView();
-    addCardView(WDSection);
-    addCardView(WDSection);
+      WDSection = new BorderPane();
+      populateWDView(WDSection);
+      // TODO call conditionally
+      addCardView(WDSection);
+      clearCardView();
+      addCardView(WDSection);
+      addCardView(WDSection);
 
-    VBox phaseSection = new VBox();
-    populatePhaseView(phaseSection);
+      VBox phaseSection = new VBox();
+      populatePhaseView(phaseSection);
 
-    vbox.getChildren().addAll(WDSection, phaseSection);
-    Scene scene = new Scene(vbox, 800, 600);
-    primaryStage.setScene(scene);
-    primaryStage.show();
+      vbox.getChildren().addAll(WDSection, phaseSection);
+      Scene scene = new Scene(vbox, 800, 600);
+      primaryStage.setScene(scene);
+      primaryStage.show();
 
-    Thread cliThread = new Thread(Runner::processCommandline);
-    cliThread.setDaemon(true);
-    cliThread.start();
+      Thread cliThread = new Thread(Runner::processCommandline);
+      cliThread.setDaemon(true);
+      cliThread.start();
+    }
+    catch(Exception e) {
+      System.out.println(e.getMessage());
+    }
   }
 }

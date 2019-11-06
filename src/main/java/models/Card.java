@@ -3,7 +3,8 @@ package models;
 /**
  * This class maintains information for the cards
  *
- * @author Siddharth Singh
+ * @author Siddharth
+ * @version 1.0
  */
 public class Card {
 
@@ -11,11 +12,17 @@ public class Card {
    * Total cards introduced in the game
    */
   private static int cardCount = 0;
-  String owner;
+
   /**
-   * Stores the Card object
+   * The name of the player who owns the card.
+   */
+  private String owner;
+
+  /**
+   * Stores the typeOfCard enum
    */
   private typeOfCard type;
+
   /**
    * Country of the card
    */

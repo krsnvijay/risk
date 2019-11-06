@@ -14,18 +14,63 @@ import static java.util.Collections.reverseOrder;
 import static java.util.stream.Collectors.toCollection;
 import static views.ConsoleView.display;
 
+/**
+ * This is the controller that manages the Attack phase entirely.
+ * @version 1.0
+ * @author Vijay
+ */
 public class BattleController {
 
+  /**
+   * The number of dice for the attacker.
+   */
   private int numOfDiceAttacker;
-  private Country attackingCountry;
-  private Country defendingCountry;
-  private String attackerName;
-  private String defenderName;
-  private GameMap gameMap;
-  private Card topCard;
+
+  /**
+   * The number of dice for the defender.
+   */
   private int numOfDiceDefender;
+
+  /**
+   * The attacking Country object.
+   */
+  private Country attackingCountry;
+
+  /**
+   * The defending Country object.
+   */
+  private Country defendingCountry;
+
+  /**
+   * The name of the attacking player.
+   */
+  private String attackerName;
+
+  /**
+   * The name of the defending player.
+   */
+  private String defenderName;
+
+  /**
+   * An instance of the Game Map.
+   */
+  private GameMap gameMap;
+
+  /**
+   * The topmost card on the deck.
+   */
+  private Card topCard;
+
+  /**
+   * Tracks if -allout is enabled.
+   */
   private boolean isAllOutEnabled = false;
 
+  /**
+   * Constructor for the Battle Controller
+   * @param gameMap the Game Map object.
+   * @param command the command to be processed.
+   */
   public BattleController(GameMap gameMap, String command) {
     this.gameMap = gameMap;
     String[] commandSplit = command.split(" ");
@@ -52,6 +97,10 @@ public class BattleController {
         .anyMatch(armyCount -> armyCount > 1);
   }
 
+  /**
+   * Calculates the maximum number of dice for a defender.
+   * @return integer representing the number of dice.
+   */
   public int calculateMaxDiceForDefender() {
     int armies = defendingCountry.getNumberOfArmies();
     if (armies > 1) {
@@ -63,6 +112,10 @@ public class BattleController {
     }
   }
 
+  /**
+   * Calculates the maximum number of dice for an attacker.
+   * @return integer representing the number of dice.
+   */
   public int calculateMaxDiceForAttacker() {
     int armies = attackingCountry.getNumberOfArmies();
     if (armies > 3) {
@@ -74,6 +127,12 @@ public class BattleController {
     }
   }
 
+  /**
+   * This is a utility method that compares the dice rolls according to the Risk rules.
+   * @param attackerDiceRoll the rolls for the attacker
+   * @param defenderDiceRoll the rolls for the defender
+   * @return the winner of the dice roll.
+   */
   public ArrayList<Boolean> compareDiceRolls(
       ArrayList<Integer> attackerDiceRoll, ArrayList<Integer> defenderDiceRoll) {
     Iterator<Integer> attackerDiceIterator =
@@ -85,17 +144,17 @@ public class BattleController {
       int maxAttacker = attackerDiceIterator.next();
       int maxDefender = defenderDiceIterator.next();
       display(
-          String.format("comparing dice %d(attacker) with %d(defender)", maxAttacker, maxDefender),
+          String.format("comparing dice %d (attacker) with %d (defender)", maxAttacker, maxDefender),
           true);
       boolean result = maxAttacker > maxDefender;
-      display(String.format("%s won", result ? "Attacker" : "Defender"), true);
+      display(String.format("%s won!", result ? "Attacker" : "Defender"), true);
       diceComparisonResult.add(result);
     }
     return diceComparisonResult;
   }
 
   /**
-   * Rolls multiple dice
+   * Rolls multiple dice.
    *
    * @param numOfDice number of dice to roll
    * @return result of each dice roll
@@ -105,6 +164,10 @@ public class BattleController {
     return Stream.generate(roll).limit(numOfDice).collect(toCollection(ArrayList::new));
   }
 
+  /**
+   * Initiates the attack phase.
+   * @return true when the attack finishes.
+   */
   public boolean startBattle() {
     gameMap.setCurrentContext(Context.GAME_ATTACK_BATTLE_DEFENDER);
     if (isAllOutEnabled) {
@@ -126,6 +189,10 @@ public class BattleController {
     return true;
   }
 
+  /**
+   * Returns the number of dice for the attacker.
+   * @return number of dice.
+   */
   public int getNumOfDiceFromAttacker() {
     if (isAllOutEnabled) {
       return calculateMaxDiceForAttacker();
@@ -134,6 +201,10 @@ public class BattleController {
     }
   }
 
+  /**
+   * Returns the number of dice for the defender.
+   * @return number of dice.
+   */
   public int getNumOfDiceFromDefender() {
     int defenderNumOfDice = 0;
     if (isAllOutEnabled) {
@@ -182,6 +253,9 @@ public class BattleController {
     }
   }
 
+  /**
+   * Attempts an attack based on the command specified by the attacker.
+   */
   public void attemptAttack() {
     numOfDiceDefender = getNumOfDiceFromDefender();
     numOfDiceAttacker = getNumOfDiceFromAttacker();
@@ -212,6 +286,10 @@ public class BattleController {
     }
   }
 
+  /**
+   * Returns the armies to be moved to a captured territory on successful attack.
+   * @return number of armies as an integer.
+   */
   public int getNumOfArmiesToMoveFromAttacker() {
     int numOfArmies = 0;
     while (true) {
@@ -250,6 +328,9 @@ public class BattleController {
     }
   }
 
+  /**
+   * This method executes on successful capture of a country.
+   */
   private void successfulBattle() {
     // move armies to new territory
     int numOfArmiesToMove = getNumOfArmiesToMoveFromAttacker();
@@ -262,6 +343,9 @@ public class BattleController {
         false);
   }
 
+  /**
+   * This method executes on successful defence of a country.
+   */
   public void successfulDefence() {
     if (attackingCountry.getNumberOfArmies() > 2) {
       attackingCountry.removeArmies(1);
@@ -283,6 +367,9 @@ public class BattleController {
     }
   }
 
+  /**
+   * This method executes on a specific roll-win for attacker.
+   */
   public void successfulAttack() {
     if (defendingCountry.getNumberOfArmies() > 1) {
       defendingCountry.removeArmies(1);

@@ -3,7 +3,10 @@ package models;
 import java.util.Objects;
 
 /**
- * This class maintains information for a continent
+ * This class maintains information for a continent.
+ *
+ * @author Sabari
+ * @version 1.0
  */
 public class Continent {
 

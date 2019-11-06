@@ -1,13 +1,16 @@
 package controllers;
 
-import static views.ConsoleView.display;
-
 import models.Context;
 import models.GameMap;
 import models.Player;
 
+import static views.ConsoleView.display;
+
 /**
  * Controller for Setup Context
+ *
+ * @author Sabari
+ * @version 1.0
  */
 public class SetupController {
 

@@ -1,15 +1,15 @@
 package models;
 
-import controllers.EditorController;
-import controllers.GameController;
-import controllers.MainController;
-import controllers.SetupController;
-import controllers.StartUpController;
+import controllers.*;
+
 import java.util.function.BiPredicate;
 
 /**
  * Enum to store command regex pattern, mapping function and usage Can be used command validation
  * and calling relevant controller function
+ *
+ * @author Vijay
+ * @version 1.0
  */
 public enum Command {
   GAME_HELP("^help$", MainController::processGameHelpCommand, "help"),

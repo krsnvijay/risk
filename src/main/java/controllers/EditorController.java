@@ -1,15 +1,19 @@
 package controllers;
 
-import static views.ConsoleView.display;
-
-import java.util.Arrays;
 import models.Context;
 import models.GameMap;
 import utils.EditMap;
 import utils.MapParser;
 
+import java.util.Arrays;
+
+import static views.ConsoleView.display;
+
 /**
  * Controller for Editor Context
+ *
+ * @version 1.0
+ * @author Sabari
  */
 public class EditorController {
 

@@ -11,9 +11,15 @@ import static views.ConsoleView.display;
 
 /**
  * Controller for Game loop and phases
+ *
+ * @author Warren
+ * @version 1.0
  */
 public class GameController {
 
+  /**
+   * This boolean is false if a card hasn't been assigned to the current player.
+   */
   public static boolean assignedCard = false;
 
   /**
@@ -93,6 +99,13 @@ public class GameController {
     return true;
   }
 
+  /**
+   * Performs the reinforce command.
+   *
+   * @param gameMap the Game Map instance.
+   * @param command the command entered by the user.
+   * @return the result of reinforcement.
+   */
   public static boolean performReinforce(GameMap gameMap, String command) {
     Player currentPlayer = gameMap.getCurrentPlayer();
     String[] commandSplit = command.split(" ");
@@ -131,6 +144,12 @@ public class GameController {
     return result;
   }
 
+  /**
+   * Checks whether fortification is valid.
+   * @param gameMap The Game Map instance.
+   * @param command The command entered by the user.
+   * @return true if the fortification is valid.
+   */
   public static boolean validateFortify(GameMap gameMap, String command) {
     Player currentPlayer = gameMap.getCurrentPlayer();
     String[] commandSplit = command.split(" ");
@@ -175,6 +194,13 @@ public class GameController {
     return true;
   }
 
+  /**
+   * This method performs the fortification.
+   *
+   * @param gameMap The Game Map instance.
+   * @param command The command entered by the user.
+   * @return the boolean result of the fortification.
+   */
   public static boolean performFortify(GameMap gameMap, String command) {
     Player currentPlayer = gameMap.getCurrentPlayer();
 
@@ -198,6 +224,11 @@ public class GameController {
     return result;
   }
 
+  /**
+   * Handles the fortifynone logic.
+   * @param gameMap The Game Map instance
+   * @return the result of the command.
+   */
   private static boolean performFortifyNone(GameMap gameMap) {
     Player currentPlayer = gameMap.getCurrentPlayer();
     display(String.format("%s chose not to fortify", currentPlayer.getPlayerName()), true);
@@ -258,6 +289,12 @@ public class GameController {
         true);
   }
 
+  /**
+   * Validates the attack method.
+   * @param gameMap The Game Map instance.
+   * @param command The command entered by the user.
+   * @return true if the attack is valid, false otherwise.
+   */
   public static boolean validateAttack(GameMap gameMap, String command) {
     Player currentPlayer = gameMap.getCurrentPlayer();
 
@@ -330,6 +367,13 @@ public class GameController {
     return true;
   }
 
+  /**
+   * This method performs the attack.
+   *
+   * @param gameMap The Game Map instance.
+   * @param command The command entered by the user.
+   * @return The boolean result of the attack command.
+   */
   public static boolean performAttack(GameMap gameMap, String command) {
     Player currentPlayer = gameMap.getCurrentPlayer();
     String[] commandSplit = command.split(" ");
@@ -346,6 +390,12 @@ public class GameController {
     return currentPlayer.attack(gameMap, command);
   }
 
+  /**
+   * This method handles the attack none scenario.
+   *
+   * @param gameMap The Game Map instance.
+   * @return the boolean result of the attacknone command.
+   */
   public static boolean performAttackNone(GameMap gameMap) {
     Player currentPlayer = gameMap.getCurrentPlayer();
     display(String.format("%s chose not to attack", currentPlayer.getPlayerName()), true);
@@ -356,6 +406,13 @@ public class GameController {
     return true;
   }
 
+  /**
+   * Validates the reinforcement command.
+   *
+   * @param gameMap The Game Map instance.
+   * @param command The command entered by the user.
+   * @return
+   */
   public static boolean validateReinforce(GameMap gameMap, String command) {
     Player currentPlayer = gameMap.getCurrentPlayer();
 

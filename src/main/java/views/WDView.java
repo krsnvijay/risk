@@ -1,25 +1,44 @@
 package views;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 import models.GameMap;
 import models.WorldDomination;
 
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
+
+/**
+ * The class for the World Domination view.
+ *
+ * @author Siddhant
+ * @version 1.0
+ */
 public class WDView implements Observer {
+  /**
+   * Thread execution service.
+   */
   private final ExecutorService service = Executors.newCachedThreadPool();
+
+  /**
+   * Instance of the Runner class.
+   */
   private Runner appInstance;
 
+  /**
+   * Constructor for the WorldDomination view.
+   * @param app instance of the Runner class.
+   */
   public WDView(Runner app) {
     this.appInstance = app;
   }
 
+  /**
+   * The overridden update method for the observer.
+   *
+   * @param o the Observable (WorldDomination in this scenario)
+   * @param arg the arg object is unused in this scenario.
+   */
   @Override
   public void update(Observable o, Object arg) {
     WorldDomination worldDomination = (WorldDomination) o;

@@ -4,6 +4,9 @@ import static models.GameMap.getGameMap;
 
 /**
  * View for cli
+ *
+ * @author Vijay
+ * @version 1.0
  */
 public class ConsoleView {
 

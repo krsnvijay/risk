@@ -14,6 +14,9 @@ import static views.ConsoleView.display;
 
 /**
  * Controller for Main Menu Context
+ *
+ * @author Siddharth
+ * @version 1.0
  */
 public class MainController {
 

@@ -6,6 +6,7 @@ import java.util.Objects;
  * This class maintains the information for a Country.
  *
  * @author Vijay
+ * @version 1.0
  */
 public class Country {
   /** The name of the continent the Country belongs to. */

@@ -1,24 +1,18 @@
 package models;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toMap;
-import static views.ConsoleView.display;
-
 import controllers.BattleController;
-import java.util.AbstractMap;
+
+import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+
+import static java.util.stream.Collectors.*;
+import static views.ConsoleView.display;
 
 /**
  * This is the Player class which handles every player.
  *
- * @author s_anakih
+ * @author Sabari
+ * @version 1.0
  */
 public class Player {
 
@@ -164,6 +158,10 @@ public class Player {
     return cardsInHand;
   }
 
+  /**
+   * Sets the cards in the player's hand.
+   * @param cardsInHand A collection of Card objects.
+   */
   public void setCardsInHand(List<Card> cardsInHand) {
     this.cardsInHand = cardsInHand;
   }
@@ -297,6 +295,12 @@ public class Player {
     return Objects.hash(playerName, numberOfArmies);
   }
 
+  /**
+   * Starts the battle loop.
+   * @param gameMap The Game Map instance.
+   * @param command The command string.
+   * @return a boolean with the result.
+   */
   public boolean attack(GameMap gameMap, String command) {
     // Start battle loop
     BattleController battleController = new BattleController(gameMap, command);
