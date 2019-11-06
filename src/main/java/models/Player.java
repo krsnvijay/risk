@@ -14,7 +14,7 @@ import static views.ConsoleView.display;
  * @author Sabari
  * @version 1.0
  */
-public class Player {
+public class Player extends Observable {
 
   /**
    * Maintains the number of sets traded in game
@@ -164,6 +164,8 @@ public class Player {
    */
   public void setCardsInHand(List<Card> cardsInHand) {
     this.cardsInHand = cardsInHand;
+    setChanged();
+    notifyObservers();
   }
 
   /**
@@ -173,6 +175,8 @@ public class Player {
    */
   public void addCard(Card card) {
     this.cardsInHand.add(card);
+    setChanged();
+    notifyObservers();
   }
 
   /**
@@ -196,6 +200,8 @@ public class Player {
       numberOfArmies += armiesAcquired;
       for (int index : indices) {
         cardsInHand.remove(index);
+        setChanged();
+        notifyObservers();
       }
       display("Acquired " + armiesAcquired + " through card exchange", false);
     } else {

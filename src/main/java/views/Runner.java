@@ -16,14 +16,14 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import models.Card;
 import models.Context;
 import models.GameMap;
 import models.WorldDomination;
 import utils.CLI;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observer;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static views.ConsoleView.display;
 
@@ -69,6 +69,10 @@ public class Runner extends Application {
    */
   private ScrollPane cardScroller = new ScrollPane();
 
+  private ArrayList<Label> cardLabels = new ArrayList<>();
+
+  private Map<String, List<String>> cardLabelStringsTempMap = new HashMap<>();
+
   /**
    * Constructor for the runner class.
    */
@@ -82,6 +86,12 @@ public class Runner extends Application {
     rootArmyLabel = new Label("Total armies:");
     rootArmyLabel.setPadding(new Insets(15, 150, 0, 0));
     rootArmyLabel.setStyle("-fx-font-weight: bold;");
+    for(int i = 0;i<6;i++) {
+      Label card= new Label("");
+      card.setPadding(new Insets(10, 10, 10, 10));
+      card.setStyle("-fx-border-color: black; -fx-border-radius: 2px; -fx-border-insets: 5");
+      cardLabels.add(card);
+    }
   }
 
   /**
@@ -158,6 +168,36 @@ public class Runner extends Application {
         });
   }
 
+  public void updateCardView(){
+    String currPlayer = GameMap.getGameMap().getCurrentPlayer().getPlayerName();
+    if (cardLabelStringsTempMap.containsKey(currPlayer)) {
+      List<String> cardInHandStrings = cardLabelStringsTempMap.get(currPlayer);
+        for (int i = 0; i < cardLabels.size(); i++) {
+          if (i < cardInHandStrings.size()) {
+            int finalI = i;
+          Platform.runLater(
+              () -> {
+                System.out.println("SETTING LABEL here");
+                cardLabels.get(finalI).setText(cardInHandStrings.get(finalI));
+                cardLabels.get(finalI).setVisible(true);
+              });
+          }
+          else {
+            int finalI1 = i;
+            Platform.runLater(()->{
+                cardLabels.get(finalI1).setVisible(false);
+                cardLabels.get(finalI1).setText("");
+            });
+          }
+        }
+     }
+  }
+
+  public void updateCardLabelsTemp(List<String> cardsInHandStrings) {
+    String currPlayer = GameMap.getGameMap().getCurrentPlayer().getPlayerName();
+    cardLabelStringsTempMap.put(currPlayer, cardsInHandStrings);
+  }
+
   /**
    * Initiates and processes the command line for the whole game.
    */
@@ -216,9 +256,12 @@ public class Runner extends Application {
     cardSection.setAlignment(Pos.CENTER);
     Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
+    cardLabels.stream().forEach(cardLabel -> {
+      if(cardLabel.getText().equals("")) cardLabel.setVisible(false);
+      addCardToView(cardLabel);
+    });
+
     cardSection.setStyle("-fx-background-color: #b0b0b0;");
-    addCardToView("1. British Columbia Artillary");
-    addCardToView("2. Ontario Cavalry");
     cardScroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
     HBox.setHgrow(cardScroller, Priority.ALWAYS);
@@ -298,17 +341,14 @@ public class Runner extends Application {
    * Adds a card to the view.
    * @param name the complete name of the card.
    */
-  private void addCardToView(String name) {
-    Label cardView = new Label(name);
-    cardView.setPadding(new Insets(10, 10, 10, 10));
-    cardView.setStyle("-fx-border-color: black; -fx-border-radius: 2px; -fx-border-insets: 5");
-    cardSection.getChildren().add(cardView);
+  private void addCardToView(Label card) {
+    cardSection.getChildren().add(card);
   }
 
   /**
    * Removes the card view from the screen.
    */
-  private void clearCardView() {
+  public void clearCardView() {
     WDSection.setBottom(null);
   }
 
@@ -329,17 +369,18 @@ public class Runner extends Application {
       WorldDomination.getInstance().addObserver(wdView);
       ObserverList.add(phaseView);
 
+      CardExchangeView _cardExchangeView = new CardExchangeView(this);
+
       primaryStage.setTitle("Risk by Group 2");
       VBox vbox = new VBox();
       vbox.setFillWidth(true);
 
       WDSection = new BorderPane();
       populateWDView(WDSection);
+
       // TODO call conditionally
       addCardView(WDSection);
-      clearCardView();
-      addCardView(WDSection);
-      addCardView(WDSection);
+      //clearCardView();
 
       VBox phaseSection = new VBox();
       populatePhaseView(phaseSection);

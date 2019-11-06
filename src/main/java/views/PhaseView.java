@@ -2,10 +2,10 @@ package views;
 
 import models.GameMap;
 
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 /**
  * The Phase View which displays information about the phase, current player, and logs.
@@ -52,6 +52,22 @@ public class PhaseView implements Observer {
         break;
       case "CURRENT_CONTEXT":
         String currentPhase = gameMap.getCurrentContext().name();
+
+        if(currentPhase.equals("GAME_STARTUP")) {
+          gameMap
+              .getPlayersList()
+              .forEach(
+                  player -> {
+                    player.addObserver(CardExchangeView.getInstance());
+                    System.out.println("ADDED OBSERVER!");
+                  });
+        }
+
+        if(currentPhase.equals("GAME_REINFORCE")) {
+          service.submit(() -> appInstance.updateCardView());
+        }
+
+        if(currentPhase.equals("GAME_ATTACK")) service.submit(() -> appInstance.clearCardView());
         // clear phase log
         gameMap.setPhaseLog("", true);
         service.submit(() -> appInstance.updatePhaseLabel(currentPhase));
