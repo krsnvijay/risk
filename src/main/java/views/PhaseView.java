@@ -67,7 +67,9 @@ public class PhaseView implements Observer {
           service.submit(() -> appInstance.updateCardView());
         }
 
-        if(currentPhase.equals("GAME_ATTACK")) service.submit(() -> appInstance.clearCardView());
+        if (currentPhase.equals("GAME_ATTACK")) {
+          service.submit(() -> appInstance.clearCardView());
+        }
         // clear phase log
         gameMap.setPhaseLog("", true);
         service.submit(() -> appInstance.updatePhaseLabel(currentPhase));

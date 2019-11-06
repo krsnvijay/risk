@@ -2,9 +2,6 @@ package views;
 
 import models.Card;
 import models.GameMap;
-import models.Player;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -30,9 +27,6 @@ public class CardExchangeView implements Observer {
 
   @Override
   public void update(Observable o, Object arg) {
-    Player player = (Player) o;
-    System.out.println("CALLED HERE");
-    // an update to cardsInHand for current player
     GameMap gameMap = GameMap.getGameMap();
     List<Card> cardsInHand = gameMap.getCurrentPlayer().getCardsInHand();
     List<String> cardsInHandString = cardsInHand.stream().map((card) -> {

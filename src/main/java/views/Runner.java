@@ -16,15 +16,12 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import models.Card;
 import models.Context;
 import models.GameMap;
 import models.WorldDomination;
 import utils.CLI;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
 import static views.ConsoleView.display;
 
 /**
@@ -86,7 +83,7 @@ public class Runner extends Application {
     rootArmyLabel = new Label("Total armies:");
     rootArmyLabel.setPadding(new Insets(15, 150, 0, 0));
     rootArmyLabel.setStyle("-fx-font-weight: bold;");
-    for(int i = 0;i<6;i++) {
+    for(int i = 0;i<5;i++) {
       Label card= new Label("");
       card.setPadding(new Insets(10, 10, 10, 10));
       card.setStyle("-fx-border-color: black; -fx-border-radius: 2px; -fx-border-insets: 5");
@@ -177,7 +174,6 @@ public class Runner extends Application {
             int finalI = i;
           Platform.runLater(
               () -> {
-                System.out.println("SETTING LABEL here");
                 cardLabels.get(finalI).setText(cardInHandStrings.get(finalI));
                 cardLabels.get(finalI).setVisible(true);
               });
@@ -349,7 +345,7 @@ public class Runner extends Application {
    * Removes the card view from the screen.
    */
   public void clearCardView() {
-    WDSection.setBottom(null);
+    cardLabels.forEach(cardLabel -> cardLabel.setVisible(false));
   }
 
   /**
