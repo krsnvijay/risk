@@ -1,12 +1,13 @@
 package controllers;
 
-import static views.ConsoleView.display;
-
-import java.util.ArrayList;
 import models.Context;
 import models.Country;
 import models.GameMap;
 import models.Player;
+
+import java.util.ArrayList;
+
+import static views.ConsoleView.display;
 
 /**
  * Controller for Game loop and phases
@@ -262,7 +263,9 @@ public class GameController {
 
     // Validate country names
     String[] commandSplit = command.split(" ");
-    if (commandSplit.length == 1) return false;
+    if (commandSplit.length == 1) {
+      return false;
+    }
     if (!gameMap.getCountries().containsKey(commandSplit[1])
         || !gameMap.getCountries().containsKey(commandSplit[2])) {
       display("Error: One or both the countries do not exist", false);

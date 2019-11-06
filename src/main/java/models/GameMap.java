@@ -1,22 +1,9 @@
 package models;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
-import static utils.MapParser.buildDeck;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Observable;
-import java.util.Random;
-import java.util.Set;
+import static java.util.stream.Collectors.*;
+import static utils.MapParser.buildDeck;
 
 /**
  * GameMap stores map data i.e borders, countries, files, continents The class is a singleton.
@@ -540,9 +527,7 @@ public class GameMap extends Observable {
     return true;
   }
 
-  /**
-   * Assigns a random card to the player from the deck
-   */
+  /** Assigns a random card to the player from the deck */
   public void assignCard() {
     Player currentPlayer = getCurrentPlayer();
     if (positionOfCard < deck.size()) {
@@ -613,7 +598,7 @@ public class GameMap extends Observable {
    *     phases
    */
   public String showMapByOwnershipByCurrentPlayer(String currentPlayer) {
-      ArrayList<Country> countriesOwnedByCurrPlayer =
+    ArrayList<Country> countriesOwnedByCurrPlayer =
         this.countries.values().stream()
             .filter(country -> country.getOwnerName().equals(currentPlayer))
             .collect(toCollection(ArrayList::new));
@@ -679,6 +664,7 @@ public class GameMap extends Observable {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
+
     GameMap gameMap = (GameMap) o;
     return fileSectionData.equals(gameMap.fileSectionData)
         && borders.equals(gameMap.borders)

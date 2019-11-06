@@ -1,27 +1,18 @@
 package utils;
 
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
+import models.Card;
+import models.Continent;
+import models.Country;
+import models.GameMap;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
-import models.Card;
-import models.Continent;
-import models.Country;
-import models.GameMap;
+
+import static java.util.stream.Collectors.*;
 
 /**
  * The Map Parser utility parses the whole map file from disk.
@@ -51,7 +42,9 @@ public class MapParser {
           while (sc.hasNext()) {
             String sectionLine = sc.nextLine();
 
-            if (sectionLine.trim().isEmpty()) break;
+            if (sectionLine.trim().isEmpty()) {
+              break;
+            }
             sectionData.add(sectionLine);
           }
           return sectionData;

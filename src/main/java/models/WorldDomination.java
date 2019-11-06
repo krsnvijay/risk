@@ -1,16 +1,10 @@
 package models;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toMap;
-
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Observable;
-import java.util.stream.Collectors;
 
 public class WorldDomination extends Observable {
   private static WorldDomination worldDomination = null;
@@ -67,8 +61,9 @@ public class WorldDomination extends Observable {
                   for (Map.Entry<String, Integer> entry : continentsOwnership.entrySet()) {
                     int fullOwnerShip = continentsSize.get(entry.getKey());
                     int currentOwnerShip = entry.getValue();
-                    if (fullOwnerShip == currentOwnerShip)
+                    if (fullOwnerShip == currentOwnerShip) {
                       continentsOwnedByPlayer.add(entry.getKey());
+                    }
                   }
 
                   return new AbstractMap.SimpleEntry<>(
