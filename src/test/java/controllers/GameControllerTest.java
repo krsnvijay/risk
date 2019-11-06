@@ -29,8 +29,7 @@ public class GameControllerTest {
   public static final String INDIA = "India";
   public static final String CHINA = "China";
   public static final String QUEBEC = "Quebec";
-  /** list of players */
-  private static ArrayList<Player> playersList = new ArrayList<>();
+
   /** player name */
   String playerName;
   /** reason for failure */
@@ -59,9 +58,9 @@ public class GameControllerTest {
     gameMap = MapParser.loadMap(riskMap.getPath());
     reason = "";
     command = "";
+    gameMap.setPlayersList(new ArrayList<>());
     gameMap.addGamePlayer(PLAYER_1);
     gameMap.addGamePlayer(PLAYER_2);
-    playersList = gameMap.getPlayersList();
     gameMap.setCurrentContext(Context.GAME_SETUP);
     gameMap.gameSetup();
     gameMap.placeAll();

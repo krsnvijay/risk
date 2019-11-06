@@ -3,6 +3,7 @@ package controllers;
 import static junit.framework.TestCase.assertEquals;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Map;
 import models.Context;
 import models.Country;
@@ -44,14 +45,14 @@ public class BattleControllerTest {
     File riskMap = new File("src/test/resources/risk.map");
     gameMap = MapParser.loadMap(riskMap.getPath());
     reason = "";
-
+    gameMap.setPlayersList(new ArrayList<>());
     gameMap.addGamePlayer(PLAYER_1);
     gameMap.addGamePlayer(PLAYER_2);
-
     gameMap.setCurrentContext(Context.GAME_SETUP);
     gameMap.gameSetup();
     gameMap.placeAll();
     gameMap.setCurrentContext(Context.GAME_ATTACK);
+    GameMap.setCurrentPlayerIndex(0);
     countries = gameMap.getCountries();
   }
 

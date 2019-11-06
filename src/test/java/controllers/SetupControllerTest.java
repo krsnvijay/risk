@@ -1,5 +1,10 @@
 package controllers;
 
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Map;
 import models.Context;
 import models.Country;
 import models.GameMap;
@@ -7,13 +12,6 @@ import models.Player;
 import org.junit.Before;
 import org.junit.Test;
 import utils.MapParser;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Map;
-
-import static java.util.stream.Collectors.toCollection;
-import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -54,6 +52,7 @@ class SetupControllerTest {
     File riskMap = new File("src/test/resources/risk.map");
     gameMap = MapParser.loadMap(riskMap.getPath());
     reason = "";
+    gameMap.setPlayersList(new ArrayList<>());
     gameMap.addGamePlayer(PLAYER_1);
     gameMap.addGamePlayer(PLAYER_2);
     playersList = gameMap.getPlayersList();
@@ -61,6 +60,7 @@ class SetupControllerTest {
     gameMap.gameSetup();
     gameMap.placeAll();
     gameMap.setCurrentContext(Context.GAME_ATTACK);
+    GameMap.setCurrentPlayerIndex(0);
     countries = gameMap.getCountries();
   }
 

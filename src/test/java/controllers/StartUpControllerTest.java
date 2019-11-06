@@ -1,5 +1,11 @@
 package controllers;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Map;
 import models.Context;
 import models.Country;
 import models.GameMap;
@@ -7,13 +13,6 @@ import models.Player;
 import org.junit.Before;
 import org.junit.Test;
 import utils.MapParser;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * test class to check the functionalities of StartUpController.java
@@ -57,6 +56,7 @@ class StartUpControllerTest {
     gameMap = MapParser.loadMap(riskMap.getPath());
     reason = "";
     command = "";
+    gameMap.setPlayersList(new ArrayList<>());
     gameMap.addGamePlayer(PLAYER_1);
     gameMap.addGamePlayer(PLAYER_2);
     playersList = gameMap.getPlayersList();
@@ -64,6 +64,7 @@ class StartUpControllerTest {
     gameMap.gameSetup();
     gameMap.placeAll();
     gameMap.setCurrentContext(Context.GAME_ATTACK);
+    GameMap.setCurrentPlayerIndex(0);
     countries = gameMap.getCountries();
   }
 
