@@ -15,7 +15,10 @@ import java.util.Map;
 import static junit.framework.TestCase.assertEquals;
 
 /**
- * Test class to check Controller for battle loop
+ * test class to check the functionalities of BattleController.java
+ *
+ * @see controllers.BattleController
+ * @author Sabari Venkadesh
  */
 
 public class BattleControllerTest {

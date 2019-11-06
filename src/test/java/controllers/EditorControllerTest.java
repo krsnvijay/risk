@@ -14,11 +14,21 @@ import java.nio.file.Paths;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-
+/**
+ * test class to check the functionalities of EditorController.java
+ *
+ * @see controllers.EditorController
+ * @author Sabari Venkadesh
+ */
 class EditorControllerTest {
     private GameMap gameMap;
     private String reason;
 
+    /**
+     * Sets up context for the test
+     *
+     * @throws Exception when map file is invalid
+     */
     @Before
     public void setUp() throws Exception {
         // Load Risk map from resource folder

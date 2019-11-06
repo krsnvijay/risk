@@ -13,6 +13,13 @@ import static org.hamcrest.CoreMatchers.either;
 import static org.junit.Assert.assertThat;
 
 
+
+/**
+ * test class to check the functionalities of MainController.java
+ *
+ * @see controllers.MainController
+ * @author Siddharth Singh
+ */
 class MainControllerTest {
 
     /**
@@ -23,7 +30,11 @@ class MainControllerTest {
     /** reason displays the reason for the failed condition */
     private String reason;
 
-
+    /**
+     * Sets up context for the test
+     *
+     * @throws Exception when map file is invalid
+     */
     @Before
     public void setUp() throws Exception {
         // Load Risk map from resource folder
@@ -32,15 +43,16 @@ class MainControllerTest {
         reason = "";
     }
 
+
+    /** Test to check if edit map commands are valid */
     @Test
     void editMap() {
     }
 
+    /** Test to check whether the attacking country has more than 2 armies*/
     @Test
     void loadMap() throws Exception {
-        GameMap gameMapInvalid = null;
         File testMap = new File("src/test/resources/mapparserinvalid.map");
-        gameMapInvalid = MapParser.loadMap(testMap.getPath());
         Scanner scan = new Scanner(testMap);
         StringBuilder sb = new StringBuilder();
         String temp = "", str = "";
@@ -59,14 +71,6 @@ class MainControllerTest {
     }
 
     @Test
-    void gamePlayer() {
-    }
-
-    @Test
     void exitGame() {
-    }
-
-    @Test
-    void gameHelp() {
     }
 }

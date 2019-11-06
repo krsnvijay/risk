@@ -9,27 +9,29 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import static java.util.stream.Collectors.toCollection;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 
+
+/**
+ * test class to check the functionalities of GameController.java
+ *
+ * @see controllers.GameController
+ * @author Siddharth Singh
+ */
 public class GameControllerTest {
-    public static final String PLAYER_1 = "Player1";
-    public static final String PLAYER_2 = "Player2";
-    public static final String INDIA = "India";
-    public static final String CHINA = "China";
-    /** list of players */
+  public static final String PLAYER_1 = "Player1";
+  public static final String PLAYER_2 = "Player2";
+  public static final String INDIA = "India";
+  public static final String CHINA = "China";
+  /** list of players */
   private static ArrayList<Player> playersList = new ArrayList<>();
   /** player name */
   String playerName;
   /** reason for failure */
   String reason;
-
+  /** commands by the player */
   String command;
-
-  GameController gameController = new GameController();
 
   /** list of countries */
   Map<String, Country> countries;
@@ -62,27 +64,36 @@ public class GameControllerTest {
     countries = gameMap.getCountries();
   }
 
-  @Test
-  public void reinforce() {
-    playerName = gameMap.getPlayersList().get(0).getPlayerName();
-  }
 
-  // attacker validation
+  /** Test to check whether the reinforced army is added to the country*/
+/*  @Test
+  public void reinforce() {
+    Country sourceCountry = gameMap.getCountries().get(INDIA);
+    sourceCountry.setOwnerName(PLAYER_1);
+    sourceCountry.setNumberOfArmies(5);
+    boolean result = gameMap.getPlayersList().get(0).reinforce(gameMap, CHINA, 2);
+    int numberOfArmies = sourceCountry.getNumberOfArmies();
+    reason = "The total armies should be 4";
+    assertTrue(reason, result);
+  }
+  */
+
+  /** Test to check whether the attacking country has more than 2 armies*/
   @Test
   public void attackArmiesTest() {
     Country attackingCountry = gameMap.getCountries().get(INDIA);
-    Country defendingCountry =gameMap.getCountries().get(CHINA);
-    attackingCountry.setOwnerName(PLAYER_1);
-    defendingCountry.setOwnerName(PLAYER_2);
+    Country defendingCountry = gameMap.getCountries().get(CHINA);
+    attackingCountry.setOwnerName(PLAYER_2);
+    defendingCountry.setOwnerName(PLAYER_1);
     attackingCountry.setNumberOfArmies(3);
     defendingCountry.setNumberOfArmies(2);
-    command = String.format("attack %s %s -allout",INDIA,CHINA);
-    boolean result = GameController.processAttackCommand(gameMap,command);
+    command = String.format("attack %s %s -allout", INDIA, CHINA);
+    boolean result = GameController.processAttackCommand(gameMap, command);
     reason = "Armies should be greater than 2 for the attacker country";
     assertTrue(reason, result);
   }
 
-  // defender validation
+  /** Test to check whether the attacking countries are adjacent*/
   @Test
   public void defendAdjacencyTest() {
     Country sourceCountry = gameMap.getCountries().get(INDIA);
@@ -91,13 +102,13 @@ public class GameControllerTest {
     destCountry.setOwnerName(PLAYER_2);
     sourceCountry.setNumberOfArmies(4);
     destCountry.setNumberOfArmies(2);
-    command = String.format("attack %s %s -allout",INDIA,CHINA);
+    command = String.format("attack %s %s -allout", INDIA, CHINA);
     boolean result = GameController.processAttackCommand(gameMap, command);
     reason = "Countries should be adjacent for a valid attack";
     assertFalse(reason, result);
   }
 
-  // cards validation
+  /** Test to check whether the card set is valid*/
   @Test
   public void exchangeCardsTest() {
     Card card1 = new Card(INDIA);
@@ -114,11 +125,13 @@ public class GameControllerTest {
     assertTrue(reason, result);
   }
 
-  // valid move after conquer
+  /** Test to check whether the player conquers a valid country*/
   @Test
-  public void conquerTest() {}
+  public void conquerTest() {
 
-  // end of game validation
+  }
+
+  /** Test to check if a player won the game */
   @Test
   public void endOfGameTest() {
     playerName = gameMap.getPlayersList().get(0).getPlayerName();
@@ -134,26 +147,18 @@ public class GameControllerTest {
     assertTrue(reason, result);
   }
 
-  // fortification validation
+  /** Test to check whether fortification happens only within adjacent countries */
   @Test
   public void fortifyTest() {
-    playerName = gameMap.getPlayersList().get(0).getPlayerName();
-    ArrayList<Country> sourceCountry =
-        countries.values().stream()
-            .filter(
-                country ->
-                    country.getNumberOfArmies() == 3 && country.getOwnerName().equals(PLAYER_1))
-            .collect(toCollection(ArrayList::new));
-    // how to get set values
-    Set<String> destinationCountry = gameMap.getBorders().get(sourceCountry.get(0).getName());
+    Country sourceCountry = gameMap.getCountries().get(INDIA);
+    Country destCountry = gameMap.getCountries().get(CHINA);
+    sourceCountry.setOwnerName(PLAYER_1);
+    destCountry.setOwnerName(PLAYER_2);
+    sourceCountry.setNumberOfArmies(4);
+    destCountry.setNumberOfArmies(2);
+    command = String.format("fortify %s %s 2", INDIA, CHINA);
+    boolean result = GameController.performFortify(gameMap, command);
     reason = "Fortification within countries that aren't adjacent is not possible";
-    command = "fortify " + sourceCountry.get(0).getName() + " ";
-    assertEquals(reason, "Hello", "Hello");
+    assertTrue(reason, result);
   }
-
-  @Test
-  public void defendTest() {}
-
-  @Test
-  public void attackMove() {}
 }
