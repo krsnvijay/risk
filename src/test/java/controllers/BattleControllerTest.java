@@ -14,6 +14,10 @@ import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;
 
+/**
+ * Test class to check Controller for battle loop
+ */
+
 public class BattleControllerTest {
 
   public static final String PLAYER_1 = "Player1";
@@ -76,6 +80,10 @@ public class BattleControllerTest {
     countries = gameMap.getCountries();
   }
 
+  /**
+   * validate calculateMaxDice for Attacker
+   */
+
   @Test
   public void calculateMaxDiceForAttacker() {
 
@@ -95,6 +103,8 @@ public class BattleControllerTest {
 
   }
 
+  /**validate calculateMaxDice for Defender*/
+
   @Test
   public void calculateMaxDiceForDefender() {
     Country India = gameMap.getCountries().get(INDIA);
@@ -110,6 +120,8 @@ public class BattleControllerTest {
     China.setNumberOfArmies(0);
     assertEquals(battleController.calculateMaxDiceForDefender(), 0);
   }
+
+  /** validate getNumberofDice for attacker */
 
   @Test
   public void getNumberOfDiceAttacker() {
