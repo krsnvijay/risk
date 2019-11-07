@@ -119,7 +119,7 @@ public class GameControllerTest {
     Card card1 = new Card(INDIA);
     Card card2 = new Card(CHINA);
     Card card3 = new Card(QUEBEC);
-    List<Card> cardsInHand = new ArrayList<>();
+    ArrayList<Card> cardsInHand = new ArrayList<>();
     cardsInHand.add(card1);
     cardsInHand.add(card2);
     cardsInHand.add(card3);

@@ -183,9 +183,6 @@ public class Runner extends Application {
   public void updateCardLabelsTemp(List<String> cardsInHandStrings) {
     String currPlayer = GameMap.getGameMap().getCurrentPlayer().getPlayerName();
     cardLabelStringsTempMap.put(currPlayer, cardsInHandStrings);
-    if(GameMap.getGameMap().getCurrentContext().name().equals("GAME_REINFORCE")){
-      updateCardView();
-    }
   }
 
   /** Initiates and processes the command line for the whole game. */

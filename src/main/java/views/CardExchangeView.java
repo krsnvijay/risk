@@ -38,5 +38,6 @@ public class CardExchangeView implements Observer {
             .collect(Collectors.toList());
 
     service.submit(() -> appInstance.updateCardLabelsTemp(cardsInHandString));
+    if(gameMap.getCurrentContext().name().equals("GAME_REINFORCE")) service.submit(() -> appInstance.updateCardView());
   }
 }

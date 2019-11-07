@@ -27,7 +27,7 @@ public class Player extends Observable {
   /** Stores the number of armies a player has. */
   private int numberOfArmies;
   /** Stores the cards currently held by the player. */
-  private List<Card> cardsInHand = new ArrayList<>();
+  private ArrayList<Card> cardsInHand = new ArrayList<>();
 
   /**
    * This constructor initializes the class.
@@ -163,7 +163,7 @@ public class Player extends Observable {
    *
    * @param cardsInHand A collection of Card objects.
    */
-  public void setCardsInHand(List<Card> cardsInHand) {
+  public void setCardsInHand(ArrayList<Card> cardsInHand) {
     this.cardsInHand = cardsInHand;
     setChanged();
     notifyObservers();
@@ -205,15 +205,25 @@ public class Player extends Observable {
         cardsToAddToDeck.add(cardsInHand.get(index));
       }
 
-      Arrays.stream(indices).boxed().sorted(Comparator.reverseOrder()).forEach(index -> {
-        cardsInHand.remove(index);
-      });
+      ArrayList<Integer> listIndices =
+          Arrays.stream(indices)
+              .boxed()
+              .sorted(Comparator.reverseOrder())
+              .collect(Collectors.toCollection(ArrayList::new));
 
-      setChanged();
-      notifyObservers();
+      ArrayList<Card> resultCardsInHand = new ArrayList<>();
+      for(int i = 0;i<cardsInHand.size();i++){
+        if(!listIndices.contains(i)){
+          resultCardsInHand.add(cardsInHand.get(i));
+        }
+      }
+      setCardsInHand(resultCardsInHand);
 
       Collections.shuffle(cardsToAddToDeck);
-      GameMap.getGameMap().getDeck().addAll(cardsToAddToDeck); // add the exchanged cards to deck after removing from player hand
+      GameMap.getGameMap()
+          .getDeck()
+          .addAll(
+              cardsToAddToDeck); // add the exchanged cards to deck after removing from player hand
 
       display("Acquired " + armiesAcquired + " through card exchange", false);
     } else {
