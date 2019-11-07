@@ -20,6 +20,7 @@ public class PhaseView implements Observer {
   /** Instance of the Runner class. */
   private Runner appInstance;
 
+  /** stores previous phase **/
   private static String prevPhase = "PREV";
 
   /**

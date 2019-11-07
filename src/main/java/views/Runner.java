@@ -52,8 +52,10 @@ public class Runner extends Application {
   /** ScrollPane for scrollable cards in hand. */
   private ScrollPane cardScroller = new ScrollPane();
 
+  /** An Array of Labels for cards **/
   private ArrayList<Label> cardLabels = new ArrayList<>();
 
+  /** A Temporary Map of Players mapped to cards they have in hand **/
   private Map<String, List<String>> cardLabelStringsTempMap = new HashMap<>();
 
   /** Constructor for the runner class. */
@@ -156,6 +158,9 @@ public class Runner extends Application {
         });
   }
 
+  /**
+   * Update the whole card view
+   */
   public void updateCardView() {
     String currPlayer = GameMap.getGameMap().getCurrentPlayer().getPlayerName();
     if (cardLabelStringsTempMap.containsKey(currPlayer)) {
@@ -180,6 +185,10 @@ public class Runner extends Application {
     }
   }
 
+  /**
+   * Update the termporary map of cards in hand for each player
+   * @param cardsInHandStrings
+   */
   public void updateCardLabelsTemp(List<String> cardsInHandStrings) {
     String currPlayer = GameMap.getGameMap().getCurrentPlayer().getPlayerName();
     cardLabelStringsTempMap.put(currPlayer, cardsInHandStrings);
@@ -370,9 +379,7 @@ public class Runner extends Application {
       WDSection = new BorderPane();
       populateWDView(WDSection);
 
-      // TODO call conditionally
       addCardView(WDSection);
-      // clearCardView();
 
       VBox phaseSection = new VBox();
       populatePhaseView(phaseSection);

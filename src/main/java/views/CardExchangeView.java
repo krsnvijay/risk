@@ -11,20 +11,36 @@ import java.util.stream.Collectors;
 
 public class CardExchangeView implements Observer {
 
+  /** A cached Pool of threads to queue services on the UI thread **/
   private final ExecutorService service = Executors.newCachedThreadPool();
+
+  /** Reference to the Runner instance on the UI thread **/
   private Runner appInstance;
 
+  /** Singleton CardExchangeView Instance **/
   private static CardExchangeView cardExchangeView = null;
 
+  /**
+   * A getter for the singleton instance of CardExchangeView
+   * @return CardExchange View Singleton Instance
+   */
   public static CardExchangeView getInstance() {
     return cardExchangeView;
   }
 
+  /**
+   * Constructor for Card Exchange View
+   * @param app an instance of the Runner on the UI Thread
+   */
   public CardExchangeView(Runner app) {
     this.appInstance = app;
     cardExchangeView = this;
   }
 
+  /**
+   * @param o an Observable Instance
+   * @param arg an OPTIONAL argument to be passed from notifyObservers
+   */
   @Override
   public void update(Observable o, Object arg) {
     GameMap gameMap = GameMap.getGameMap();
