@@ -187,7 +187,7 @@ public class Runner extends Application {
 
   /**
    * Update the termporary map of cards in hand for each player
-   * @param cardsInHandStrings
+   * @param cardsInHandStrings a list of names for each card in hand
    */
   public void updateCardLabelsTemp(List<String> cardsInHandStrings) {
     String currPlayer = GameMap.getGameMap().getCurrentPlayer().getPlayerName();
@@ -342,7 +342,7 @@ public class Runner extends Application {
   /**
    * Adds a card to the view.
    *
-   * @param name the complete name of the card.
+   * @param card the complete name of the card.
    */
   private void addCardToView(Label card) {
     cardSection.getChildren().add(card);

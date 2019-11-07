@@ -13,6 +13,7 @@ public class ConsoleView {
   /**
    * Displays text to the console
    *
+   * @param writeLog whether log should be written down
    * @param text string to display
    */
   public static void display(String text, boolean writeLog) {

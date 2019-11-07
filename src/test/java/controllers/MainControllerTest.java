@@ -49,7 +49,9 @@ public class MainControllerTest {
     public void editMap() {
     }
 
-    /** Test to check whether the attacking country has more than 2 armies*/
+    /** Test to check whether the attacking country has more than 2 armies
+     * @throws Exception IO exceptions
+     * */
     @Test
     public void loadMap() throws Exception {
         File testMap = new File("src/test/resources/mapparserinvalid.map");

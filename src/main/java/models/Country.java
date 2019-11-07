@@ -38,7 +38,9 @@ public class Country {
    */
   private boolean playerNeedsCardAdded = false;
 
-  /** Getter and setter for the Card object */
+  /** Getter and setter for the Card object
+   * @return the Card Object
+   * */
   public Card getCard() {
     return card;
   }

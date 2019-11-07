@@ -412,7 +412,7 @@ public class GameController {
    *
    * @param gameMap The Game Map instance.
    * @param command The command entered by the user.
-   * @return
+   * @return the result of the validation
    */
   public static boolean validateReinforce(GameMap gameMap, String command) {
     Player currentPlayer = gameMap.getCurrentPlayer();

@@ -238,6 +238,7 @@ public class Player extends Observable {
    *
    * @param countryToPlace name of country
    * @param armiesToPlace count of armies to place
+   * @param gameMap the Game Map instance
    * @return boolean to indicate success or failure
    */
   public boolean reinforce(GameMap gameMap, String countryToPlace, int armiesToPlace) {
@@ -247,6 +248,7 @@ public class Player extends Observable {
   /**
    * Moves armies from one adjacent country to the other
    *
+   * @param gameMap the Game Map instance
    * @param fromCountry country name to move from
    * @param toCountry contry name to move to
    * @param armyToMove no of armies to move
@@ -280,7 +282,9 @@ public class Player extends Observable {
     this.numberOfArmies = numberOfArmies;
   }
 
-  /** This method gives armies to the player */
+  /** This method gives armies to the player
+   * @return int with the number of armies.
+   * */
   public int giveArmies() {
     if (numberOfTradedSet == 1) {
       armiesTradedForSet += 4;

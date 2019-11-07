@@ -1,4 +1,8 @@
+
 controllers
+controllers.testsuites
 models
+models.testsuites
 utils
+utils.testsuites
 views
