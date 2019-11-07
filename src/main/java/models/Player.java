@@ -4,6 +4,8 @@ import controllers.BattleController;
 
 import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.*;
 import static views.ConsoleView.display;
@@ -190,18 +192,29 @@ public class Player extends Observable {
         cardSet.add(cardsInHand.get(index).getCardValue());
       } else {
         display("One OR more of your card indices are INCORRECT", false);
-        break;
+        return;
       }
     }
     if (cardSet.size() == 1 || cardSet.size() == 3) {
       numberOfTradedSet++;
       int armiesAcquired = giveArmies();
       numberOfArmies += armiesAcquired;
+
+      ArrayList<Card> cardsToAddToDeck = new ArrayList<>();
       for (int index : indices) {
-        cardsInHand.remove(index);
-        setChanged();
-        notifyObservers();
+        cardsToAddToDeck.add(cardsInHand.get(index));
       }
+
+      Arrays.stream(indices).boxed().sorted(Comparator.reverseOrder()).forEach(index -> {
+        cardsInHand.remove(index);
+      });
+
+      setChanged();
+      notifyObservers();
+
+      Collections.shuffle(cardsToAddToDeck);
+      GameMap.getGameMap().getDeck().addAll(cardsToAddToDeck); // add the exchanged cards to deck after removing from player hand
+
       display("Acquired " + armiesAcquired + " through card exchange", false);
     } else {
       display(

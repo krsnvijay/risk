@@ -20,6 +20,8 @@ public class PhaseView implements Observer {
   /** Instance of the Runner class. */
   private Runner appInstance;
 
+  private static String prevPhase = "PREV";
+
   /**
    * Constructor that initializes the application.
    *
@@ -38,6 +40,10 @@ public class PhaseView implements Observer {
   @Override
   public void update(Observable o, Object changed) {
     GameMap gameMap = ((GameMap) o);
+    String currentPhase =
+        gameMap.getCurrentContext().name().contains("ATTACK")
+            ? "GAME_ATTACK"
+            : gameMap.getCurrentContext().name();
     switch ((String) changed) {
       case "PHASE_LOG":
         String phaseLog = gameMap.getPhaseLog();
@@ -48,8 +54,6 @@ public class PhaseView implements Observer {
         service.submit(() -> appInstance.updatePlayerLabel(currentPlayer));
         break;
       case "CURRENT_CONTEXT":
-        String currentPhase = gameMap.getCurrentContext().name();
-
         if (currentPhase.equals("GAME_STARTUP")) {
           gameMap
               .getPlayersList()
@@ -67,7 +71,10 @@ public class PhaseView implements Observer {
           service.submit(() -> appInstance.clearCardView());
         }
         // clear phase log
-        gameMap.setPhaseLog("", true);
+        if(!prevPhase.equals(currentPhase)) {
+          gameMap.setPhaseLog("", true);
+          prevPhase = currentPhase;
+        }
         service.submit(() -> appInstance.updatePhaseLabel(currentPhase));
         break;
     }

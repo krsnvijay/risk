@@ -78,9 +78,6 @@ public class GameMap extends Observable {
     this.deck = deck;
   }
 
-  /** The position of the card in the deck */
-  static int positionOfCard = 0;
-
   /**
    * This is the constructor for the GameMap class.
    *
@@ -557,10 +554,9 @@ public class GameMap extends Observable {
   /** Assigns a random card to the player from the deck */
   public void assignCard() {
     Player currentPlayer = getCurrentPlayer();
-    if (positionOfCard < deck.size()) {
-      currentPlayer.addCard(deck.get(positionOfCard));
-      deck.remove(positionOfCard);
-      positionOfCard++;
+    if (deck.size() > 0) {
+      currentPlayer.addCard(deck.get(0));
+      deck.remove(0);
     }
   }
 
