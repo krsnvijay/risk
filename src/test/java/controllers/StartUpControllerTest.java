@@ -1,11 +1,5 @@
 package controllers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Map;
 import models.Context;
 import models.Country;
 import models.GameMap;
@@ -14,13 +8,20 @@ import org.junit.Before;
 import org.junit.Test;
 import utils.MapParser;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
  * test class to check the functionalities of StartUpController.java
  *
  * @see controllers.StartUpController
  * @author Siddharth Singh
  */
-class StartUpControllerTest {
+public class StartUpControllerTest {
 
   public static final String PLAYER_1 = "Player1";
   public static final String PLAYER_2 = "Player2";
@@ -51,7 +52,7 @@ class StartUpControllerTest {
    * @throws Exception when map file is invalid
    */
   @Before
-  void setUp() throws Exception {
+  public void setUp() throws Exception {
     File riskMap = new File("src/test/resources/risk.map");
     gameMap = MapParser.loadMap(riskMap.getPath());
     reason = "";
@@ -62,7 +63,6 @@ class StartUpControllerTest {
     playersList = gameMap.getPlayersList();
     gameMap.setCurrentContext(Context.GAME_SETUP);
     gameMap.gameSetup();
-    gameMap.placeAll();
     gameMap.setCurrentContext(Context.GAME_ATTACK);
     GameMap.setCurrentPlayerIndex(0);
     countries = gameMap.getCountries();
@@ -70,18 +70,18 @@ class StartUpControllerTest {
 
   /** Test to check whether the armies are placed in valid countries */
   @Test
-  void placeArmy() {
+  public void placeArmy() {
     Country sourceCountry = gameMap.getCountries().get(INDIA);
     sourceCountry.setOwnerName(PLAYER_1);
     gameMap.placeArmy(INDIA, 3);
     int actualArmies = sourceCountry.getNumberOfArmies();
-    reason = "The country should have 3 armies";
-    assertEquals(reason, 3, actualArmies);
+    reason = "The country should have 4 armies";
+    assertEquals(reason, 4, actualArmies);
   }
 
   /** Test to check all the countries are placed */
   @Test
-  void placeAll() {
+  public void placeAll() {
     boolean result = gameMap.placeAll();
     reason = "Armies should be placed for the players";
     assertTrue(reason, result);

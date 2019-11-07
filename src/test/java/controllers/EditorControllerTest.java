@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
  * @see controllers.EditorController
  * @author Sabari Venkadesh
  */
-class EditorControllerTest {
+public class EditorControllerTest {
     private GameMap gameMap;
     private String reason;
 
@@ -38,19 +38,19 @@ class EditorControllerTest {
     }
 
     @Test
-    void editContinent() {
+    public void editContinent() {
     }
 
     @Test
-    void editCountry() {
+    public void editCountry() {
     }
 
     @Test
-    void editNeighbor() {
+    public void editNeighbor() {
     }
 
     @Test
-    void validateMap() {
+    public void validateMap() {
         //  Arrange
         File riskMap = new File("src/test/resources/riskinvalid.map");
         //  Act
@@ -65,7 +65,7 @@ class EditorControllerTest {
     }
 
     @Test
-    void saveMap() throws IOException {
+    public void saveMap() throws IOException {
         Files.write(
                 Paths.get("src/test/resources/mapparsersavetest.map"),
                 MapParser.serializeMap(gameMap, "mapparsersavetest").getBytes());
@@ -74,6 +74,6 @@ class EditorControllerTest {
     }
 
     @Test
-    void showMap() {
+    public void showMap() {
     }
 }

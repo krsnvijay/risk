@@ -20,7 +20,7 @@ import static org.junit.Assert.assertThat;
  * @see controllers.MainController
  * @author Siddharth Singh
  */
-class MainControllerTest {
+public class MainControllerTest {
 
     /**
      * gameMap loads the invalid risk map from the resources folder
@@ -46,12 +46,12 @@ class MainControllerTest {
 
     /** Test to check if edit map commands are valid */
     @Test
-    void editMap() {
+    public void editMap() {
     }
 
     /** Test to check whether the attacking country has more than 2 armies*/
     @Test
-    void loadMap() throws Exception {
+    public void loadMap() throws Exception {
         File testMap = new File("src/test/resources/mapparserinvalid.map");
         Scanner scan = new Scanner(testMap);
         StringBuilder sb = new StringBuilder();
@@ -71,6 +71,6 @@ class MainControllerTest {
     }
 
     @Test
-    void exitGame() {
+    public void exitGame() {
     }
 }

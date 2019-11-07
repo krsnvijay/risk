@@ -1,10 +1,5 @@
 package controllers;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Map;
 import models.Context;
 import models.Country;
 import models.GameMap;
@@ -13,6 +8,12 @@ import org.junit.Before;
 import org.junit.Test;
 import utils.MapParser;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Map;
+
+import static org.junit.Assert.assertTrue;
+
 
 /**
  * test class to check the functionalities of SetupController.java
@@ -20,7 +21,7 @@ import utils.MapParser;
  * @see controllers.SetupController
  * @author Sabari Venkadesh
  */
-class SetupControllerTest {
+public class SetupControllerTest {
   public static final String PLAYER_1 = "Player1";
   public static final String PLAYER_2 = "Player2";
   public static final String INDIA = "India";
@@ -66,7 +67,7 @@ class SetupControllerTest {
 
   /** Test to check whether the countries are populated*/
   @Test
-  void populateCountries() {
+  public void populateCountries() {
     ArrayList<Player> activePlayers = gameMap.getPlayersList();
     ArrayList<Country> populatedCountries = new ArrayList<>(gameMap.populateCountries(activePlayers).values());
     boolean result = true;
