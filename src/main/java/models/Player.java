@@ -154,7 +154,7 @@ public class Player extends Observable {
    *
    * @return List with the Cards
    */
-  public List<Card> getCardsInHand() {
+  public ArrayList<Card> getCardsInHand() {
     return cardsInHand;
   }
 

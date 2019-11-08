@@ -6,6 +6,7 @@ import static views.ConsoleView.display;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -376,6 +377,10 @@ public class BattleController {
 
   /** This method executes on a specific roll-win for attacker. */
   public void successfulAttack() {
+    Player winningPlayer = gameMap.getCurrentPlayer();
+    ArrayList<Player> losingPlayer = gameMap.getPlayersList().stream()
+            .filter(c -> c.getPlayerName().equals(defenderName))
+            .collect(Collectors.toCollection(ArrayList::new));
     if (defendingCountry.getNumberOfArmies() > 1) {
       defendingCountry.removeArmies(1);
       display(
@@ -419,6 +424,13 @@ public class BattleController {
           Player.checkPlayerOwnsAtleastOneCountry(defenderName, gameMap);
       if (!isDefenderHavingCountries) {
         display(String.format("Removing %s from the game due to no ownership", defenderName), true);
+        if (!losingPlayer.isEmpty()) {
+          ArrayList<Card> losingPlayerCards = losingPlayer.get(0).getCardsInHand();
+          for (Card losingPlayerCard : losingPlayerCards) {
+            winningPlayer.addCard(losingPlayerCard);
+          }
+          display(String.format("%s now owns %s's cards",attackerName,defenderName), true);
+        }
         gameMap.removeGamePlayer(defenderName);
       }
 
