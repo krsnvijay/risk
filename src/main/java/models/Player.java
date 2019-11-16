@@ -16,7 +16,7 @@ import static views.ConsoleView.display;
  * @author Sabari
  * @version 1.0
  */
-public class Player extends Observable {
+public class Player extends Observable implements PlayerStrategy {
 
   /** Maintains the number of sets traded in game */
   private static int numberOfTradedSet = 0;
