@@ -7,5 +7,4 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({GameMapTest.class, PlayerTest.class})
-public class ModelsTestSuite {
-}
+public class ModelsTestSuite {}
