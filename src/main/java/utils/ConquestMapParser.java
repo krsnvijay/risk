@@ -57,14 +57,14 @@ public class ConquestMapParser implements MapParser {
             break;
           case "[Territories]":
             while (scanner.hasNext()) {
-              countries =
+              countries.putAll(
                   sectionData.stream()
                       .map(this::deserializeCountry)
-                      .collect(toMap(Country::getName, Function.identity()));
-              borders =
+                      .collect(toMap(Country::getName, Function.identity())));
+              borders.putAll(
                   sectionData.stream()
                       .map(this::deserializeBorder)
-                      .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+                      .collect(toMap(Map.Entry::getKey, Map.Entry::getValue)));
               sectionData = readSectionData.apply(scanner);
             }
             break;
