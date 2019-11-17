@@ -1,20 +1,17 @@
 package controllers;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import models.*;
+import org.junit.Before;
+import org.junit.Test;
+import utils.DominationMapParser;
+import utils.MapParser;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import models.Card;
-import models.Context;
-import models.Country;
-import models.GameMap;
-import models.Player;
-import org.junit.Before;
-import org.junit.Test;
-import utils.MapParser;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -55,7 +52,8 @@ public class GameControllerTest {
   @Before
   public void setUp() throws Exception {
     File riskMap = new File("src/test/resources/risk.map");
-    gameMap = MapParser.loadMap(riskMap.getPath());
+    MapParser mapParser = new DominationMapParser();
+    gameMap = mapParser.loadMap(riskMap.getPath());
     reason = "";
     command = "";
     gameMap.setPlayersList(new ArrayList<>());

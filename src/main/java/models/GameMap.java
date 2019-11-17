@@ -1,22 +1,8 @@
 package models;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
-import static utils.MapParser.buildDeck;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Observable;
-import java.util.Random;
-import java.util.Set;
+import static java.util.stream.Collectors.*;
 
 /**
  * GameMap stores map data i.e borders, countries, files, continents The class is a singleton.
@@ -63,19 +49,30 @@ public class GameMap extends Observable {
   public ArrayList<Card> deck = null;
 
   /**
-   * Returns the Deck of cards.
-   * @return an ArrayList of Card objects -- the Deck.
+   * The constructor for the GameMap.
    */
-  public ArrayList<Card> getDeck() {
-    return deck;
+  private GameMap() {
+    super();
+    this.borders = new HashMap<>();
+    this.fileSectionData = new ArrayList<>();
+    this.countries = new HashMap<>();
+    this.continents = new HashMap<>();
+    this.fileName = "";
   }
 
   /**
-   * Sets the deck object.
-   * @param deck A collection of Card objects.
+   * Builds the deck of RISK cards
+   *
+   * @param gameMap The GameMap object to save.
    */
-  public void setDeck(ArrayList<Card> deck) {
-    this.deck = deck;
+  public static void buildDeck(GameMap gameMap) {
+    ArrayList<Country> countriesInMap = new ArrayList<>(gameMap.getCountries().values());
+    ArrayList<Card> cardsInDeck = new ArrayList<>();
+    for (Country country : countriesInMap) {
+      cardsInDeck.add(new Card(country.getName()));
+    }
+    Collections.shuffle(cardsInDeck);
+    gameMap.setDeck(cardsInDeck);
   }
 
   /**
@@ -101,15 +98,12 @@ public class GameMap extends Observable {
   }
 
   /**
-   * The constructor for the GameMap.
+   * Returns the Deck of cards.
+   *
+   * @return an ArrayList of Card objects -- the Deck.
    */
-  private GameMap() {
-    super();
-    this.borders = new HashMap<>();
-    this.fileSectionData = new ArrayList<>();
-    this.countries = new HashMap<>();
-    this.continents = new HashMap<>();
-    this.fileName = "";
+  public ArrayList<Card> getDeck() {
+    return deck;
   }
 
   /**
@@ -551,6 +545,15 @@ public class GameMap extends Observable {
     return true;
   }
 
+  /**
+   * Sets the deck object.
+   *
+   * @param deck A collection of Card objects.
+   */
+  public void setDeck(ArrayList<Card> deck) {
+    this.deck = deck;
+  }
+
   /** Assigns a random card to the player from the deck */
   public void assignCard() {
     Player currentPlayer = getCurrentPlayer();
@@ -724,6 +727,7 @@ public class GameMap extends Observable {
 
   /**
    * Returns the messages logged for the phase.
+   *
    * @return A string with the log.
    */
   public String getPhaseLog() {
@@ -732,6 +736,7 @@ public class GameMap extends Observable {
 
   /**
    * Sets the log.
+   *
    * @param phaseLog the String to append to the log.
    * @param flushLog whether the log should be cleared.
    */

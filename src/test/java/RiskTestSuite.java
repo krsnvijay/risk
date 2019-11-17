@@ -3,8 +3,8 @@ import models.GameMapTest;
 import models.PlayerTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import utils.EditMapTest;
 import utils.MapParserTest;
+import utils.MapValidatorTest;
 
 @RunWith(Suite.class)
 
@@ -18,7 +18,7 @@ import utils.MapParserTest;
     SetupControllerTest.class,
     GameMapTest.class,
     PlayerTest.class,
-    EditMapTest.class,
+    MapValidatorTest.class,
     MapParserTest.class
 })
 

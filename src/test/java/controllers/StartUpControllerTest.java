@@ -6,6 +6,7 @@ import models.GameMap;
 import models.Player;
 import org.junit.Before;
 import org.junit.Test;
+import utils.DominationMapParser;
 import utils.MapParser;
 
 import java.io.File;
@@ -54,7 +55,8 @@ public class StartUpControllerTest {
   @Before
   public void setUp() throws Exception {
     File riskMap = new File("src/test/resources/risk.map");
-    gameMap = MapParser.loadMap(riskMap.getPath());
+    MapParser mapParser = new DominationMapParser();
+    gameMap = mapParser.loadMap(riskMap.getPath());
     reason = "";
     command = "";
     gameMap.setPlayersList(new ArrayList<>());

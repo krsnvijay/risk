@@ -2,8 +2,9 @@ package models;
 
 import org.junit.Before;
 import org.junit.Test;
-import utils.EditMap;
+import utils.DominationMapParser;
 import utils.MapParser;
+import utils.MapValidator;
 
 import java.io.File;
 import java.util.Collection;
@@ -31,7 +32,8 @@ public class GameMapTest {
   public void setUp() throws Exception {
     // Load Risk map from resource folder
     File riskMap = new File("src/test/resources/risk.map");
-    gameMap = MapParser.loadMap(riskMap.getPath());
+    MapParser mapParser = new DominationMapParser();
+    gameMap = mapParser.loadMap(riskMap.getPath());
     reason = "";
   }
 
@@ -200,10 +202,11 @@ public class GameMapTest {
     File riskMap = new File("src/test/resources/riskinvalid.map");
     //  Act
     try {
-      gameMap = MapParser.loadMap(riskMap.getPath());
-      EditMap editMap = new EditMap();
+      MapParser mapParser = new DominationMapParser();
+      gameMap = mapParser.loadMap(riskMap.getPath());
+      MapValidator mapValidator = new MapValidator();
       // Assert
-      assertFalse(EditMap.validateMap(gameMap));
+      assertFalse(MapValidator.validateMap(gameMap));
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -216,7 +219,7 @@ public class GameMapTest {
   public void duplicateCountries() {
     //  Arrange
     String continentName = "Asia";
-    EditMap editMap = new EditMap();
+    MapValidator mapValidator = new MapValidator();
     //  Act
     Map<String, Country> map = new HashMap<>();
     for (Country country : gameMap.getCountries().values()) {
@@ -228,6 +231,6 @@ public class GameMapTest {
     }
     gameMap.setCountries(map);
     //  Assert
-    assertFalse(EditMap.validateMap(gameMap));
+    assertFalse(MapValidator.validateMap(gameMap));
   }
 }

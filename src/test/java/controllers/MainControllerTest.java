@@ -3,6 +3,7 @@ package controllers;
 import models.GameMap;
 import org.junit.Before;
 import org.junit.Test;
+import utils.DominationMapParser;
 import utils.MapParser;
 
 import java.io.File;
@@ -39,7 +40,8 @@ public class MainControllerTest {
     public void setUp() throws Exception {
         // Load Risk map from resource folder
         File riskMap = new File("src/test/resources/risk.map");
-        gameMap = MapParser.loadMap(riskMap.getPath());
+      MapParser mapParser = new DominationMapParser();
+      gameMap = mapParser.loadMap(riskMap.getPath());
         reason = "";
     }
 

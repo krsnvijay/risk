@@ -1,7 +1,9 @@
 package models;
 
-import static java.util.stream.Collectors.toMap;
-import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
+import utils.DominationMapParser;
+import utils.MapParser;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,9 +11,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.junit.Before;
-import org.junit.Test;
-import utils.MapParser;
+
+import static java.util.stream.Collectors.toMap;
+import static org.junit.Assert.assertEquals;
 
 /**
  * test class to check the functionalities of Player.java {@link Player}
@@ -37,7 +39,8 @@ public class PlayerTest {
   @Before
   public void setUp() throws Exception {
     File riskMap = new File("src/test/resources/risk.map");
-    gameMap = MapParser.loadMap(riskMap.getPath());
+    MapParser mapParser = new DominationMapParser();
+    gameMap = mapParser.loadMap(riskMap.getPath());
     reason = "";
     gameMap.setPlayersList(new ArrayList<>());
     gameMap.addGamePlayer(PLAYER_1);

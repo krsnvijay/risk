@@ -3,8 +3,9 @@ package controllers;
 import models.GameMap;
 import org.junit.Before;
 import org.junit.Test;
-import utils.EditMap;
+import utils.DominationMapParser;
 import utils.MapParser;
+import utils.MapValidator;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +34,8 @@ public class EditorControllerTest {
     public void setUp() throws Exception {
         // Load Risk map from resource folder
         File riskMap = new File("src/test/resources/risk.map");
-        gameMap = MapParser.loadMap(riskMap.getPath());
+        MapParser mapParser = new DominationMapParser();
+        gameMap = mapParser.loadMap(riskMap.getPath());
         reason = "";
     }
 
@@ -55,10 +57,11 @@ public class EditorControllerTest {
         File riskMap = new File("src/test/resources/riskinvalid.map");
         //  Act
         try {
-            gameMap = MapParser.loadMap(riskMap.getPath());
-            EditMap editMap = new EditMap();
+            MapParser mapParser = new DominationMapParser();
+            gameMap = mapParser.loadMap(riskMap.getPath());
+            MapValidator mapValidator = new MapValidator();
             // Assert
-            assertFalse(EditMap.validateMap(gameMap));
+            assertFalse(MapValidator.validateMap(gameMap));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -66,9 +69,10 @@ public class EditorControllerTest {
 
     @Test
     public void saveMap() throws IOException {
+        DominationMapParser mapParser = new DominationMapParser();
         Files.write(
                 Paths.get("src/test/resources/mapparsersavetest.map"),
-                MapParser.serializeMap(gameMap, "mapparsersavetest").getBytes());
+            mapParser.serializeMap(gameMap, "mapparsersavetest").getBytes());
         File saveTestFile = new File("src/test/resources/mapparsersavetest.map");
         assertTrue(saveTestFile.exists());
     }

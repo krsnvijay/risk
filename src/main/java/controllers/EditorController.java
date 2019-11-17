@@ -2,8 +2,9 @@ package controllers;
 
 import models.Context;
 import models.GameMap;
-import utils.EditMap;
+import utils.DominationMapParser;
 import utils.MapParser;
+import utils.MapValidator;
 
 import java.util.Arrays;
 
@@ -140,7 +141,7 @@ public class EditorController {
    * @return boolean to indicate map validity
    */
   public static boolean processValidateMapCommand(GameMap gameMap, String command) {
-    boolean result = EditMap.validateMap(gameMap);
+    boolean result = MapValidator.validateMap(gameMap);
     if (result) {
       display("Game map is valid", false);
     } else {
@@ -161,7 +162,9 @@ public class EditorController {
     boolean result = false;
     boolean isMapValid = processValidateMapCommand(gameMap, command);
     if (isMapValid) {
-      result = MapParser.saveMap(gameMap, fileLocation);
+
+      MapParser mapParser = new DominationMapParser();
+      result = mapParser.saveMap(gameMap, fileLocation);
       if (result) {
         display("Game map saved to " + fileLocation, false);
         gameMap.setCurrentContext(Context.MAIN_MENU);

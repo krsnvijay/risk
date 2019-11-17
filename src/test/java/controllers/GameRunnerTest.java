@@ -1,16 +1,18 @@
 package controllers;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.util.ArrayList;
 import models.Country;
 import models.GameMap;
 import models.Player;
 import org.junit.Before;
 import org.junit.Test;
+import utils.DominationMapParser;
 import utils.MapParser;
+
+import java.io.File;
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * test class to check the functionalities of GameRunner.java
@@ -44,7 +46,8 @@ public class GameRunnerTest {
   @Before
   public void setUp() throws Exception {
     File riskMap = new File("src/test/resources/risk.map");
-    gameMap = MapParser.loadMap(riskMap.getPath());
+    MapParser mapParser = new DominationMapParser();
+    gameMap = mapParser.loadMap(riskMap.getPath());
     reason = "";
     player1 = new Player("Player1");
     player2 = new Player("Player2");

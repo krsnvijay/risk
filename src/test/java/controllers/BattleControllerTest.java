@@ -1,16 +1,18 @@
 package controllers;
 
-import static junit.framework.TestCase.assertEquals;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Map;
 import models.Context;
 import models.Country;
 import models.GameMap;
 import org.junit.Before;
 import org.junit.Test;
+import utils.DominationMapParser;
 import utils.MapParser;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Map;
+
+import static junit.framework.TestCase.assertEquals;
 
 /**
  * test class to check the functionalities of BattleController.java
@@ -43,7 +45,8 @@ public class BattleControllerTest {
   @Before
   public void setUp() throws Exception {
     File riskMap = new File("src/test/resources/risk.map");
-    gameMap = MapParser.loadMap(riskMap.getPath());
+    MapParser mapParser = new DominationMapParser();
+    gameMap = mapParser.loadMap(riskMap.getPath());
     reason = "";
     gameMap.setPlayersList(new ArrayList<>());
     gameMap.addGamePlayer(PLAYER_1);

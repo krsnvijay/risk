@@ -38,7 +38,8 @@ public class MapParserTest {
   public void setUp() throws Exception {
     // Load Risk map from resource folder
     File riskMap = new File("src/test/resources/risk.map");
-    gameMap = MapParser.loadMap(riskMap.getPath());
+    MapParser mapParser = new DominationMapParser();
+    gameMap = mapParser.loadMap(riskMap.getPath());
     reason = "";
   }
   /**
@@ -50,7 +51,8 @@ public class MapParserTest {
   public void loadMap() throws Exception {
     GameMap gameMapInvalid = null;
     File testMap = new File("src/test/resources/mapparserinvalid.map");
-    gameMapInvalid = MapParser.loadMap(testMap.getPath());
+    MapParser mapParser = new DominationMapParser();
+    gameMapInvalid = mapParser.loadMap(testMap.getPath());
     Scanner scan = new Scanner(testMap);
     StringBuilder sb = new StringBuilder();
     String temp = "", str = "";
@@ -75,9 +77,10 @@ public class MapParserTest {
    */
   @Test
   public void saveMap() throws IOException {
+    DominationMapParser mapParser = new DominationMapParser();
     Files.write(
         Paths.get("src/test/resources/mapparsersavetest.map"),
-        MapParser.serializeMap(gameMap, "mapparsersavetest").getBytes());
+        mapParser.serializeMap(gameMap, "mapparsersavetest").getBytes());
     File saveTestFile = new File("src/test/resources/mapparsersavetest.map");
     assertTrue(saveTestFile.exists());
   }

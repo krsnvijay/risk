@@ -4,6 +4,7 @@ import models.Command;
 import models.Context;
 import models.GameMap;
 import models.Player;
+import utils.DominationMapParser;
 import utils.MapParser;
 
 import java.io.FileNotFoundException;
@@ -36,7 +37,9 @@ public class MainController {
     boolean newFile = false;
     GameMap newGameMap = null;
     try {
-      newGameMap = MapParser.loadMap(fileLocation);
+
+      MapParser mapParser = new DominationMapParser();
+      newGameMap = mapParser.loadMap(fileLocation);
       result = true;
     } catch (FileNotFoundException e) {
       newGameMap = GameMap.getGameMap();
@@ -70,7 +73,8 @@ public class MainController {
     GameMap newGameMap = null;
     boolean result = false;
     try {
-      newGameMap = MapParser.loadMap(fileLocation);
+      MapParser mapParser = new DominationMapParser();
+      newGameMap = mapParser.loadMap(fileLocation);
       result = true;
     } catch (Exception e) {
       display(e.getMessage(), false);

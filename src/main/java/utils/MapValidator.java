@@ -17,12 +17,7 @@ import static java.util.stream.Collectors.groupingBy;
  * @author Warren
  * @version 1.0
  */
-public class EditMap extends MapParser {
-
-  /** The constructor for EditMap. Calls the MapParser constructor. */
-  public EditMap() {
-    super();
-  }
+public class MapValidator {
 
   /**
    * Performs a DFS on every continent, works using recursion.
@@ -120,87 +115,6 @@ public class EditMap extends MapParser {
       DFSUtilContinents(countriesInContinent, visited, countriesInContinent.get(0), map);
       if (visited.size() != countriesInContinent.size()) {
         return false;
-      }
-    }
-    return true;
-  }
-
-  /**
-   * Processes the edit continent command.
-   *
-   * @param opCmds The options entered in the command.
-   * @param map The GameMap object to modify.
-   * @return A boolean with success or failure for the command.
-   */
-  public boolean editContinent(String[] opCmds, GameMap map) {
-    for (String opCmd : opCmds) {
-      String[] splitOpCmd = opCmd.split(" ");
-      if (splitOpCmd.length < 2 || splitOpCmd.length > 3) {
-        System.out.println(
-            "Invalid syntax: usage editcontinent -add <continentName> <controlValue> -remove <continentName>");
-        continue;
-      }
-      String commandType = splitOpCmd[0];
-      String continentName = splitOpCmd[1];
-      if (commandType.equals("add")) {
-        int continentControlValue = Integer.parseInt(splitOpCmd[2]);
-        map.addContinent(continentName, continentControlValue);
-      } else if (commandType.equals("remove")) {
-        map.removeContinent(continentName);
-      }
-    }
-    return true;
-  }
-
-  /**
-   * Processes the edit country command.
-   *
-   * @param opCmds The command options
-   * @param map The GameMap object to modify
-   * @return A boolean result for success or failure.
-   */
-  public boolean editCountry(String[] opCmds, GameMap map) {
-    for (String opCmd : opCmds) {
-      String[] splitOpCmd = opCmd.split(" ");
-      if (splitOpCmd.length < 2 || splitOpCmd.length > 3) {
-        System.out.println(
-            "Invalid syntax: usage editcountry -add <countryName> <continentName> -remove <countryName>");
-        continue;
-      }
-      String commandType = splitOpCmd[0];
-      String countryName = splitOpCmd[1];
-      if (commandType.equals("add")) {
-        String continentString = splitOpCmd[2];
-        map.addCountry(countryName, continentString);
-      } else if (commandType.equals("remove")) {
-        map.removeCountry(countryName);
-      }
-    }
-    return true;
-  }
-
-  /**
-   * Processes the edit neighbour command.
-   *
-   * @param opCmds The command options.
-   * @param map The GameMap object to modify.
-   * @return A boolean with success or failure.
-   */
-  public boolean editNeighbor(String[] opCmds, GameMap map) {
-    for (String opCmd : opCmds) {
-      String[] splitOpCmd = opCmd.split(" ");
-      if (splitOpCmd.length != 3) {
-        System.out.println(
-            "Invalid syntax: usage editneighbor -add <country1> <country2> -remove <country1> <country2>");
-        continue;
-      }
-      String commandType = splitOpCmd[0];
-      String country1 = splitOpCmd[1];
-      String country2 = splitOpCmd[2];
-      if (commandType.equals("add")) {
-        map.addBorder(country1, country2);
-      } else if (commandType.equals("remove")) {
-        map.removeBorder(country1, country2);
       }
     }
     return true;
