@@ -22,6 +22,7 @@ import models.WorldDomination;
 import utils.CLI;
 
 import java.util.*;
+
 import static views.ConsoleView.display;
 
 /**
@@ -162,7 +163,7 @@ public class Runner extends Application {
    * Update the whole card view
    */
   public void updateCardView() {
-    String currPlayer = GameMap.getGameMap().getCurrentPlayer().getPlayerName();
+    String currPlayer = GameMap.getGameMap().getCurrentPlayer().getStrategy().getPlayerName();
     if (cardLabelStringsTempMap.containsKey(currPlayer)) {
       List<String> cardInHandStrings = cardLabelStringsTempMap.get(currPlayer);
       for (int i = 0; i < cardLabels.size(); i++) {
@@ -190,7 +191,7 @@ public class Runner extends Application {
    * @param cardsInHandStrings a list of names for each card in hand
    */
   public void updateCardLabelsTemp(List<String> cardsInHandStrings) {
-    String currPlayer = GameMap.getGameMap().getCurrentPlayer().getPlayerName();
+    String currPlayer = GameMap.getGameMap().getCurrentPlayer().getStrategy().getPlayerName();
     cardLabelStringsTempMap.put(currPlayer, cardsInHandStrings);
   }
 

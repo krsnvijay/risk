@@ -1,13 +1,13 @@
-package models;
+package models.player;
 
 import controllers.BattleController;
+import models.Card;
+import models.GameMap;
+import views.CardExchangeView;
 
 import java.util.*;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.*;
 import static views.ConsoleView.display;
 
 /**
@@ -16,7 +16,7 @@ import static views.ConsoleView.display;
  * @author Sabari
  * @version 1.0
  */
-public class Player extends Observable implements PlayerStrategy {
+public class PlayerHuman extends Observable implements PlayerStrategy {
 
   /** Maintains the number of sets traded in game */
   private static int numberOfTradedSet = 0;
@@ -34,95 +34,13 @@ public class Player extends Observable implements PlayerStrategy {
    *
    * @param playerName name of the player
    */
-  public Player(String playerName) {
+  public PlayerHuman(String playerName) {
     super();
     this.playerName = playerName;
   }
 
-  /**
-   * This method returns all countries owned by a player.
-   *
-   * @param playerName The name of the player.
-   * @param gameMap the entire map graph
-   * @return a list of countries owned by this player.
-   */
-  public static ArrayList<Country> getCountriesByOwnership(String playerName, GameMap gameMap) {
-    return gameMap.getCountries().values().stream()
-        .filter(c -> c.getOwnerName().equals(playerName))
-        .collect(toCollection(ArrayList::new));
-  }
-
-  /**
-   * Utility method to check whether the player has lost the game.
-   *
-   * @param playerName String with the player's name.
-   * @param gameMap The GameMap object.
-   * @return boolean true if player is still in the game, false otherwise.
-   */
-  public static boolean checkPlayerOwnsAtleastOneCountry(String playerName, GameMap gameMap) {
-    return getCountriesByOwnership(playerName, gameMap).size() > 0;
-  }
-
-  /**
-   * Utility method to check whether the player owns all the countries
-   *
-   * @param playerName String with the player's name.
-   * @param gameMap The GameMap object.
-   * @return boolean true if player is still in the game, false otherwise.
-   */
-  public static boolean checkPlayerOwnsAllTheCountries(String playerName, GameMap gameMap) {
-    return getCountriesByOwnership(playerName, gameMap).size() == gameMap.getCountries().size();
-  }
-
-  /**
-   * Calculates bonus armies if a player owns a continent
-   *
-   * @param playerName current player name
-   * @param gameMap contains map state
-   * @return bonus armies
-   */
-  public static int getBonusArmiesIfPlayerOwnsContinents(String playerName, GameMap gameMap) {
-    int bonusArmies = 0;
-    Map<String, List<Country>> mapByContinents =
-        gameMap.getCountries().values().stream().collect(groupingBy(Country::getContinent));
-    Map<String, List<Country>> mapByPlayersOwnership =
-        gameMap.getCountries().values().stream()
-            .filter(c -> c.getOwnerName().equals(playerName))
-            .collect(groupingBy(Country::getContinent));
-    Map<String, Integer> continentsSize =
-        mapByContinents.entrySet().stream()
-            .map(e -> new AbstractMap.SimpleEntry<String, Integer>(e.getKey(), e.getValue().size()))
-            .collect(toMap(SimpleEntry::getKey, SimpleEntry::getValue));
-    Map<String, Integer> continentsOwnership =
-        mapByPlayersOwnership.entrySet().stream()
-            .map(e -> new AbstractMap.SimpleEntry<String, Integer>(e.getKey(), e.getValue().size()))
-            .collect(toMap(SimpleEntry::getKey, SimpleEntry::getValue));
-    for (Map.Entry<String, Integer> entry : continentsOwnership.entrySet()) {
-      int fullOwnerShip = continentsSize.get(entry.getKey());
-      int currentOwnerShip = entry.getValue();
-      if (fullOwnerShip == currentOwnerShip) {
-        int controlValue = gameMap.getContinents().get(entry.getKey()).getValue();
-        bonusArmies += controlValue;
-      }
-    }
-    return bonusArmies;
-  }
-
-  /**
-   * Calculate armies for reinforcement phase
-   *
-   * @param gameMap contains map state
-   * @return armies count
-   */
-  public int calculateReinforcements(GameMap gameMap) {
-    int ownedCountries = getCountriesByOwnership(this.playerName, gameMap).size();
-    int allReinforcementArmies = getBonusArmiesIfPlayerOwnsContinents(playerName, gameMap);
-
-    if (ownedCountries < 9) {
-      allReinforcementArmies += 3;
-    }
-    allReinforcementArmies += ownedCountries / 3;
-    return allReinforcementArmies;
+  public void addObserver(CardExchangeView object) {
+    super.addObserver(object);
   }
 
   /**
@@ -137,10 +55,28 @@ public class Player extends Observable implements PlayerStrategy {
   /**
    * This method sets the name of the player.
    *
-   * @param playername the name of the player.
+   * @param playerName the name of the player.
    */
-  public void setPlayerName(String playername) {
-    this.playerName = playername;
+  public void setPlayerName(String playerName) {
+    this.playerName = playerName;
+  }
+
+  /**
+   * Getter for number of armies the player owns.
+   *
+   * @return int with number of armies
+   */
+  public int getNumberOfArmies() {
+    return this.numberOfArmies;
+  }
+
+  /**
+   * Setter for number of armies the player owns.
+   *
+   * @param numberOfArmies int with the number of armies.
+   */
+  public void setNumberOfArmies(int numberOfArmies) {
+    this.numberOfArmies = numberOfArmies;
   }
 
   /** This is an override for pretty printing the name. */
@@ -264,23 +200,6 @@ public class Player extends Observable implements PlayerStrategy {
     return result;
   }
 
-  /**
-   * Getter for number of armies the player owns.
-   *
-   * @return int with number of armies
-   */
-  public int getNumberOfArmies() {
-    return this.numberOfArmies;
-  }
-
-  /**
-   * Setter for number of armies the player owns.
-   *
-   * @param numberOfArmies int with the number of armies.
-   */
-  public void setNumberOfArmies(int numberOfArmies) {
-    this.numberOfArmies = numberOfArmies;
-  }
 
   /** This method gives armies to the player
    * @return int with the number of armies.
@@ -317,7 +236,7 @@ public class Player extends Observable implements PlayerStrategy {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Player player = (Player) o;
+    PlayerHuman player = (PlayerHuman) o;
     return numberOfArmies == player.numberOfArmies && playerName.equals(player.playerName);
   }
 

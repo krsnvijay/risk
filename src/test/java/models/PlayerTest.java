@@ -12,11 +12,16 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import models.player.Player;
+import org.junit.Before;
+import org.junit.Test;
+import utils.MapParser;
+
 import static java.util.stream.Collectors.toMap;
 import static org.junit.Assert.assertEquals;
 
 /**
- * test class to check the functionalities of Player.java {@link Player}
+ * test class to check the functionalities of PlayerHuman.java {@link Player}
  */
 public class PlayerTest {
 
@@ -43,8 +48,8 @@ public class PlayerTest {
     gameMap = mapParser.loadMap(riskMap.getPath());
     reason = "";
     gameMap.setPlayersList(new ArrayList<>());
-    gameMap.addGamePlayer(PLAYER_1);
-    gameMap.addGamePlayer(PLAYER_2);
+    gameMap.addGamePlayer(PLAYER_1, "human");
+    gameMap.addGamePlayer(PLAYER_2, "human");
     gameMap.setCurrentContext(Context.GAME_SETUP);
     gameMap.gameSetup();
     gameMap.placeAll();
@@ -66,8 +71,8 @@ public class PlayerTest {
     int ownedCountries = Player.getCountriesByOwnership(PLAYER_1, gameMap).size();
     int ownedContinents = Player.getBonusArmiesIfPlayerOwnsContinents(PLAYER_1, gameMap);
     int expectedReinforcementArmies = ownedContinents + (ownedCountries / 3);
-    Player player_1 = gameMap.getPlayersList().get(0);
-    int actualReinforcementArmies = player_1.calculateReinforcements(gameMap);
+    Player player_Human_1 = gameMap.getPlayersList().get(0);
+    int actualReinforcementArmies = player_Human_1.calculateReinforcements(gameMap);
     reason = "Number of reinforcement armies should be " + expectedReinforcementArmies;
     assertEquals(reason, expectedReinforcementArmies, actualReinforcementArmies);
   }

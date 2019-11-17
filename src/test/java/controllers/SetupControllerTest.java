@@ -3,7 +3,7 @@ package controllers;
 import models.Context;
 import models.Country;
 import models.GameMap;
-import models.Player;
+import models.player.Player;
 import org.junit.Before;
 import org.junit.Test;
 import utils.DominationMapParser;
@@ -56,8 +56,8 @@ public class SetupControllerTest {
     gameMap = mapParser.loadMap(riskMap.getPath());
     reason = "";
     gameMap.setPlayersList(new ArrayList<>());
-    gameMap.addGamePlayer(PLAYER_1);
-    gameMap.addGamePlayer(PLAYER_2);
+    gameMap.addGamePlayer(PLAYER_1, "human");
+    gameMap.addGamePlayer(PLAYER_2, "human");
     playersList = gameMap.getPlayersList();
     gameMap.setCurrentContext(Context.GAME_SETUP);
     gameMap.gameSetup();
@@ -70,8 +70,8 @@ public class SetupControllerTest {
   /** Test to check whether the countries are populated*/
   @Test
   public void populateCountries() {
-    ArrayList<Player> activePlayers = gameMap.getPlayersList();
-    ArrayList<Country> populatedCountries = new ArrayList<>(gameMap.populateCountries(activePlayers).values());
+    ArrayList<Player> activePlayerHumen = gameMap.getPlayersList();
+    ArrayList<Country> populatedCountries = new ArrayList<>(gameMap.populateCountries(activePlayerHumen).values());
     boolean result = true;
     for (Country populatedCountry : populatedCountries) {
       if (populatedCountry.getOwnerName() == null) {

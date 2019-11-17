@@ -49,8 +49,8 @@ public class BattleControllerTest {
     gameMap = mapParser.loadMap(riskMap.getPath());
     reason = "";
     gameMap.setPlayersList(new ArrayList<>());
-    gameMap.addGamePlayer(PLAYER_1);
-    gameMap.addGamePlayer(PLAYER_2);
+    gameMap.addGamePlayer(PLAYER_1, "human");
+    gameMap.addGamePlayer(PLAYER_2, "human");
     gameMap.setCurrentContext(Context.GAME_SETUP);
     gameMap.gameSetup();
     gameMap.placeAll();

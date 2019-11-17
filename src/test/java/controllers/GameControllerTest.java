@@ -1,6 +1,7 @@
 package controllers;
 
 import models.*;
+import models.player.*;
 import org.junit.Before;
 import org.junit.Test;
 import utils.DominationMapParser;
@@ -57,8 +58,8 @@ public class GameControllerTest {
     reason = "";
     command = "";
     gameMap.setPlayersList(new ArrayList<>());
-    gameMap.addGamePlayer(PLAYER_1);
-    gameMap.addGamePlayer(PLAYER_2);
+    gameMap.addGamePlayer(PLAYER_1, "human");
+    gameMap.addGamePlayer(PLAYER_2, "human");
     gameMap.setCurrentContext(Context.GAME_SETUP);
     gameMap.gameSetup();
     gameMap.placeAll();
@@ -121,7 +122,7 @@ public class GameControllerTest {
     cardsInHand.add(card1);
     cardsInHand.add(card2);
     cardsInHand.add(card3);
-    gameMap.getPlayersList().get(0).setCardsInHand(cardsInHand);
+    gameMap.getPlayersList().get(0).getStrategy().setCardsInHand(cardsInHand);
     reason = "The set is valid only when the 3 cards are from different class or the same class";
     command = "exchangecards 1 2 3";
     boolean result = GameController.processExchangeCardsCommand(gameMap, command);
@@ -137,7 +138,7 @@ public class GameControllerTest {
   /** Test to check if a player won the game */
   @Test
   public void endOfGameTest() {
-    playerName = gameMap.getPlayersList().get(0).getPlayerName();
+    playerName = gameMap.getPlayersList().get(0).getStrategy().getPlayerName();
     int countrySize = countries.size();
     int i = 0;
     ArrayList<Country> allCountries = new ArrayList<>(countries.values());

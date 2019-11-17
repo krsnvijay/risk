@@ -3,7 +3,7 @@ package controllers;
 import models.Command;
 import models.Context;
 import models.GameMap;
-import models.Player;
+import models.player.Player;
 import utils.DominationMapParser;
 import utils.MapParser;
 
@@ -108,7 +108,8 @@ public class MainController {
       String playerName = subCommandSplit[1];
       ArrayList<Player> playersList = gameMap.getPlayersList();
       if (subCommandType.equals("add")) {
-        result = gameMap.addGamePlayer(playerName);
+        String strategy = subCommandSplit[2];
+        result = gameMap.addGamePlayer(playerName, strategy);
         if (result) {
           display(String.format("Added %s", playerName), false);
         } else {

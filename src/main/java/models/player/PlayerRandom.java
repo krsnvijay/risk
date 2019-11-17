@@ -1,37 +1,49 @@
-package models;
+package models.player;
+
+import models.Card;
+import models.GameMap;
+import views.CardExchangeView;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static views.ConsoleView.display;
 
-public class PlayerCheater extends Observable implements PlayerStrategy {
+public class PlayerRandom extends Observable implements PlayerStrategy {
   /** Maintains the number of sets traded in game */
   private static int numberOfTradedSet = 0;
   /** Number of armies traded in for each set */
   private static int armiesTradedForSet = 0;
   /** This instance variable holds the name of the player. */
-  private String playerName;
+  private String playerName = "Random";
   /** Stores the number of armies a player has. */
   private int numberOfArmies;
   /** Stores the cards currently held by the player. */
   private ArrayList<Card> cardsInHand = new ArrayList<>();
 
+  public PlayerRandom(String name) {
+    this.setPlayerName(name);
+  }
+
+  public void addObserver(CardExchangeView object) {
+    super.addObserver(object);
+  }
+
   @Override
   public boolean attack(GameMap gameMap, String command) {
-    // capture all neighbours of all owned countries
+    // ????
     return false;
   }
 
   @Override
   public boolean reinforce(GameMap gameMap, String countryToPlace, int armiesToPlace) {
-    // double the armies on all countries owned
+    // ????
     return false;
   }
 
   @Override
   public boolean fortify(GameMap gameMap, String fromCountry, String toCountry, int armyToMove) {
-    // double armies on countries with neighbours belonging to other players
+    // ????
     return false;
   }
 
@@ -53,6 +65,66 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
   }
 
   /**
+   * This method removes armies from the player
+   *
+   * @param count armies to subtract from the player
+   */
+  public void subtractArmies(int count) {
+    this.numberOfArmies -= count;
+  }
+
+  /**
+   * This method returns the name of the player.
+   *
+   * @return playerName the name of the player.
+   */
+  public String getPlayerName() {
+    return playerName;
+  }
+
+  /**
+   * This method sets the name of the player.
+   *
+   * @param playername the name of the player.
+   */
+  public void setPlayerName(String playername) {
+    this.playerName = playername;
+  }
+
+  /**
+   * Getter for number of armies the player owns.
+   *
+   * @return int with number of armies
+   */
+  public int getNumberOfArmies() {
+    return this.numberOfArmies;
+  }
+
+  /**
+   * Setter for number of armies the player owns.
+   *
+   * @param numberOfArmies int with the number of armies.
+   */
+  public void setNumberOfArmies(int numberOfArmies) {
+    this.numberOfArmies = numberOfArmies;
+  }
+
+  /** This is an override for pretty printing the name. */
+  @Override
+  public String toString() {
+    return String.format("%s", this.playerName);
+  }
+
+  /**
+   * Returns the player's hand.
+   *
+   * @return List with the Cards
+   */
+  public ArrayList<Card> getCardsInHand() {
+    return cardsInHand;
+  }
+
+  /**
    * Sets the cards in the player's hand.
    *
    * @param cardsInHand A collection of Card objects.
@@ -62,6 +134,18 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
     setChanged();
     notifyObservers();
   }
+
+  /**
+   * Adds a card to this player's hand.
+   *
+   * @param card The Card object to be added.
+   */
+  public void addCard(Card card) {
+    this.cardsInHand.add(card);
+    setChanged();
+    notifyObservers();
+  }
+
 
   /**
    * Exchange the card for armies.

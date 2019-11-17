@@ -1,4 +1,8 @@
-package models;
+package models.player;
+
+import models.Card;
+import models.GameMap;
+import views.CardExchangeView;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,11 +15,19 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
   /** Number of armies traded in for each set */
   private static int armiesTradedForSet = 0;
   /** This instance variable holds the name of the player. */
-  private String playerName;
+  private String playerName = "Aggressor";
   /** Stores the number of armies a player has. */
   private int numberOfArmies;
   /** Stores the cards currently held by the player. */
   private ArrayList<Card> cardsInHand = new ArrayList<>();
+
+  public PlayerAggressive(String name) {
+    this.setPlayerName(name);
+  }
+
+  public void addObserver(CardExchangeView object) {
+    super.addObserver(object);
+  }
 
   @Override
   public boolean attack(GameMap gameMap, String command) {
@@ -55,6 +67,57 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
   }
 
   /**
+   * This method returns the name of the player.
+   *
+   * @return playerName the name of the player.
+   */
+  public String getPlayerName() {
+    return playerName;
+  }
+
+  /**
+   * This method sets the name of the player.
+   *
+   * @param playername the name of the player.
+   */
+  public void setPlayerName(String playername) {
+    this.playerName = playername;
+  }
+
+  /**
+   * Getter for number of armies the player owns.
+   *
+   * @return int with number of armies
+   */
+  public int getNumberOfArmies() {
+    return this.numberOfArmies;
+  }
+
+  /**
+   * Setter for number of armies the player owns.
+   *
+   * @param numberOfArmies int with the number of armies.
+   */
+  public void setNumberOfArmies(int numberOfArmies) {
+    this.numberOfArmies = numberOfArmies;
+  }
+
+  /** This is an override for pretty printing the name. */
+  @Override
+  public String toString() {
+    return String.format("%s", this.playerName);
+  }
+
+  /**
+   * Returns the player's hand.
+   *
+   * @return List with the Cards
+   */
+  public ArrayList<Card> getCardsInHand() {
+    return cardsInHand;
+  }
+
+  /**
    * Sets the cards in the player's hand.
    *
    * @param cardsInHand A collection of Card objects.
@@ -63,6 +126,26 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
     this.cardsInHand = cardsInHand;
     setChanged();
     notifyObservers();
+  }
+
+  /**
+   * Adds a card to this player's hand.
+   *
+   * @param card The Card object to be added.
+   */
+  public void addCard(Card card) {
+    this.cardsInHand.add(card);
+    setChanged();
+    notifyObservers();
+  }
+
+  /**
+   * This method removes armies from the player
+   *
+   * @param count armies to subtract from the player
+   */
+  public void subtractArmies(int count) {
+    this.numberOfArmies -= count;
   }
 
   /**

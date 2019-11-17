@@ -3,7 +3,7 @@ package controllers;
 import models.Context;
 import models.Country;
 import models.GameMap;
-import models.Player;
+import models.player.Player;
 
 import java.util.ArrayList;
 
@@ -83,7 +83,7 @@ public class GameController {
     if (command.contains("-none")) {
       display(
           String.format(
-              "%s doesn't want to exchange cards", gameMap.getCurrentPlayer().getPlayerName()),
+              "%s doesn't want to exchange cards", gameMap.getCurrentPlayer().getStrategy().getPlayerName()),
           true);
       return true;
     }
@@ -93,7 +93,7 @@ public class GameController {
       positionOfCards[i - 1] = Integer.parseInt(commandSplit[i]);
     }
     // exchange cards method implementation
-    gameMap.getCurrentPlayer().exchangeCardsForArmies(positionOfCards);
+    gameMap.getCurrentPlayer().getStrategy().exchangeCardsForArmies(positionOfCards);
     return true;
   }
 
@@ -109,34 +109,34 @@ public class GameController {
     String[] commandSplit = command.split(" ");
     String countryName = commandSplit[1];
     int armiesToPlace = Integer.parseInt(commandSplit[2]);
-    boolean result = currentPlayer.reinforce(gameMap, countryName, armiesToPlace);
+    boolean result = currentPlayer.getStrategy().reinforce(gameMap, countryName, armiesToPlace);
     if (result) {
       display(
           String.format(
               "%s has placed %d army(s) in %s",
-              currentPlayer.getPlayerName(), armiesToPlace, countryName),
+              currentPlayer.getStrategy().getPlayerName(), armiesToPlace, countryName),
           true);
     } else {
       display(
           String.format(
-              "%s doesnt own %s or it does not exist", currentPlayer.getPlayerName(), countryName),
+              "%s doesnt own %s or it does not exist", currentPlayer.getStrategy().getPlayerName(), countryName),
           false);
     }
-    if (currentPlayer.getNumberOfArmies() == 0) {
-      if (gameMap.getCurrentPlayer().getCardsInHand().size() < 5) {
+    if (currentPlayer.getStrategy().getNumberOfArmies() == 0) {
+      if (gameMap.getCurrentPlayer().getStrategy().getCardsInHand().size() < 5) {
         changeToNextPhase(gameMap);
       } else {
         display(
             String.format(
                 "%s has more than 5 cards. Please exchange cards to continue.",
-                currentPlayer.getPlayerName()),
+                currentPlayer.getStrategy().getPlayerName()),
             true);
       }
     } else {
       display(
           String.format(
               "%s has %d army(s) to reinforce",
-              currentPlayer.getPlayerName(), currentPlayer.getNumberOfArmies()),
+              currentPlayer.getStrategy().getPlayerName(), currentPlayer.getStrategy().getNumberOfArmies()),
           true);
     }
     return result;
@@ -165,7 +165,7 @@ public class GameController {
     }
 
     ArrayList<Country> playerOwnedCountries =
-        Player.getCountriesByOwnership(currentPlayer.getPlayerName(), gameMap);
+        Player.getCountriesByOwnership(currentPlayer.getStrategy().getPlayerName(), gameMap);
 
     boolean isOwnershipValid =
         playerOwnedCountries.stream().anyMatch(c -> c.getName().equals(fromCountry))
@@ -174,7 +174,7 @@ public class GameController {
       display(
           String.format(
               "%s doesnt own the country(s) %s, %s or does not exist",
-              currentPlayer.getPlayerName(), fromCountry, toCountry),
+              currentPlayer.getStrategy().getPlayerName(), fromCountry, toCountry),
           false);
       return false;
     }
@@ -207,12 +207,12 @@ public class GameController {
     String fromCountry = commandSplit[1];
     String toCountry = commandSplit[2];
     int armyToMove = Integer.parseInt(commandSplit[3]);
-    boolean result = currentPlayer.fortify(gameMap, fromCountry, toCountry, armyToMove);
+    boolean result = currentPlayer.getStrategy().fortify(gameMap, fromCountry, toCountry, armyToMove);
     if (result) {
       display(
           String.format(
               "%s Fortified %s with %d army(s) from %s",
-              currentPlayer.getPlayerName(), toCountry, armyToMove, fromCountry),
+              currentPlayer.getStrategy().getPlayerName(), toCountry, armyToMove, fromCountry),
           true);
       changeToNextPhase(gameMap);
     } else {
@@ -231,7 +231,7 @@ public class GameController {
    */
   private static boolean performFortifyNone(GameMap gameMap) {
     Player currentPlayer = gameMap.getCurrentPlayer();
-    display(String.format("%s chose not to fortify", currentPlayer.getPlayerName()), true);
+    display(String.format("%s chose not to fortify", currentPlayer.getStrategy().getPlayerName()), true);
     changeToNextPhase(gameMap);
     return true;
   }
@@ -279,13 +279,13 @@ public class GameController {
   public static void startPhaseLoop(GameMap gameMap) {
     gameMap.setCurrentContext(Context.GAME_REINFORCE);
     Player currentPlayer = gameMap.getCurrentPlayer();
-    currentPlayer.setNumberOfArmies(currentPlayer.calculateReinforcements(gameMap));
-    display(currentPlayer.getPlayerName() + "'s turn:", false);
+    currentPlayer.getStrategy().setNumberOfArmies(currentPlayer.calculateReinforcements(gameMap));
+    display(currentPlayer.getStrategy().getPlayerName() + "'s turn:", false);
     display("[Reinforce]", false);
     display(
         String.format(
             "%s has %d army(s) to reinforce",
-            currentPlayer.getPlayerName(), currentPlayer.getNumberOfArmies()),
+            currentPlayer.getStrategy().getPlayerName(), currentPlayer.getStrategy().getNumberOfArmies()),
         true);
   }
 
@@ -316,7 +316,7 @@ public class GameController {
     Country defendingCountry = gameMap.getCountries().get(commandSplit[2]);
     String defenderName = defendingCountry.getOwnerName();
     // Current Player should be owner of the from country
-    if (!attackerName.equals(currentPlayer.getPlayerName())) {
+    if (!attackerName.equals(currentPlayer.getStrategy().getPlayerName())) {
       display(
           String.format(
               "Error: Current player %s should be owner of %s to attack",
@@ -388,7 +388,7 @@ public class GameController {
             "%s owned by %s declared an attack on %s owned by %s",
             attackingCountry.getName(), attackerName, defendingCountry.getName(), defenderName),
         true);
-    return currentPlayer.attack(gameMap, command);
+    return currentPlayer.getStrategy().attack(gameMap, command);
   }
 
   /**
@@ -399,7 +399,7 @@ public class GameController {
    */
   public static boolean performAttackNone(GameMap gameMap) {
     Player currentPlayer = gameMap.getCurrentPlayer();
-    display(String.format("%s chose not to attack", currentPlayer.getPlayerName()), true);
+    display(String.format("%s chose not to attack", currentPlayer.getStrategy().getPlayerName()), true);
     if (GameController.assignedCard) {
       GameController.assignedCard = false;
     }
@@ -421,13 +421,13 @@ public class GameController {
     String countryName = commandSplit[1];
     int armiesToPlace = Integer.parseInt(commandSplit[2]);
 
-    if (Player.getCountriesByOwnership(currentPlayer.getPlayerName(), gameMap).stream()
+    if (Player.getCountriesByOwnership(currentPlayer.getStrategy().getPlayerName(), gameMap).stream()
         .noneMatch(c -> c.getName().equals(countryName))) {
       display("Player doesnt own the country or it doesnt exist", false);
       return false;
     }
 
-    if (armiesToPlace < 1 || armiesToPlace > currentPlayer.getNumberOfArmies()) {
+    if (armiesToPlace < 1 || armiesToPlace > currentPlayer.getStrategy().getNumberOfArmies()) {
       display("numOfArmy should be > 0 and < available armies", false);
       return false;
     }

@@ -1,5 +1,8 @@
 package models;
 
+import models.player.Player;
+import models.player.PlayerStrategy;
+
 import java.util.*;
 
 import static java.util.stream.Collectors.*;
@@ -351,13 +354,15 @@ public class GameMap extends Observable {
    * @param playerName player to add
    * @return boolean to indicate status
    */
-  public boolean addGamePlayer(String playerName) {
-    Player player = new Player(playerName);
-    if (!playersList.contains(player)) {
+  public boolean addGamePlayer(String playerName, String strategy) {
+    Player player = new Player(playerName, strategy);
+    if(playersList.stream().anyMatch(p -> p.getStrategy().getPlayerName().equals(playerName))) {
+      return false;
+    }
+    else {
       playersList.add(player);
       return true;
     }
-    return false;
   }
 
   /**
@@ -367,9 +372,11 @@ public class GameMap extends Observable {
    * @return boolean to indicate status
    */
   public boolean removeGamePlayer(String playerName) {
-    Player player = new Player(playerName);
-    if (playersList.contains(player)) {
-      playersList.remove(player);
+    Optional<Player> p1 = playersList.stream()
+        .filter(player -> player.getStrategy().getPlayerName().equals(playerName)).findFirst();
+
+    if(p1.isPresent()) {
+      playersList.remove(p1.get());
       return true;
     }
     return false;
@@ -498,7 +505,7 @@ public class GameMap extends Observable {
 
     for (int i = 0; i < countrySize; i++) {
       Country currentCountry = countries.get(i);
-      Player currentPlayer = playerList.get(i % playerCount);
+      PlayerStrategy currentPlayer = playerList.get(i % playerCount).getStrategy();
       currentPlayer.subtractArmies(1);
       currentCountry.addArmies(1);
       currentCountry.setOwnerName(currentPlayer.getPlayerName());
@@ -537,7 +544,7 @@ public class GameMap extends Observable {
     }
     int armiesPerPlayer = totalArmyCounts[playersList.size() - 2];
     for (Player p : playersList) {
-      p.setNumberOfArmies(armiesPerPlayer);
+      p.getStrategy().setNumberOfArmies(armiesPerPlayer);
     }
     this.setCountries(populateCountries(playersList));
     // assigns countries to cards
@@ -572,15 +579,15 @@ public class GameMap extends Observable {
    */
   public boolean placeArmy(String countryName, int numArmies) {
     Player currentPlayer = getCurrentPlayer();
-    String currentPlayerName = currentPlayer.getPlayerName();
+    String currentPlayerName = currentPlayer.getStrategy().getPlayerName();
     if (!countries.containsKey(countryName)) {
       return false;
     }
     Country currentCountry = countries.get(countryName);
     if (currentCountry.getOwnerName().equals(currentPlayerName)
-        && currentPlayer.getNumberOfArmies() > 0) {
+        && currentPlayer.getStrategy().getNumberOfArmies() > 0) {
       currentCountry.addArmies(numArmies);
-      currentPlayer.subtractArmies(numArmies);
+      currentPlayer.getStrategy().subtractArmies(numArmies);
       return true;
     }
     return false;
@@ -592,7 +599,8 @@ public class GameMap extends Observable {
    * @return true if numberOfArmies for each player is 0 ; else returns false
    */
   public boolean checkGameReady() {
-    return playersList.stream().mapToInt(Player::getNumberOfArmies).allMatch(count -> count == 0);
+    return playersList.stream().map(Player::getStrategy)
+        .mapToInt(PlayerStrategy::getNumberOfArmies).allMatch(count -> count == 0);
   }
 
   /**
@@ -603,9 +611,9 @@ public class GameMap extends Observable {
   public boolean placeAll() {
     for (int turn = 0; turn < playersList.size(); turn++) {
       ArrayList<Country> countriesForPlayer =
-          Player.getCountriesByOwnership(getCurrentPlayer().getPlayerName(), this);
+          Player.getCountriesByOwnership(getCurrentPlayer().getStrategy().getPlayerName(), this);
       Random randomGen = new Random();
-      while (getCurrentPlayer().getNumberOfArmies() > 0) {
+      while (getCurrentPlayer().getStrategy().getNumberOfArmies() > 0) {
         int randomIndexCountry = randomGen.nextInt(countriesForPlayer.size());
         placeArmy(countriesForPlayer.get(randomIndexCountry).getName(), 1);
       }

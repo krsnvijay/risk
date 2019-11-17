@@ -1,5 +1,7 @@
 package models;
 
+import models.player.Player;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -82,7 +84,7 @@ public class WorldDomination extends Observable {
 
                   Map<String, List<Country>> mapByPlayersOwnership =
                       gameMap.getCountries().values().stream()
-                          .filter(c -> c.getOwnerName().equals(player.getPlayerName()))
+                          .filter(c -> c.getOwnerName().equals(player.getStrategy().getPlayerName()))
                           .collect(groupingBy(Country::getContinent));
 
                   Map<String, Integer> continentsOwnership =
@@ -102,7 +104,7 @@ public class WorldDomination extends Observable {
                   }
 
                   return new AbstractMap.SimpleEntry<>(
-                      player.getPlayerName(), continentsOwnedByPlayer);
+                      player.getStrategy().getPlayerName(), continentsOwnedByPlayer);
                 })
             .collect(toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
   }
@@ -125,8 +127,8 @@ public class WorldDomination extends Observable {
             .map(
                 player ->
                     new AbstractMap.SimpleEntry<>(
-                        player.getPlayerName(),
-                        Player.getCountriesByOwnership(player.getPlayerName(), gameMap).stream()
+                        player.getStrategy().getPlayerName(),
+                        Player.getCountriesByOwnership(player.getStrategy().getPlayerName(), gameMap).stream()
                             .mapToInt(Country::getNumberOfArmies)
                             .sum()))
             .collect(
@@ -153,10 +155,10 @@ public class WorldDomination extends Observable {
             .map(
                 player -> {
                   long ownershipCount =
-                      Player.getCountriesByOwnership(player.getPlayerName(), gameMap).stream()
+                      Player.getCountriesByOwnership(player.getStrategy().getPlayerName(), gameMap).stream()
                           .count();
                   return new AbstractMap.SimpleEntry<>(
-                      player.getPlayerName(), (ownershipCount / totalNumOfCountries) * 100);
+                      player.getStrategy().getPlayerName(), (ownershipCount / totalNumOfCountries) * 100);
                 })
             .collect(
                 Collectors.toMap(

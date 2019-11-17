@@ -1,23 +1,19 @@
 package controllers;
 
-import static java.util.Collections.reverseOrder;
-import static java.util.stream.Collectors.toCollection;
-import static views.ConsoleView.display;
+import models.*;
+import models.player.Player;
+import utils.CLI;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import models.Card;
-import models.Command;
-import models.Context;
-import models.Country;
-import models.GameMap;
-import models.Player;
-import utils.CLI;
+
+import static java.util.Collections.reverseOrder;
+import static java.util.stream.Collectors.toCollection;
+import static views.ConsoleView.display;
 
 /**
  * This is the controller that manages the Attack phase entirely.
@@ -74,7 +70,7 @@ public class BattleController {
     this.gameMap = gameMap;
     String[] commandSplit = command.split(" ");
     attackingCountry = gameMap.getCountries().get(commandSplit[1]);
-    attackerName = gameMap.getCurrentPlayer().getPlayerName();
+    attackerName = gameMap.getCurrentPlayer().getStrategy().getPlayerName();
     defendingCountry = gameMap.getCountries().get(commandSplit[2]);
     if (!command.contains("-allout")) {
       numOfDiceAttacker = Integer.parseInt(commandSplit[3]);
@@ -379,7 +375,7 @@ public class BattleController {
   public void successfulAttack() {
     Player winningPlayer = gameMap.getCurrentPlayer();
     ArrayList<Player> losingPlayer = gameMap.getPlayersList().stream()
-            .filter(c -> c.getPlayerName().equals(defenderName))
+            .filter(c -> c.getStrategy().getPlayerName().equals(defenderName))
             .collect(Collectors.toCollection(ArrayList::new));
     if (defendingCountry.getNumberOfArmies() > 1) {
       defendingCountry.removeArmies(1);
@@ -411,9 +407,9 @@ public class BattleController {
         gameMap.assignCard();
         GameController.assignedCard = true;
         display(
-            gameMap.getCurrentPlayer().getPlayerName()
+            gameMap.getCurrentPlayer().getStrategy().getPlayerName()
                 + " currently has "
-                + gameMap.getCurrentPlayer().getCardsInHand().stream()
+                + gameMap.getCurrentPlayer().getStrategy().getCardsInHand().stream()
                 .map(Card::getName)
                 .collect(Collectors.joining(" "))
                 + " card(s).",
@@ -425,7 +421,7 @@ public class BattleController {
       if (!isDefenderHavingCountries) {
         display(String.format("Removing %s from the game due to no ownership", defenderName), true);
         if (!losingPlayer.isEmpty()) {
-          ArrayList<Card> losingPlayerCards = losingPlayer.get(0).getCardsInHand();
+          ArrayList<Card> losingPlayerCards = losingPlayer.get(0).getStrategy().getCardsInHand();
           for (Card losingPlayerCard : losingPlayerCards) {
             winningPlayer.addCard(losingPlayerCard);
           }

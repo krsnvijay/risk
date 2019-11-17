@@ -1,7 +1,7 @@
 package controllers;
 
 import models.GameMap;
-import models.Player;
+import models.player.Player;
 
 import static controllers.GameController.startPhaseLoop;
 import static views.ConsoleView.display;
@@ -28,7 +28,7 @@ public class StartUpController {
     if (result) {
       display(
           String.format(
-              "%s placed an army in %s", gameMap.getCurrentPlayer().getPlayerName(), countryName),
+              "%s placed an army in %s", gameMap.getCurrentPlayer().getStrategy().getPlayerName(), countryName),
           true);
       if (gameMap.checkGameReady()) {
         startPhaseLoop(gameMap);
@@ -36,18 +36,18 @@ public class StartUpController {
       } else {
         gameMap.updatePlayerIndex();
         Player currentPlayer = gameMap.getCurrentPlayer();
-        display(String.format("%s's turn to place an army", currentPlayer.getPlayerName()), false);
+        display(String.format("%s's turn to place an army", currentPlayer.getStrategy().getPlayerName()), false);
         display(
             String.format(
                 "%s has %d armies left to place",
-                currentPlayer.getPlayerName(), currentPlayer.getNumberOfArmies()),
+                currentPlayer.getStrategy().getPlayerName(), currentPlayer.getStrategy().getNumberOfArmies()),
             false);
       }
     } else {
       display(
           String.format(
               "%s does not own %s to place armies or it does not exist",
-              gameMap.getCurrentPlayer().getPlayerName(), countryName),
+              gameMap.getCurrentPlayer().getStrategy().getPlayerName(), countryName),
           false);
     }
     return result;

@@ -30,9 +30,9 @@ public enum Command {
   VALIDATE_MAP("^validatemap$", EditorController::processValidateMapCommand, "validatemap"),
   SAVE_MAP("^savemap (.+)$", EditorController::processSaveMapCommand, "savemap <fileLocation>"),
   GAME_PLAYER(
-      "^gameplayer( -(add|remove) ([^ ]+))+$",
+      "^gameplayer( -(add ([^ ]+) (aggressive|random|benevolent|cheater|human)|remove ([^ ]+)))+$",
       MainController::processGamePlayerCommand,
-      "gameplayer -add <playerName> -remove <playerName>"),
+      "gameplayer -add <playerName> <strategy> -remove <playerName>"),
   LOAD_MAP("^loadmap (.+)$", MainController::processLoadMapCommand, "loadmap <fileLocation>"),
   POPULATE_COUNTRIES(
       "^populatecountries$", SetupController::processPopulateCountriesCommand, "populatecountries"),

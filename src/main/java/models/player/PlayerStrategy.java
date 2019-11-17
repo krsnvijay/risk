@@ -1,9 +1,10 @@
-package models;
+package models.player;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import models.Card;
+import models.GameMap;
+import views.CardExchangeView;
 
-import static views.ConsoleView.display;
+import java.util.ArrayList;
 
 /**
  * This interface holds the methods for implementing a Player Strategy
@@ -37,7 +38,15 @@ public interface PlayerStrategy {
    */
   boolean fortify(GameMap gameMap, String fromCountry, String toCountry, int armyToMove);
 
-  default void exchangeCardsForArmies(int[] indices) {
-    // TODO
-  }
+  void addCard(Card card);
+  int giveArmies();
+  void subtractArmies(int count);
+  void exchangeCardsForArmies(int[] indices);
+  ArrayList<Card> getCardsInHand();
+  void setCardsInHand(ArrayList<Card> cardsInHand);
+  void setPlayerName(String playerName);
+  String getPlayerName();
+  int getNumberOfArmies();
+  void setNumberOfArmies(int numberOfArmies);
+  void addObserver(CardExchangeView instance);
 }

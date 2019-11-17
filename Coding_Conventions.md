@@ -322,7 +322,7 @@ Class GameMap{
   
   ...
 }
-// File Player.java
+PlayerHuman.java
 Class Player{
   ...
 }
