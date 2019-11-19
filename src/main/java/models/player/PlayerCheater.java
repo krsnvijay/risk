@@ -1,6 +1,7 @@
 package models.player;
 
 import models.Card;
+import models.Country;
 import models.GameMap;
 import views.CardExchangeView;
 
@@ -20,6 +21,8 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
   private int numberOfArmies;
   /** Stores the cards currently held by the player. */
   private ArrayList<Card> cardsInHand = new ArrayList<>();
+  /** How many turns have elapsed */
+  private int turnCount = 0;
 
   public PlayerCheater(String name) {
     this.setPlayerName(name);
@@ -29,25 +32,74 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
     super.addObserver(object);
   }
 
+  /**
+   * The Cheater's attack will capture all neighbors of owned countries.
+   *
+   * @param gameMap the GameMap instance
+   * @param command the command entered by the user
+   * @return the boolean result of the command; always true for AI.
+   */
   @Override
   public boolean attack(GameMap gameMap, String command) {
-    // capture all neighbours of all owned countries
     display("Cheater Attacks", true);
-    return false;
+    ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
+    Map<String, Country> allCountries = gameMap.getCountries();
+    for(Country cheaterCountry: countries) {
+      Set<String> borders = gameMap.getBorders().get(cheaterCountry.getName());
+      for(String neighborName : borders) {
+        Country neighbor = allCountries.get(neighborName);
+        if(!neighbor.getOwnerName().equals(playerName)) {
+          neighbor.setOwnerName(playerName);
+          cheaterCountry.removeArmies(numberOfArmies/2);
+          neighbor.setNumberOfArmies(numberOfArmies/2);
+        }
+      }
+    }
+    return true;
   }
 
+  /**
+   * The Cheater's reinforce command doubles armies on all countries owned.
+   *
+   * @param gameMap the GameMap instance
+   * @param countryToPlace the country to reinforce
+   * @param armiesToPlace the number of armies
+   * @return the boolean result of the command; always true for AI.
+   */
   @Override
   public boolean reinforce(GameMap gameMap, String countryToPlace, int armiesToPlace) {
-    // double the armies on all countries owned
-    display("Cheater Reinforces", true);
-    return false;
+    display("Cheater Reinforces, all owned countries have double the armies now.", true);
+    ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
+    gameMap.getCurrentPlayer().getStrategy().setNumberOfArmies(0);
+    countries.forEach(country -> country.addArmies(country.getNumberOfArmies()));
+    return true;
   }
 
+  /**
+   * The Cheater's fortify will double armies on all countries with neighbors belonging to other players.
+   *
+   * @param gameMap the GameMap instance
+   * @param fromCountry the country to move from
+   * @param toCountry the country to move to
+   * @param armyToMove the number of armies
+   * @return the boolean result of the command; always true for AI.
+   */
   @Override
   public boolean fortify(GameMap gameMap, String fromCountry, String toCountry, int armyToMove) {
-    // double armies on countries with neighbours belonging to other players
-    display("Cheater Fortifies", true);
-    return false;
+    display("Cheater Fortifies, all countries with opposing neighbors have double the armies now.", true);
+    ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
+    Map<String, Country> allCountries = gameMap.getCountries();
+    for(Country cheaterCountry: countries) {
+      Set<String> borders = gameMap.getBorders().get(cheaterCountry.getName());
+      for(String neighborName : borders) {
+        Country neighbor = allCountries.get(neighborName);
+        if(!neighbor.getOwnerName().equals(playerName)) {
+          cheaterCountry.addArmies(cheaterCountry.getNumberOfArmies());
+        }
+      }
+    }
+    turnCount++;
+    return true;
   }
 
   /** This method gives armies to the player

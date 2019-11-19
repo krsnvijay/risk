@@ -20,6 +20,8 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
   private int numberOfArmies;
   /** Stores the cards currently held by the player. */
   private ArrayList<Card> cardsInHand = new ArrayList<>();
+  /** How many turns have elapsed */
+  private int turnCount = 0;
 
   public PlayerRandom(String name) {
     this.setPlayerName(name);

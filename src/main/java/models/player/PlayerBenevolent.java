@@ -20,6 +20,8 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
   private int numberOfArmies;
   /** Stores the cards currently held by the player. */
   private ArrayList<Card> cardsInHand = new ArrayList<>();
+  /** How many turns have elapsed */
+  private int turnCount = 0;
 
   public PlayerBenevolent(String name) {
     this.setPlayerName(name);

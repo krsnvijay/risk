@@ -33,6 +33,8 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
      * Stores the cards currently held by the player.
      */
     private ArrayList<Card> cardsInHand = new ArrayList<>();
+    /** How many turns have elapsed */
+    private int turnCount = 0;
 
     public PlayerAggressive(String name) {
         this.setPlayerName(name);
