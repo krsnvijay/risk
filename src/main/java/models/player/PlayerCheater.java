@@ -32,19 +32,21 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
   @Override
   public boolean attack(GameMap gameMap, String command) {
     // capture all neighbours of all owned countries
+    display("Cheater Attacks", true);
     return false;
   }
 
   @Override
   public boolean reinforce(GameMap gameMap, String countryToPlace, int armiesToPlace) {
     // double the armies on all countries owned
-
+    display("Cheater Reinforces", true);
     return false;
   }
 
   @Override
   public boolean fortify(GameMap gameMap, String fromCountry, String toCountry, int armyToMove) {
     // double armies on countries with neighbours belonging to other players
+    display("Cheater Fortifies", true);
     return false;
   }
 

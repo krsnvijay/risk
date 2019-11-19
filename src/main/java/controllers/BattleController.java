@@ -2,6 +2,7 @@ package controllers;
 
 import models.*;
 import models.player.Player;
+import models.player.PlayerHuman;
 import utils.CLI;
 
 import java.util.ArrayList;
@@ -42,7 +43,10 @@ public class BattleController {
 
   /** The name of the defending player. */
   private String defenderName;
-
+    /**
+     * The defending player.
+     */
+    private Player defendingPlayer;
   /** An instance of the Game Map. */
   private GameMap gameMap;
 
@@ -75,7 +79,8 @@ public class BattleController {
     if (!command.contains("-allout")) {
       numOfDiceAttacker = Integer.parseInt(commandSplit[3]);
     }
-    defenderName = defendingCountry.getOwnerName();
+      defendingPlayer = gameMap.getPlayersList().stream().filter(player -> player.getStrategy().getPlayerName().equals(defendingCountry.getOwnerName())).findFirst().get();
+      defenderName = defendingPlayer.getStrategy().getPlayerName();
     isAllOutEnabled = command.contains("-allout");
   }
 
@@ -208,9 +213,13 @@ public class BattleController {
    * @return number of dice.
    */
   public int getNumOfDiceFromDefender() {
-    if (isAllOutEnabled) {
-      return calculateMaxDiceForDefender();
-    }
+      if (isAllOutEnabled) {
+          return calculateMaxDiceForDefender();
+      }
+      if (!(defendingPlayer.getStrategy() instanceof PlayerHuman)) {
+          // TODO: Change num of defender dice according to strategy
+          return calculateMaxDiceForDefender();
+      }
     if (isNoInputEnabled) {
       display("Skipping Input loop from defender", true);
       isNoInputEnabled = false;

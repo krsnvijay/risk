@@ -4,6 +4,7 @@ import models.Context;
 import models.Country;
 import models.GameMap;
 import models.player.Player;
+import models.player.PlayerHuman;
 
 import java.util.ArrayList;
 
@@ -279,7 +280,17 @@ public class GameController {
   public static void startPhaseLoop(GameMap gameMap) {
     gameMap.setCurrentContext(Context.GAME_REINFORCE);
     Player currentPlayer = gameMap.getCurrentPlayer();
-    currentPlayer.getStrategy().setNumberOfArmies(currentPlayer.calculateReinforcements(gameMap));
+    currentPlayer.getStrategy().setNumberOfArmies(Player.calculateReinforcements(gameMap));
+    if (!(currentPlayer.getStrategy() instanceof PlayerHuman)) {
+      display(currentPlayer.getStrategy().getPlayerName() + " AI's turn", true);
+      currentPlayer.getStrategy().reinforce(gameMap, null, -1);
+      gameMap.setCurrentContext(Context.GAME_ATTACK);
+      currentPlayer.getStrategy().attack(gameMap, null);
+      gameMap.setCurrentContext(Context.GAME_FORTIFY);
+      currentPlayer.getStrategy().fortify(gameMap, null, null, -1);
+      changeToNextPhase(gameMap);
+      return;
+    }
     display(currentPlayer.getStrategy().getPlayerName() + "'s turn:", false);
     display("[Reinforce]", false);
     display(
