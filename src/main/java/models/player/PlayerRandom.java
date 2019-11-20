@@ -1,6 +1,9 @@
 package models.player;
 
+import controllers.BattleController;
+import controllers.GameController;
 import models.Card;
+import models.Country;
 import models.GameMap;
 import views.CardExchangeView;
 
@@ -22,36 +25,114 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
   private ArrayList<Card> cardsInHand = new ArrayList<>();
   /** How many turns have elapsed */
   private int turnCount = 0;
+  /** Generate random numbers for the player. */
+  private Random randomGenerator = new Random();
 
+  /**
+   * Constructor for Random Player object
+   *
+   * @param name sets the name of the player
+   */
   public PlayerRandom(String name) {
     this.setPlayerName(name);
   }
 
+  /**
+   * Update the CardExchangeView with the context
+   *
+   * @param object to set the context
+   */
   public void addObserver(CardExchangeView object) {
     super.addObserver(object);
   }
 
+  /**
+   * Method to select a random country to attack
+   *
+   * @param gameMap Instance object of the game
+   * @return the command by the random player
+   */
+  public String randomAttack(GameMap gameMap) {
+    ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
+    Country attackFromCountry = countries.get(randomGenerator.nextInt(countries.size()));
+    ArrayList<String> attackToCountries =
+        new ArrayList<>(gameMap.getBorders().get(attackFromCountry.getName()));
+    String attackToCountry =
+        attackToCountries.get(randomGenerator.nextInt(attackToCountries.size()));
+    int continueAttack = randomGenerator.nextInt(2);
+    String attackCommand = null;
+    if (continueAttack == 0)
+      attackCommand =
+          String.format("attack %s %s -allout", attackFromCountry.getName(), attackToCountry);
+    else
+      attackCommand = "attack -noattack";
+    return attackCommand;
+  }
+
+  /**
+   * The player will attack a random country for a random number of times
+   *
+   * @param gameMap the GameMap instance
+   * @param command the command entered by the user
+   * @return if the attack is possible or not
+   *
+   */
   @Override
   public boolean attack(GameMap gameMap, String command) {
-    // ????
-    return false;
+    String attackCommand = null;
+    do {
+      attackCommand = randomAttack(gameMap);
+      BattleController battleController = new BattleController(gameMap, attackCommand);
+      battleController.startBattle();
+    } while (!attackCommand.contains("-noattack"));
+    return true;
   }
 
+  /**
+   * the player will reinforce a random country
+   *
+   * @param gameMap the GameMap instance
+   * @param countryToPlace the country to reinforce
+   * @param armiesToPlace the number of armies
+   * @return check whether reinforce is possible
+   *
+   */
   @Override
   public boolean reinforce(GameMap gameMap, String countryToPlace, int armiesToPlace) {
-    // ????
-    return false;
+    ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
+    Country reinforcedCountry = countries.get(randomGenerator.nextInt(countries.size()));
+    reinforcedCountry.addArmies(armiesToPlace);
+    return true;
   }
 
+  /**
+   * the player will fortify a random country
+   *
+   * @param gameMap the GameMap instance
+   * @param fromCountry the country to move from
+   * @param toCountry the country to move to
+   * @param armyToMove the number of armies
+   * @return check whether fortify is possible
+   *
+   */
   @Override
   public boolean fortify(GameMap gameMap, String fromCountry, String toCountry, int armyToMove) {
-    // ????
-    return false;
+    ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
+    Collections.shuffle(countries);
+    Country fortifyFromCountry = countries.get(0);
+    ArrayList<String> neighboringCountry = new ArrayList<>(gameMap.getBorders().get(fortifyFromCountry.getName()));
+    Country fortifyToCountry = countries.get(randomGenerator.nextInt(neighboringCountry.size()));
+    String command = String.format("fortify %s %s %d",fortifyFromCountry.getName(),fortifyToCountry.getName(),armyToMove);
+    GameController.performFortify(gameMap, command);
+    turnCount++;
+    return true;
   }
 
-  /** This method gives armies to the player
+  /**
+   * This method gives armies to the player
+   *
    * @return int with the number of armies.
-   * */
+   */
   public int giveArmies() {
     if (numberOfTradedSet == 1) {
       armiesTradedForSet += 4;
@@ -148,7 +229,6 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
     notifyObservers();
   }
 
-
   /**
    * Exchange the card for armies.
    *
@@ -181,8 +261,8 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
               .collect(Collectors.toCollection(ArrayList::new));
 
       ArrayList<Card> resultCardsInHand = new ArrayList<>();
-      for(int i = 0;i<cardsInHand.size();i++){
-        if(!listIndices.contains(i)){
+      for (int i = 0; i < cardsInHand.size(); i++) {
+        if (!listIndices.contains(i)) {
           resultCardsInHand.add(cardsInHand.get(i));
         }
       }
