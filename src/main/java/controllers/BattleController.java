@@ -79,8 +79,8 @@ public class BattleController {
     if (!command.contains("-allout")) {
       numOfDiceAttacker = Integer.parseInt(commandSplit[3]);
     }
-      defendingPlayer = gameMap.getPlayersList().stream().filter(player -> player.getStrategy().getPlayerName().equals(defendingCountry.getOwnerName())).findFirst().get();
-      defenderName = defendingPlayer.getStrategy().getPlayerName();
+    defendingPlayer = gameMap.getPlayersList().stream().filter(player -> player.getStrategy().getPlayerName().equals(defendingCountry.getOwnerName())).findFirst().get();
+    defenderName = defendingPlayer.getStrategy().getPlayerName();
     isAllOutEnabled = command.contains("-allout");
   }
 

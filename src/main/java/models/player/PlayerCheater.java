@@ -10,6 +10,12 @@ import java.util.stream.Collectors;
 
 import static views.ConsoleView.display;
 
+/**
+ * This is the Strategy for the Cheater player.
+ *
+ * @author Siddhant Bansal
+ * @version 1.0
+ */
 public class PlayerCheater extends Observable implements PlayerStrategy {
   /** Maintains the number of sets traded in game */
   private static int numberOfTradedSet = 0;
@@ -24,10 +30,18 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
   /** How many turns have elapsed */
   private int turnCount = 0;
 
+  /**
+   * The constructor for the Cheater strategy class.
+   * @param name the name of the player.
+   */
   public PlayerCheater(String name) {
     this.setPlayerName(name);
   }
 
+  /**
+   * Registers this class as an observer
+   * @param object the CardExchangeView to register with.
+   */
   public void addObserver(CardExchangeView object) {
     super.addObserver(object);
   }

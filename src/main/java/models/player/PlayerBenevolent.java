@@ -1,14 +1,24 @@
 package models.player;
 
+import controllers.GameController;
 import models.Card;
+import models.Country;
 import models.GameMap;
 import views.CardExchangeView;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
+import static controllers.GameController.changeToNextPhase;
 import static views.ConsoleView.display;
 
+/**
+ * This is the Strategy for the Benevolent player.
+ *
+ * @author Siddhant Bansal
+ * @version 1.0
+ */
 public class PlayerBenevolent extends Observable implements PlayerStrategy {
   /** Maintains the number of sets traded in game */
   private static int numberOfTradedSet = 0;
@@ -23,32 +33,91 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
   /** How many turns have elapsed */
   private int turnCount = 0;
 
+  /**
+   * The constructor for the Benevolent strategy class.
+   * @param name
+   */
   public PlayerBenevolent(String name) {
     this.setPlayerName(name);
   }
 
+  /**
+   * Registers this class as an observer
+   * @param object the CardExchangeView to register with.
+   */
   public void addObserver(CardExchangeView object) {
     super.addObserver(object);
   }
 
+  /**
+   * The Benevolent player never attacks.
+   *
+   * @param gameMap the GameMap instance
+   * @param command the command entered by the user
+   * @return the boolean result of the command; always true for AI.
+   */
   @Override
   public boolean attack(GameMap gameMap, String command) {
-    // no
-    return false;
+    return true;
   }
 
+  /**
+   * The Benevolent player always reinforces the weakest country.
+   *
+   * @param gameMap the GameMap instance
+   * @param countryToPlace the country to reinforce
+   * @param armiesToPlace the number of armies
+   * @return the boolean result of the command; always true for AI.
+   */
   @Override
   public boolean reinforce(GameMap gameMap, String countryToPlace, int armiesToPlace) {
-    // add all to weakest country
-    return false;
+    ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
+    Optional<Country> weakestCountry = countries.stream().min(Comparator.comparing(Country::getNumberOfArmies));
+    weakestCountry.ifPresent(c -> {
+      gameMap.placeArmy(c.getName(), armiesToPlace);
+    });
+    return true;
   }
 
+  /**
+   * The Benevolent player's fortify method will bolster the weakest country with one of its strongest neighbors.
+   *
+   * @param gameMap the GameMap instance
+   * @param fromCountry the country to move from
+   * @param toCountry the country to move to
+   * @param armyToMove the number of armies
+   * @return the boolean result of the command; always true for AI.
+   */
   @Override
   public boolean fortify(GameMap gameMap, String fromCountry, String toCountry, int armyToMove) {
-    // find lowest country
-    // get strongest neighbours
-    // move 1/2 armies (leave at least 2, if not -none)
-    return false;
+    ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
+    Map<String, Country> allCountries = gameMap.getCountries();
+    Optional<Country> weakestCountry = countries.stream().min(Comparator.comparing(Country::getNumberOfArmies));
+    weakestCountry.ifPresent(weakest -> {
+      Set<String> neighbors = gameMap.getBorders().get(weakest.getName());
+
+      Optional<Country> strongestNeighbor =
+          neighbors.stream()
+            .map(allCountries::get)
+              .max(Comparator.comparingInt(Country::getNumberOfArmies));
+
+      if(strongestNeighbor.isPresent()) {
+        Country target = strongestNeighbor.get();
+        int halfTheArmies = (target.getNumberOfArmies()/2);
+
+        if(halfTheArmies < 3) {
+          display(String.format("%s chose not to fortify", playerName), true);
+          changeToNextPhase(gameMap);
+        }
+
+        boolean isArmyRemoved = target.removeArmies(halfTheArmies);
+        if (isArmyRemoved) {
+          weakest.addArmies(halfTheArmies);
+        }
+        this.turnCount++;
+      }
+    });
+    return true;
   }
 
   /** This method gives armies to the player
