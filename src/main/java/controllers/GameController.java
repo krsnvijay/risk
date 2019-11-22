@@ -307,7 +307,7 @@ public class GameController {
     currentPlayer.getStrategy().setNumberOfArmies(Player.calculateReinforcements(gameMap));
     if (!(currentPlayer.getStrategy() instanceof PlayerHuman)) {
       display(currentPlayer.getStrategy().getPlayerName() + " AI's turn", true);
-      currentPlayer.getStrategy().reinforce(gameMap, null, -1);
+      currentPlayer.getStrategy().reinforce(gameMap, null, currentPlayer.getStrategy().getNumberOfArmies());
       gameMap.setCurrentContext(Context.GAME_ATTACK);
       currentPlayer.getStrategy().attack(gameMap, null);
       gameMap.setCurrentContext(Context.GAME_FORTIFY);

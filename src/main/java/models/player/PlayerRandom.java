@@ -25,7 +25,7 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
   /** How many turns have elapsed */
   private int turnCount = 0;
   /** Generate random numbers for the player. */
-  private Random randomGenerator = new Random();
+  private Random randomGenerator = GameMap.getRandomGenerator();
 
   /**
    * Constructor for Random Player object
@@ -35,6 +35,7 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
   public PlayerRandom(String name) {
     this.setPlayerName(name);
   }
+
 
   /**
    * Update the CardExchangeView with the context

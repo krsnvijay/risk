@@ -38,9 +38,15 @@ public class GameMap extends Observable {
   private String fileName;
   /** The current phase of the game. */
   private Context currentContext;
+  /**
+   * random Generator for the game
+   */
+  private static Random randomGenerator = new Random();
 
-  /** The constructor for the GameMap. */
-  private GameMap() {
+  /**
+   * The constructor for the GameMap.
+   */
+  public GameMap() {
     super();
     this.borders = new HashMap<>();
     this.fileSectionData = new ArrayList<>();
@@ -51,6 +57,24 @@ public class GameMap extends Observable {
 
   public static int getCurrentPlayerIndex() {
     return currentPlayerIndex;
+  }
+
+  /**
+   * getter for random generator
+   *
+   * @return Random object
+   */
+  public static Random getRandomGenerator() {
+    return randomGenerator;
+  }
+
+  /**
+   * Setter for random generator seed
+   *
+   * @param randomGeneratorSeed Random object generator seed
+   */
+  public static void setRandomGenerator(long randomGeneratorSeed) {
+    randomGenerator.setSeed(randomGeneratorSeed);
   }
 
   /**
