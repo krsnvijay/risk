@@ -1,7 +1,6 @@
 package models.player;
 
 import controllers.BattleController;
-import controllers.GameController;
 import models.Card;
 import models.Country;
 import models.GameMap;
@@ -10,6 +9,7 @@ import views.CardExchangeView;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static controllers.GameController.changeToNextPhase;
 import static views.ConsoleView.display;
 
 public class PlayerRandom extends Observable implements PlayerStrategy {
@@ -59,13 +59,12 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
         new ArrayList<>(gameMap.getBorders().get(attackFromCountry.getName()));
     String attackToCountry =
         attackToCountries.get(randomGenerator.nextInt(attackToCountries.size()));
-    int continueAttack = randomGenerator.nextInt(2);
+    boolean continueAttack = randomGenerator.nextBoolean();
     String attackCommand = null;
-    if (continueAttack == 0)
+    if (continueAttack)
       attackCommand =
           String.format("attack %s %s -allout", attackFromCountry.getName(), attackToCountry);
-    else
-      attackCommand = "attack -noattack";
+    else attackCommand = "attack -noattack";
     return attackCommand;
   }
 
@@ -75,7 +74,6 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
    * @param gameMap the GameMap instance
    * @param command the command entered by the user
    * @return if the attack is possible or not
-   *
    */
   @Override
   public boolean attack(GameMap gameMap, String command) {
@@ -95,13 +93,17 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
    * @param countryToPlace the country to reinforce
    * @param armiesToPlace the number of armies
    * @return check whether reinforce is possible
-   *
    */
   @Override
   public boolean reinforce(GameMap gameMap, String countryToPlace, int armiesToPlace) {
     ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
     Country reinforcedCountry = countries.get(randomGenerator.nextInt(countries.size()));
     reinforcedCountry.addArmies(armiesToPlace);
+    display(
+            String.format(
+                    "%s has placed %d army(s) in %s",
+                    playerName, armiesToPlace, reinforcedCountry.getName()),
+            true);
     return true;
   }
 
@@ -113,17 +115,27 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
    * @param toCountry the country to move to
    * @param armyToMove the number of armies
    * @return check whether fortify is possible
-   *
    */
   @Override
   public boolean fortify(GameMap gameMap, String fromCountry, String toCountry, int armyToMove) {
     ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
     Collections.shuffle(countries);
     Country fortifyFromCountry = countries.get(0);
-    ArrayList<String> neighboringCountry = new ArrayList<>(gameMap.getBorders().get(fortifyFromCountry.getName()));
+    ArrayList<String> neighboringCountry =
+        new ArrayList<>(gameMap.getBorders().get(fortifyFromCountry.getName()));
     Country fortifyToCountry = countries.get(randomGenerator.nextInt(neighboringCountry.size()));
-    String command = String.format("fortify %s %s %d",fortifyFromCountry.getName(),fortifyToCountry.getName(),armyToMove);
-    GameController.performFortify(gameMap, command);
+    if (fortifyFromCountry.getNumberOfArmies() > 2) {
+      int fortifyArmies = randomGenerator.nextInt(fortifyFromCountry.getNumberOfArmies() - 2);
+      fortifyToCountry.removeArmies(fortifyArmies);
+      fortifyToCountry.addArmies(fortifyArmies);
+      display(String.format("%s Fortified %s with %d army(s) from %s",
+              playerName, fortifyToCountry.getName(),fortifyArmies,fortifyFromCountry.getName()),
+              true);
+    }
+    else {
+      display(String.format("%s chose not to fortify", playerName), true);
+      changeToNextPhase(gameMap);
+    }
     turnCount++;
     return true;
   }
