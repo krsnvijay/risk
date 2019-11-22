@@ -1,5 +1,6 @@
 package models;
 
+import models.player.Player;
 import org.junit.Before;
 import org.junit.Test;
 import utils.DominationMapParser;
@@ -12,17 +13,10 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import models.player.Player;
-import org.junit.Before;
-import org.junit.Test;
-import utils.MapParser;
-
 import static java.util.stream.Collectors.toMap;
 import static org.junit.Assert.assertEquals;
 
-/**
- * test class to check the functionalities of PlayerHuman.java {@link Player}
- */
+/** test class to check the functionalities of PlayerHuman.java {@link Player} */
 public class PlayerTest {
 
   public static final String PLAYER_1 = "Player1";

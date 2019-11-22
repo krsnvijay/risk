@@ -37,9 +37,7 @@ public class GameMapTest {
     reason = "";
   }
 
-  /**
-   * check if the added Continent is part of the map
-   */
+  /** check if the added Continent is part of the map */
   @Test
   public void addContinent() {
     // Arrange
@@ -54,9 +52,7 @@ public class GameMapTest {
     assertThat(reason, continents, hasItem(continent));
   }
 
-  /**
-   * check if the selected continent was removed from the map
-   */
+  /** check if the selected continent was removed from the map */
   @Test
   public void removeContinent() {
     // Arrange
@@ -84,9 +80,7 @@ public class GameMapTest {
     assertThat(reason, setOfContinentNamesInAllBorders, not(hasItem(continentName)));
   }
 
-  /**
-   * check if the added Country is part of the map
-   */
+  /** check if the added Country is part of the map */
   @Test
   public void addCountry() {
     // Arrange
@@ -101,9 +95,7 @@ public class GameMapTest {
     assertThat(reason, countries, hasItem(country));
   }
 
-  /**
-   * check if the selected country was removed from the map
-   */
+  /** check if the selected country was removed from the map */
   @Test
   public void removeCountry() {
     // Arrange
@@ -129,9 +121,7 @@ public class GameMapTest {
     assertThat(reason, setOfAllBorderCountryNames, not(hasItem(countryName)));
   }
 
-  /**
-   * check if the selected two countries are neighbors
-   */
+  /** check if the selected two countries are neighbors */
   @Test
   public void addBorder() {
     // Arrange
@@ -149,9 +139,7 @@ public class GameMapTest {
     assertThat(reason, setOfCountry2NeighborNames, hasItem(countryName1));
   }
 
-  /**
-   * check if the selected two countries doesn't have any neighbors
-   */
+  /** check if the selected two countries doesn't have any neighbors */
   @Test
   public void removeBorder() {
     // Arrange
@@ -169,9 +157,7 @@ public class GameMapTest {
     assertThat(reason, setOfCountry2NeighborNames, not(hasItem(countryName1)));
   }
 
-  /**
-   * check if the country still has neighbors after removing its borders
-   */
+  /** check if the country still has neighbors after removing its borders */
   @Test
   public void removeCountryBorders() {
     // Arrange
@@ -193,9 +179,7 @@ public class GameMapTest {
     assertThat(reason, setOfNeighborCountryNames, not(hasItem(countryName)));
   }
 
-  /**
-   * check if we can load an invalid map
-   */
+  /** check if we can load an invalid map */
   @Test
   public void loadValidMap() {
     //  Arrange
@@ -212,9 +196,7 @@ public class GameMapTest {
     }
   }
 
-  /**
-   * check whether there are duplicate countries in the map
-   */
+  /** check whether there are duplicate countries in the map */
   @Test
   public void duplicateCountries() {
     //  Arrange

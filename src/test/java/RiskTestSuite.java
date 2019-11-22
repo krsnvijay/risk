@@ -7,20 +7,17 @@ import utils.MapParserTest;
 import utils.MapValidatorTest;
 
 @RunWith(Suite.class)
-
 @Suite.SuiteClasses({
-    BattleControllerTest.class,
-    EditorControllerTest.class,
-    GameControllerTest.class,
-    GameRunnerTest.class,
-    MainControllerTest.class,
-    StartUpControllerTest.class,
-    SetupControllerTest.class,
-    GameMapTest.class,
-    PlayerTest.class,
-    MapValidatorTest.class,
-    MapParserTest.class
+  BattleControllerTest.class,
+  EditorControllerTest.class,
+  GameControllerTest.class,
+  GameRunnerTest.class,
+  MainControllerTest.class,
+  StartUpControllerTest.class,
+  SetupControllerTest.class,
+  GameMapTest.class,
+  PlayerTest.class,
+  MapValidatorTest.class,
+  MapParserTest.class
 })
-
-public class RiskTestSuite {
-}
+public class RiskTestSuite {}

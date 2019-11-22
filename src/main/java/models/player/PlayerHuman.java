@@ -150,8 +150,8 @@ public class PlayerHuman extends Observable implements PlayerStrategy {
               .collect(Collectors.toCollection(ArrayList::new));
 
       ArrayList<Card> resultCardsInHand = new ArrayList<>();
-      for(int i = 0;i<cardsInHand.size();i++){
-        if(!listIndices.contains(i)){
+      for (int i = 0; i < cardsInHand.size(); i++) {
+        if (!listIndices.contains(i)) {
           resultCardsInHand.add(cardsInHand.get(i));
         }
       }
@@ -199,14 +199,15 @@ public class PlayerHuman extends Observable implements PlayerStrategy {
       gameMap.getCountries().get(toCountry).addArmies(armyToMove);
       result = true;
     }
-    if(result) this.turnCount++;
+    if (result) this.turnCount++;
     return result;
   }
 
-
-  /** This method gives armies to the player
+  /**
+   * This method gives armies to the player
+   *
    * @return int with the number of armies.
-   * */
+   */
   public int giveArmies() {
     if (numberOfTradedSet == 1) {
       armiesTradedForSet += 4;

@@ -103,7 +103,7 @@ public class DominationMapParser implements MapParser {
   /**
    * This de-serializes the country line from the file into a Country object.
    *
-   * @param countryLine    the raw line from the file.
+   * @param countryLine the raw line from the file.
    * @param continentNames the names of all continents
    * @return A continent object
    */
@@ -133,7 +133,7 @@ public class DominationMapParser implements MapParser {
   /**
    * This de-serializes the border line from the file into a Border object.
    *
-   * @param borderLine   the raw line from the file.
+   * @param borderLine the raw line from the file.
    * @param countryNames A list of country names.
    * @return An entry object, key is the name and the value is a Set of borders.
    */
@@ -162,8 +162,8 @@ public class DominationMapParser implements MapParser {
   /**
    * Serialize a Country
    *
-   * @param country         country object to serialize
-   * @param countriesOrder  ordered countries list to build indexes
+   * @param country country object to serialize
+   * @param countriesOrder ordered countries list to build indexes
    * @param continentsOrder ordered continent list to build indexes
    * @return formatted country line
    */
@@ -179,9 +179,9 @@ public class DominationMapParser implements MapParser {
   /**
    * Serialize a Border
    *
-   * @param countryName    name of country
+   * @param countryName name of country
    * @param countriesOrder ordered countries list to build indexes
-   * @param gameBorders    map of borders
+   * @param gameBorders map of borders
    * @return formatted border line
    */
   private String serializeBorder(
@@ -200,7 +200,7 @@ public class DominationMapParser implements MapParser {
   /**
    * Saves the map into a file.
    *
-   * @param gameMap  The GameMap object to save.
+   * @param gameMap The GameMap object to save.
    * @param fileName The name of the file.
    * @return boolean to indicate status
    */
@@ -219,7 +219,7 @@ public class DominationMapParser implements MapParser {
   /**
    * Serializes a GameMap object into a string (file data).
    *
-   * @param gameMap  The GameMap object to serialize.
+   * @param gameMap The GameMap object to serialize.
    * @param filename the filename of file to which the map is to be saved
    * @return The file as a string.
    */
@@ -228,11 +228,11 @@ public class DominationMapParser implements MapParser {
     String files =
         gameMap.getFileName().isEmpty()
             ? String.join(
-            "\n",
-            "pic placeholder_pic.png",
-            "map placeholder_map.gif",
-            "crd placeholder.cards",
-            "prv placeholder.jpg")
+                "\n",
+                "pic placeholder_pic.png",
+                "map placeholder_map.gif",
+                "crd placeholder.cards",
+                "prv placeholder.jpg")
             : String.join("\n", gameMap.getFileSectionData());
 
     Map<String, Country> gameCountries = gameMap.getCountries();

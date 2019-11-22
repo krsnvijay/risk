@@ -9,7 +9,6 @@ import views.CardExchangeView;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static controllers.GameController.changeToNextPhase;
 import static views.ConsoleView.display;
 
 public class PlayerRandom extends Observable implements PlayerStrategy {
@@ -100,10 +99,13 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
     Country reinforcedCountry = countries.get(randomGenerator.nextInt(countries.size()));
     reinforcedCountry.addArmies(armiesToPlace);
     display(
-            String.format(
-                    "%s has placed %d army(s) in %s",
-                    playerName, armiesToPlace, reinforcedCountry.getName()),
-            true);
+        String.format(
+            "%s has placed %d army(s) in %s",
+            playerName, armiesToPlace, reinforcedCountry.getName()),
+        true);
+    if (cardsInHand.size() > 3) {
+      this.exchangeCardsForArmies(Player.getCardExchangeIndices(this.getCardsInHand()));
+    }
     return true;
   }
 
@@ -128,13 +130,13 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
       int fortifyArmies = randomGenerator.nextInt(fortifyFromCountry.getNumberOfArmies() - 2);
       fortifyToCountry.removeArmies(fortifyArmies);
       fortifyToCountry.addArmies(fortifyArmies);
-      display(String.format("%s Fortified %s with %d army(s) from %s",
-              playerName, fortifyToCountry.getName(),fortifyArmies,fortifyFromCountry.getName()),
-              true);
-    }
-    else {
+      display(
+          String.format(
+              "%s Fortified %s with %d army(s) from %s",
+              playerName, fortifyToCountry.getName(), fortifyArmies, fortifyFromCountry.getName()),
+          true);
+    } else {
       display(String.format("%s chose not to fortify", playerName), true);
-      changeToNextPhase(gameMap);
     }
     turnCount++;
     return true;

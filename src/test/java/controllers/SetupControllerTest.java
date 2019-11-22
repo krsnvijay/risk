@@ -15,7 +15,6 @@ import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
 
-
 /**
  * test class to check the functionalities of SetupController.java
  *
@@ -67,11 +66,12 @@ public class SetupControllerTest {
     countries = gameMap.getCountries();
   }
 
-  /** Test to check whether the countries are populated*/
+  /** Test to check whether the countries are populated */
   @Test
   public void populateCountries() {
     ArrayList<Player> activePlayerHumen = gameMap.getPlayersList();
-    ArrayList<Country> populatedCountries = new ArrayList<>(gameMap.populateCountries(activePlayerHumen).values());
+    ArrayList<Country> populatedCountries =
+        new ArrayList<>(gameMap.populateCountries(activePlayerHumen).values());
     boolean result = true;
     for (Country populatedCountry : populatedCountries) {
       if (populatedCountry.getOwnerName() == null) {

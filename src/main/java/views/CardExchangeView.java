@@ -12,30 +12,30 @@ import java.util.stream.Collectors;
 
 public class CardExchangeView implements Observer {
 
-  /** A cached Pool of threads to queue services on the UI thread **/
-  private final ExecutorService service = Executors.newCachedThreadPool();
-
-  /** Reference to the Runner instance on the UI thread **/
-  private Runner appInstance;
-
-  /** Singleton CardExchangeView Instance **/
+  /** Singleton CardExchangeView Instance * */
   private static CardExchangeView cardExchangeView = null;
-
-  /**
-   * A getter for the singleton instance of CardExchangeView
-   * @return CardExchange View Singleton Instance
-   */
-  public static CardExchangeView getInstance() {
-    return cardExchangeView;
-  }
+  /** A cached Pool of threads to queue services on the UI thread * */
+  private final ExecutorService service = Executors.newCachedThreadPool();
+  /** Reference to the Runner instance on the UI thread * */
+  private Runner appInstance;
 
   /**
    * Constructor for Card Exchange View
+   *
    * @param app an instance of the Runner on the UI Thread
    */
   public CardExchangeView(Runner app) {
     this.appInstance = app;
     cardExchangeView = this;
+  }
+
+  /**
+   * A getter for the singleton instance of CardExchangeView
+   *
+   * @return CardExchange View Singleton Instance
+   */
+  public static CardExchangeView getInstance() {
+    return cardExchangeView;
   }
 
   /**
@@ -55,6 +55,7 @@ public class CardExchangeView implements Observer {
             .collect(Collectors.toList());
 
     service.submit(() -> appInstance.updateCardLabelsTemp(cardsInHandString));
-    if(gameMap.getCurrentContext().name().equals("GAME_REINFORCE")) service.submit(() -> appInstance.updateCardView());
+    if (gameMap.getCurrentContext().name().equals("GAME_REINFORCE"))
+      service.submit(() -> appInstance.updateCardView());
   }
 }

@@ -26,9 +26,7 @@ public class BattleControllerTest {
   public static final String PLAYER_2 = "Player2";
   public static final String INDIA = "India";
   public static final String CHINA = "China";
-  /**
-   * reason for failure
-   */
+  /** reason for failure */
   String reason;
 
   /** list of countries */

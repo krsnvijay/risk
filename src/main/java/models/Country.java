@@ -27,9 +27,7 @@ public class Country {
   /** Maintains the number of armies currently in a country. */
   private int numberOfArmies;
 
-  /**
-   * Joins the cards to the countries
-   */
+  /** Joins the cards to the countries */
   private Card card;
 
   /**
@@ -37,17 +35,6 @@ public class Country {
    * the country, it is set to true. It won't be set to true in any other scenario.
    */
   private boolean playerNeedsCardAdded = false;
-
-  /** Getter and setter for the Card object
-   * @return the Card Object
-   * */
-  public Card getCard() {
-    return card;
-  }
-
-  public void setCard(Card card) {
-    this.card = card;
-  }
 
   /**
    * The constructor for the Country class.
@@ -77,6 +64,19 @@ public class Country {
     this.continent = continent;
     this.x = x;
     this.y = y;
+  }
+
+  /**
+   * Getter and setter for the Card object
+   *
+   * @return the Card Object
+   */
+  public Card getCard() {
+    return card;
+  }
+
+  public void setCard(Card card) {
+    this.card = card;
   }
 
   /**

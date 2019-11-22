@@ -28,6 +28,7 @@ public enum Context {
 
   /**
    * The constructor for the Context enum.
+   *
    * @param validCommands All the valid commands as Command objects.
    */
   Context(Command... validCommands) {
@@ -37,6 +38,7 @@ public enum Context {
 
   /**
    * Validates a command.
+   *
    * @param riskCommand The command string.
    * @return boolean result of the validation.
    */
@@ -46,6 +48,7 @@ public enum Context {
 
   /**
    * Returns the matching Command object from the string provided.
+   *
    * @param riskCommand the command String.
    * @return the Command object.
    */
@@ -55,6 +58,7 @@ public enum Context {
 
   /**
    * Executes the command's behaviour.
+   *
    * @param gameMap The Game Map instance.
    * @param riskCommand the command entered by the user.
    * @return boolean result of execution.
@@ -70,6 +74,7 @@ public enum Context {
 
   /**
    * Returns a list of valid commands.
+   *
    * @return Command object array with valid commands.
    */
   public Command[] getValidCommands() {

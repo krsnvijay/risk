@@ -7,5 +7,4 @@ import utils.MapValidatorTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({MapValidatorTest.class, MapParserTest.class})
-public class UtilsTestSuite {
-}
+public class UtilsTestSuite {}

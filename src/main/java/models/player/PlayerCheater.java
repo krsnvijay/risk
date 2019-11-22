@@ -86,6 +86,9 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
     ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
     gameMap.getCurrentPlayer().getStrategy().setNumberOfArmies(0);
     countries.forEach(country -> country.addArmies(country.getNumberOfArmies()));
+    if(cardsInHand.size() > 3) {
+      this.exchangeCardsForArmies(Player.getCardExchangeIndices(this.getCardsInHand()));
+    }
     return true;
   }
 

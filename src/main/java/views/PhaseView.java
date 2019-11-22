@@ -14,14 +14,12 @@ import java.util.concurrent.Executors;
  * @version 1.0
  */
 public class PhaseView implements Observer {
+  /** stores previous phase * */
+  private static String prevPhase = "PREV";
   /** Service for thread handling. */
   private final ExecutorService service = Executors.newCachedThreadPool();
-
   /** Instance of the Runner class. */
   private Runner appInstance;
-
-  /** stores previous phase **/
-  private static String prevPhase = "PREV";
 
   /**
    * Constructor that initializes the application.
@@ -72,7 +70,7 @@ public class PhaseView implements Observer {
           service.submit(() -> appInstance.clearCardView());
         }
         // clear phase log
-        if(!prevPhase.equals(currentPhase)) {
+        if (!prevPhase.equals(currentPhase)) {
           gameMap.setPhaseLog("", true);
           prevPhase = currentPhase;
         }

@@ -15,33 +15,24 @@ import static java.util.stream.Collectors.toMap;
  * @version 1.0
  */
 public class WorldDomination extends Observable {
-  /**
-   * Instance of the WorldDomination class.
-   */
+  /** Instance of the WorldDomination class. */
   private static WorldDomination worldDomination = null;
 
-  /**
-   * Instance of the GameMap.
-   */
+  /** Instance of the GameMap. */
   private GameMap gameMap = GameMap.getGameMap();
 
-  /**
-   * Holds the ownership percentage.
-   */
+  /** Holds the ownership percentage. */
   private Map<String, Double> playerOwnershipPercentage = new HashMap<>();
 
-  /**
-   * Holds the total armies owned by the players.
-   */
+  /** Holds the total armies owned by the players. */
   private Map<String, Integer> totalArmiesOwnedByPlayer = new HashMap<>();
 
-  /**
-   * Holds the continents owned by players.
-   */
+  /** Holds the continents owned by players. */
   private Map<String, ArrayList<String>> continentsOwnedByPlayers = new HashMap<>();
 
   /**
    * Gets an instance of this class.
+   *
    * @return The instance of WorldDomination object.
    */
   public static WorldDomination getInstance() {
@@ -51,11 +42,10 @@ public class WorldDomination extends Observable {
     return worldDomination;
   }
 
-  /**
-   * Refreshes the attributes and notifies the observers to update the WD View.
-   */
+  /** Refreshes the attributes and notifies the observers to update the WD View. */
   public void recomputeAttributes() {
-    List<Context> excludedContexts = Arrays.asList(Context.MAIN_MENU,Context.MAP_EDITOR,Context.GAME_SETUP);
+    List<Context> excludedContexts =
+        Arrays.asList(Context.MAIN_MENU, Context.MAP_EDITOR, Context.GAME_SETUP);
     if (!excludedContexts.contains(gameMap.getCurrentContext())) {
       worldDomination.computeArmyCounts();
       worldDomination.computeContinentsOwnedByPlayers();
@@ -65,9 +55,7 @@ public class WorldDomination extends Observable {
     }
   }
 
-  /**
-   * Calculates the continents owned by each player.
-   */
+  /** Calculates the continents owned by each player. */
   private void computeContinentsOwnedByPlayers() {
     Map<String, List<Country>> mapByContinents =
         gameMap.getCountries().values().stream().collect(groupingBy(Country::getContinent));
@@ -84,7 +72,8 @@ public class WorldDomination extends Observable {
 
                   Map<String, List<Country>> mapByPlayersOwnership =
                       gameMap.getCountries().values().stream()
-                          .filter(c -> c.getOwnerName().equals(player.getStrategy().getPlayerName()))
+                          .filter(
+                              c -> c.getOwnerName().equals(player.getStrategy().getPlayerName()))
                           .collect(groupingBy(Country::getContinent));
 
                   Map<String, Integer> continentsOwnership =
@@ -111,6 +100,7 @@ public class WorldDomination extends Observable {
 
   /**
    * Gets the continents owned by players.
+   *
    * @return a Map with the data.
    */
   public Map<String, ArrayList<String>> getContinentsOwnedByPlayers() {
@@ -118,9 +108,7 @@ public class WorldDomination extends Observable {
     return continentsOwnedByPlayers;
   }
 
-  /**
-   * Calculates the army counts for each player.
-   */
+  /** Calculates the army counts for each player. */
   private void computeArmyCounts() {
     totalArmiesOwnedByPlayer =
         gameMap.playersList.stream()
@@ -128,7 +116,9 @@ public class WorldDomination extends Observable {
                 player ->
                     new AbstractMap.SimpleEntry<>(
                         player.getStrategy().getPlayerName(),
-                        Player.getCountriesByOwnership(player.getStrategy().getPlayerName(), gameMap).stream()
+                        Player.getCountriesByOwnership(
+                                player.getStrategy().getPlayerName(), gameMap)
+                            .stream()
                             .mapToInt(Country::getNumberOfArmies)
                             .sum()))
             .collect(
@@ -138,6 +128,7 @@ public class WorldDomination extends Observable {
 
   /**
    * Calculates the total armies owned by players.
+   *
    * @return a Map object with the data.
    */
   public Map<String, Integer> getTotalArmiesOwnedByPlayer() {
@@ -145,9 +136,7 @@ public class WorldDomination extends Observable {
     return totalArmiesOwnedByPlayer;
   }
 
-  /**
-   * Calculates the ownership percentage for players.
-   */
+  /** Calculates the ownership percentage for players. */
   private void computeOwnershipPercentage() {
     double totalNumOfCountries = gameMap.getCountries().size();
     playerOwnershipPercentage =
@@ -155,10 +144,12 @@ public class WorldDomination extends Observable {
             .map(
                 player -> {
                   long ownershipCount =
-                      Player.getCountriesByOwnership(player.getStrategy().getPlayerName(), gameMap).stream()
+                      Player.getCountriesByOwnership(player.getStrategy().getPlayerName(), gameMap)
+                          .stream()
                           .count();
                   return new AbstractMap.SimpleEntry<>(
-                      player.getStrategy().getPlayerName(), (ownershipCount / totalNumOfCountries) * 100);
+                      player.getStrategy().getPlayerName(),
+                      (ownershipCount / totalNumOfCountries) * 100);
                 })
             .collect(
                 Collectors.toMap(
@@ -167,6 +158,7 @@ public class WorldDomination extends Observable {
 
   /**
    * Returns the ownership percentage of players.
+   *
    * @return a Map containing the data.
    */
   public Map<String, Double> getPlayerOwnerShipPercentage() {

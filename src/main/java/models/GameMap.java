@@ -16,45 +16,31 @@ import static java.util.stream.Collectors.*;
  */
 public class GameMap extends Observable {
 
-  /**
-   * The singleton instance of the game's state
-   */
+  /** The singleton instance of the game's state */
   public static GameMap gameMap = null;
-
+  /** Maintains whose turn it is (index). */
+  private static int currentPlayerIndex = 0;
+  /** This maintains a list of players currently in the game. */
+  public ArrayList<Player> playersList = new ArrayList<>();
+  /** This maintains a log of phase-wise activity in the game */
+  public String phaseLog = "";
+  /** This maintains a list of RISK cards in the deck. */
+  public ArrayList<Card> deck = null;
   /** Contains the information in the [File] section. */
   private ArrayList<String> fileSectionData;
-
   /** Stores an adjacency list of all borders. */
   private Map<String, Set<String>> borders;
-
   /** Stores a map of all continents. */
   private Map<String, Continent> continents;
-
   /** Stores a map of all countries. */
   private Map<String, Country> countries;
-
   /** The name of the map file. */
   private String fileName;
-
   /** The current phase of the game. */
   private Context currentContext;
 
-  /** Maintains whose turn it is (index). */
-  private static int currentPlayerIndex = 0;
-
-  /** This maintains a list of players currently in the game. */
-  public ArrayList<Player> playersList = new ArrayList<>();
-
-  /** This maintains a log of phase-wise activity in the game */
-  public String phaseLog = "";
-
-  /** This maintains a list of RISK cards in the deck. */
-  public ArrayList<Card> deck = null;
-
-  /**
-   * The constructor for the GameMap.
-   */
-  public GameMap() {
+  /** The constructor for the GameMap. */
+  private GameMap() {
     super();
     this.borders = new HashMap<>();
     this.fileSectionData = new ArrayList<>();
@@ -80,6 +66,46 @@ public class GameMap extends Observable {
     }
     Collections.shuffle(cardsInDeck);
     gameMap.setDeck(cardsInDeck);
+  }
+
+  /**
+   * A method to get the existing instance of gameMap, or creating one if it doesn't exist.
+   *
+   * @return The instance of the gameMap.
+   */
+  public static GameMap getGameMap() {
+    if (gameMap == null) {
+      gameMap = new GameMap();
+    }
+    return gameMap;
+  }
+
+  /**
+   * Setter for gamemap instance, used in case a map is loaded from file.
+   *
+   * @param gameMap contains game state
+   */
+  public static void modifyInstance(GameMap gameMap) {
+    GameMap.gameMap = gameMap;
+  }
+
+  /**
+   * Displays all the borders of the game map.
+   *
+   * @param border The adjacency list of each border
+   * @return returns a pretty string of borders.
+   */
+  public static String showBorders(Map.Entry<String, Set<String>> border) {
+    return String.format("%s %s", border.getKey(), String.join(" ", border.getValue()));
+  }
+
+  /**
+   * Setter for currentPlayerIndex
+   *
+   * @param currentPlayerIndex index of the player to set to
+   */
+  public static void setCurrentPlayerIndex(int currentPlayerIndex) {
+    GameMap.currentPlayerIndex = currentPlayerIndex;
   }
 
   /**
@@ -114,24 +140,12 @@ public class GameMap extends Observable {
   }
 
   /**
-   * A method to get the existing instance of gameMap, or creating one if it doesn't exist.
+   * Sets the deck object.
    *
-   * @return The instance of the gameMap.
+   * @param deck A collection of Card objects.
    */
-  public static GameMap getGameMap() {
-    if (gameMap == null) {
-      gameMap = new GameMap();
-    }
-    return gameMap;
-  }
-
-  /**
-   * Setter for gamemap instance, used in case a map is loaded from file.
-   *
-   * @param gameMap contains game state
-   */
-  public static void modifyInstance(GameMap gameMap) {
-    GameMap.gameMap = gameMap;
+  public void setDeck(ArrayList<Card> deck) {
+    this.deck = deck;
   }
 
   /** Updates the current player index (round robin fashion) */
@@ -148,16 +162,6 @@ public class GameMap extends Observable {
    */
   public Player getCurrentPlayer() {
     return playersList.get(currentPlayerIndex);
-  }
-
-  /**
-   * Displays all the borders of the game map.
-   *
-   * @param border The adjacency list of each border
-   * @return returns a pretty string of borders.
-   */
-  public static String showBorders(Map.Entry<String, Set<String>> border) {
-    return String.format("%s %s", border.getKey(), String.join(" ", border.getValue()));
   }
 
   /**
@@ -360,10 +364,9 @@ public class GameMap extends Observable {
    */
   public boolean addGamePlayer(String playerName, String strategy) {
     Player player = new Player(playerName, strategy);
-    if(playersList.stream().anyMatch(p -> p.getStrategy().getPlayerName().equals(playerName))) {
+    if (playersList.stream().anyMatch(p -> p.getStrategy().getPlayerName().equals(playerName))) {
       return false;
-    }
-    else {
+    } else {
       playersList.add(player);
       return true;
     }
@@ -376,10 +379,12 @@ public class GameMap extends Observable {
    * @return boolean to indicate status
    */
   public boolean removeGamePlayer(String playerName) {
-    Optional<Player> p1 = playersList.stream()
-        .filter(player -> player.getStrategy().getPlayerName().equals(playerName)).findFirst();
+    Optional<Player> p1 =
+        playersList.stream()
+            .filter(player -> player.getStrategy().getPlayerName().equals(playerName))
+            .findFirst();
 
-    if(p1.isPresent()) {
+    if (p1.isPresent()) {
       playersList.remove(p1.get());
       return true;
     }
@@ -556,15 +561,6 @@ public class GameMap extends Observable {
     return true;
   }
 
-  /**
-   * Sets the deck object.
-   *
-   * @param deck A collection of Card objects.
-   */
-  public void setDeck(ArrayList<Card> deck) {
-    this.deck = deck;
-  }
-
   /** Assigns a random card to the player from the deck */
   public void assignCard() {
     Player currentPlayer = getCurrentPlayer();
@@ -603,8 +599,10 @@ public class GameMap extends Observable {
    * @return true if numberOfArmies for each player is 0 ; else returns false
    */
   public boolean checkGameReady() {
-    return playersList.stream().map(Player::getStrategy)
-        .mapToInt(PlayerStrategy::getNumberOfArmies).allMatch(count -> count == 0);
+    return playersList.stream()
+        .map(Player::getStrategy)
+        .mapToInt(PlayerStrategy::getNumberOfArmies)
+        .allMatch(count -> count == 0);
   }
 
   /**
@@ -760,14 +758,5 @@ public class GameMap extends Observable {
     }
     setChanged();
     notifyObservers("PHASE_LOG");
-  }
-
-  /**
-   * Setter for currentPlayerIndex
-   *
-   * @param currentPlayerIndex index of the player to set to
-   */
-  public static void setCurrentPlayerIndex(int currentPlayerIndex) {
-    GameMap.currentPlayerIndex = currentPlayerIndex;
   }
 }

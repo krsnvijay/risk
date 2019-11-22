@@ -25,9 +25,7 @@ import static views.ConsoleView.display;
  */
 public class BattleController {
 
-  /**
-   * The number of dice for the attacker.
-   */
+  /** The number of dice for the attacker. */
   private int numOfDiceAttacker;
 
   /** The number of dice for the defender. */
@@ -44,29 +42,22 @@ public class BattleController {
 
   /** The name of the defending player. */
   private String defenderName;
-    /**
-     * The defending player.
-     */
-    private Player defendingPlayer;
-  /**
-   * The attacking player.
-   */
+  /** The defending player. */
+  private Player defendingPlayer;
+  /** The attacking player. */
   private Player attackingPlayer;
+
   /** An instance of the Game Map. */
   private GameMap gameMap;
 
   /** The topmost card on the deck. */
   private Card topCard;
-  /**
-   * The number of armies to move after winning a battle
-   */
+  /** The number of armies to move after winning a battle */
   private int numOfArmiesToMove = 0;
 
   /** Tracks if -allout is enabled. */
   private boolean isAllOutEnabled = false;
-  /**
-   * Disable input from the user, flag used for unit tests
-   */
+  /** Disable input from the user, flag used for unit tests */
   private boolean isNoInputEnabled = false;
 
   /**
@@ -84,6 +75,13 @@ public class BattleController {
     if (!command.contains("-allout")) {
       numOfDiceAttacker = Integer.parseInt(commandSplit[3]);
     }
+    defendingPlayer =
+        gameMap.getPlayersList().stream()
+            .filter(
+                player ->
+                    player.getStrategy().getPlayerName().equals(defendingCountry.getOwnerName()))
+            .findFirst()
+            .get();
     attackingPlayer = gameMap.getCurrentPlayer();
     defendingPlayer = gameMap.getPlayersList().stream().filter(player -> player.getStrategy().getPlayerName().equals(defendingCountry.getOwnerName())).findFirst().get();
     defenderName = defendingPlayer.getStrategy().getPlayerName();
@@ -219,13 +217,13 @@ public class BattleController {
    * @return number of dice.
    */
   public int getNumOfDiceFromDefender() {
-      if (isAllOutEnabled) {
-          return calculateMaxDiceForDefender();
-      }
-      if (!(defendingPlayer.getStrategy() instanceof PlayerHuman)) {
-          // TODO: Change num of defender dice according to strategy
-          return calculateMaxDiceForDefender();
-      }
+    if (isAllOutEnabled) {
+      return calculateMaxDiceForDefender();
+    }
+    if (!(defendingPlayer.getStrategy() instanceof PlayerHuman)) {
+      // TODO: Change num of defender dice according to strategy
+      return calculateMaxDiceForDefender();
+    }
     if (isNoInputEnabled) {
       display("Skipping Input loop from defender", true);
       isNoInputEnabled = false;
@@ -397,7 +395,8 @@ public class BattleController {
   /** This method executes on a specific roll-win for attacker. */
   public void successfulAttack() {
     Player winningPlayer = gameMap.getCurrentPlayer();
-    ArrayList<Player> losingPlayer = gameMap.getPlayersList().stream()
+    ArrayList<Player> losingPlayer =
+        gameMap.getPlayersList().stream()
             .filter(c -> c.getStrategy().getPlayerName().equals(defenderName))
             .collect(Collectors.toCollection(ArrayList::new));
     if (defendingCountry.getNumberOfArmies() > 1) {
@@ -433,8 +432,8 @@ public class BattleController {
             gameMap.getCurrentPlayer().getStrategy().getPlayerName()
                 + " currently has "
                 + gameMap.getCurrentPlayer().getStrategy().getCardsInHand().stream()
-                .map(Card::getName)
-                .collect(Collectors.joining(" "))
+                    .map(Card::getName)
+                    .collect(Collectors.joining(" "))
                 + " card(s).",
             false);
       }
@@ -448,7 +447,7 @@ public class BattleController {
           for (Card losingPlayerCard : losingPlayerCards) {
             winningPlayer.addCard(losingPlayerCard);
           }
-          display(String.format("%s now owns %s's cards",attackerName,defenderName), true);
+          display(String.format("%s now owns %s's cards", attackerName, defenderName), true);
         }
         gameMap.removeGamePlayer(defenderName);
       }

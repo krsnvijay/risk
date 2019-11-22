@@ -8,24 +8,16 @@ package models;
  */
 public class Card {
 
-  /**
-   * Total cards introduced in the game
-   */
+  /** Total cards introduced in the game */
   private static int cardCount = 0;
 
-  /**
-   * The name of the player who owns the card.
-   */
+  /** The name of the player who owns the card. */
   private String owner;
 
-  /**
-   * Stores the typeOfCard enum
-   */
+  /** Stores the typeOfCard enum */
   private typeOfCard type;
 
-  /**
-   * Country of the card
-   */
+  /** Country of the card */
   private String country;
 
   /**
@@ -87,14 +79,10 @@ public class Card {
     this.country = country;
   }
 
-  /**
-   * Enum class to maintain the cards and its values
-   */
+  /** Enum class to maintain the cards and its values */
   public enum typeOfCard {
 
-    /**
-     * The type of card (Artillery, Cavalry or Infantry)
-     */
+    /** The type of card (Artillery, Cavalry or Infantry) */
     INFANTRY("Infantry"),
     CAVALRY("Cavalry"),
     ARTILLERY("Artillery");

@@ -1,7 +1,10 @@
 package controllers;
 
-import models.*;
-import models.player.*;
+import models.Card;
+import models.Context;
+import models.Country;
+import models.GameMap;
+import models.player.Player;
 import org.junit.Before;
 import org.junit.Test;
 import utils.DominationMapParser;
@@ -13,7 +16,6 @@ import java.util.Map;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
 
 /**
  * test class to check the functionalities of GameController.java
@@ -68,9 +70,8 @@ public class GameControllerTest {
     countries = gameMap.getCountries();
   }
 
-
-  /** Test to check whether the reinforced army is added to the country*/
-/*  @Test
+  /** Test to check whether the reinforced army is added to the country */
+  /*  @Test
   public void reinforce() {
     Country sourceCountry = gameMap.getCountries().get(INDIA);
     sourceCountry.setOwnerName(PLAYER_1);
@@ -82,7 +83,7 @@ public class GameControllerTest {
   }
   */
 
-  /** Test to check whether the attacking country has more than 2 armies*/
+  /** Test to check whether the attacking country has more than 2 armies */
   @Test
   public void attackArmiesTest() {
     Country attackingCountry = gameMap.getCountries().get(INDIA);
@@ -97,7 +98,7 @@ public class GameControllerTest {
     assertFalse(reason, result);
   }
 
-  /** Test to check whether the attacking countries are adjacent*/
+  /** Test to check whether the attacking countries are adjacent */
   @Test
   public void defendAdjacencyTest() {
     Country sourceCountry = gameMap.getCountries().get(INDIA);
@@ -112,7 +113,7 @@ public class GameControllerTest {
     assertFalse(reason, result);
   }
 
-  /** Test to check whether the card set is valid*/
+  /** Test to check whether the card set is valid */
   @Test
   public void exchangeCardsTest() {
     Card card1 = new Card(INDIA);
@@ -129,11 +130,9 @@ public class GameControllerTest {
     assertTrue(reason, result);
   }
 
-  /** Test to check whether the player conquers a valid country*/
+  /** Test to check whether the player conquers a valid country */
   @Test
-  public void conquerTest() {
-
-  }
+  public void conquerTest() {}
 
   /** Test to check if a player won the game */
   @Test

@@ -29,11 +29,14 @@ public class SetupController {
       gameMap.setCurrentContext(Context.GAME_STARTUP);
       display("[Game Startup Phase]", false);
       Player currentPlayer = gameMap.getCurrentPlayer();
-      display(String.format("%s's turn to place an army", currentPlayer.getStrategy().getPlayerName()), false);
+      display(
+          String.format("%s's turn to place an army", currentPlayer.getStrategy().getPlayerName()),
+          false);
       display(
           String.format(
               "%s has %d armies left to place",
-              currentPlayer.getStrategy().getPlayerName(), currentPlayer.getStrategy().getNumberOfArmies()),
+              currentPlayer.getStrategy().getPlayerName(),
+              currentPlayer.getStrategy().getNumberOfArmies()),
           false);
     } else {
       display("The player list should be > 1 and <= 6", false);

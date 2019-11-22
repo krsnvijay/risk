@@ -1,16 +1,13 @@
 package models.player;
 
-import controllers.GameController;
 import models.Card;
 import models.Country;
 import models.GameMap;
 import views.CardExchangeView;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import static controllers.GameController.changeToNextPhase;
 import static views.ConsoleView.display;
 
 /**
@@ -35,6 +32,7 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
 
   /**
    * The constructor for the Benevolent strategy class.
+   *
    * @param name
    */
   public PlayerBenevolent(String name) {
@@ -43,6 +41,7 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
 
   /**
    * Registers this class as an observer
+   *
    * @param object the CardExchangeView to register with.
    */
   public void addObserver(CardExchangeView object) {
@@ -72,15 +71,21 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
   @Override
   public boolean reinforce(GameMap gameMap, String countryToPlace, int armiesToPlace) {
     ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
-    Optional<Country> weakestCountry = countries.stream().min(Comparator.comparing(Country::getNumberOfArmies));
-    weakestCountry.ifPresent(c -> {
-      gameMap.placeArmy(c.getName(), armiesToPlace);
-    });
+    Optional<Country> weakestCountry =
+        countries.stream().min(Comparator.comparing(Country::getNumberOfArmies));
+    weakestCountry.ifPresent(
+        c -> {
+          gameMap.placeArmy(c.getName(), armiesToPlace);
+        });
+    if (cardsInHand.size() > 3) {
+      this.exchangeCardsForArmies(Player.getCardExchangeIndices(this.getCardsInHand()));
+    }
     return true;
   }
 
   /**
-   * The Benevolent player's fortify method will bolster the weakest country with one of its strongest neighbors.
+   * The Benevolent player's fortify method will bolster the weakest country with one of its
+   * strongest neighbors.
    *
    * @param gameMap the GameMap instance
    * @param fromCountry the country to move from
@@ -92,37 +97,40 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
   public boolean fortify(GameMap gameMap, String fromCountry, String toCountry, int armyToMove) {
     ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
     Map<String, Country> allCountries = gameMap.getCountries();
-    Optional<Country> weakestCountry = countries.stream().min(Comparator.comparing(Country::getNumberOfArmies));
-    weakestCountry.ifPresent(weakest -> {
-      Set<String> neighbors = gameMap.getBorders().get(weakest.getName());
+    Optional<Country> weakestCountry =
+        countries.stream().min(Comparator.comparing(Country::getNumberOfArmies));
+    weakestCountry.ifPresent(
+        weakest -> {
+          Set<String> neighbors = gameMap.getBorders().get(weakest.getName());
 
-      Optional<Country> strongestNeighbor =
-          neighbors.stream()
-            .map(allCountries::get)
-              .max(Comparator.comparingInt(Country::getNumberOfArmies));
+          Optional<Country> strongestNeighbor =
+              neighbors.stream()
+                  .map(allCountries::get)
+                  .max(Comparator.comparingInt(Country::getNumberOfArmies));
 
-      if(strongestNeighbor.isPresent()) {
-        Country target = strongestNeighbor.get();
-        int halfTheArmies = (target.getNumberOfArmies()/2);
+          if (strongestNeighbor.isPresent()) {
+            Country target = strongestNeighbor.get();
+            int halfTheArmies = (target.getNumberOfArmies() / 2);
 
-        if(halfTheArmies < 3) {
-          display(String.format("%s chose not to fortify", playerName), true);
-          changeToNextPhase(gameMap);
-        }
+            if (halfTheArmies < 3) {
+              display(String.format("%s chose not to fortify", playerName), true);
+            }
 
-        boolean isArmyRemoved = target.removeArmies(halfTheArmies);
-        if (isArmyRemoved) {
-          weakest.addArmies(halfTheArmies);
-        }
-        this.turnCount++;
-      }
-    });
+            boolean isArmyRemoved = target.removeArmies(halfTheArmies);
+            if (isArmyRemoved) {
+              weakest.addArmies(halfTheArmies);
+            }
+            this.turnCount++;
+          }
+        });
     return true;
   }
 
-  /** This method gives armies to the player
+  /**
+   * This method gives armies to the player
+   *
    * @return int with the number of armies.
-   * */
+   */
   public int giveArmies() {
     if (numberOfTradedSet == 1) {
       armiesTradedForSet += 4;
@@ -251,8 +259,8 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
               .collect(Collectors.toCollection(ArrayList::new));
 
       ArrayList<Card> resultCardsInHand = new ArrayList<>();
-      for(int i = 0;i<cardsInHand.size();i++){
-        if(!listIndices.contains(i)){
+      for (int i = 0; i < cardsInHand.size(); i++) {
+        if (!listIndices.contains(i)) {
           resultCardsInHand.add(cardsInHand.get(i));
         }
       }

@@ -22,9 +22,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class MapParserTest {
 
-  /**
-   * gameMap loads the invalid risk map from the resources folder
-   */
+  /** gameMap loads the invalid risk map from the resources folder */
   private GameMap gameMap;
   /** reason displays the reason for the failed condition */
   private String reason;

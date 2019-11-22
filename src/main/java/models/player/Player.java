@@ -19,13 +19,11 @@ import static java.util.stream.Collectors.*;
  * @version 1.0
  */
 public class Player {
-  /**
-   * The strategy for the Player.
-   */
+  /** The strategy for the Player. */
   private PlayerStrategy strategy = null;
 
   public Player(String name, String strategy) {
-    switch(strategy) {
+    switch (strategy) {
       case "random":
         this.setStrategy(new PlayerRandom(name));
         break;
@@ -42,22 +40,6 @@ public class Player {
         this.setStrategy(new PlayerHuman(name));
         break;
     }
-  }
-
-  /**
-   * Gets the current strategy for the player.
-   * @return a PlayerStrategy object
-   */
-  public PlayerStrategy getStrategy() {
-    return strategy;
-  }
-
-  /**
-   * Sets the current strategy for the player.
-   * @param strategy the PlayerStrategy to use.
-   */
-  public void setStrategy(PlayerStrategy strategy) {
-    this.strategy = strategy;
   }
 
   /**
@@ -145,6 +127,58 @@ public class Player {
     }
     allReinforcementArmies += ownedCountries / 3;
     return allReinforcementArmies;
+  }
+
+  /**
+   * Utility to get indices for AI players.
+   *
+   * @return an integer array of indices.
+   */
+  public static int[] getCardExchangeIndices(ArrayList<Card> cardsInHand) {
+    ArrayList<Integer> infantryList = new ArrayList<>();
+    ArrayList<Integer> cavalryList = new ArrayList<>();
+    ArrayList<Integer> artilleryList = new ArrayList<>();
+    int iteratorIndex = 0;
+    for (Card card : cardsInHand) {
+      switch (card.getType().name()) {
+        case "INFANTRY":
+          infantryList.add(iteratorIndex);
+          break;
+        case "CAVALRY":
+          cavalryList.add(iteratorIndex);
+          break;
+        case "ARTILLERY":
+          artilleryList.add(iteratorIndex);
+          break;
+      }
+      iteratorIndex++;
+    }
+
+    if (infantryList.isEmpty() || cavalryList.isEmpty() || artilleryList.isEmpty()) {
+      if (infantryList.size() > 2) return infantryList.stream().mapToInt(i -> i).toArray();
+      if (cavalryList.size() > 2) return cavalryList.stream().mapToInt(i -> i).toArray();
+      if (artilleryList.size() > 2) return artilleryList.stream().mapToInt(i -> i).toArray();
+    }
+
+    return new int[] {infantryList.get(0), cavalryList.get(0), artilleryList.get(0)};
+  }
+
+  /**
+   * Gets the current strategy for the player.
+   *
+   * @return a PlayerStrategy object
+   */
+  public PlayerStrategy getStrategy() {
+    return strategy;
+  }
+
+  /**
+   * Sets the current strategy for the player.
+   *
+   * @param strategy the PlayerStrategy to use.
+   */
+  public void setStrategy(PlayerStrategy strategy) {
+    this.strategy = strategy;
   }
 
   /**

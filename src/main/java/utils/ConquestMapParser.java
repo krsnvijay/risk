@@ -139,7 +139,7 @@ public class ConquestMapParser implements MapParser {
   /**
    * Serialize a Country
    *
-   * @param country   country object to serialize
+   * @param country country object to serialize
    * @param neighbors neighbors of the country
    * @return formatted country line
    */
@@ -168,7 +168,7 @@ public class ConquestMapParser implements MapParser {
   /**
    * Saves the map into a file.
    *
-   * @param gameMap  The GameMap object to save.
+   * @param gameMap The GameMap object to save.
    * @param fileName The name of the file.
    * @return boolean to indicate status
    */
@@ -187,7 +187,7 @@ public class ConquestMapParser implements MapParser {
   /**
    * Serializes a GameMap object into a string (file data).
    *
-   * @param gameMap  The GameMap object to serialize.
+   * @param gameMap The GameMap object to serialize.
    * @param filename the filename of file to which the map is to be saved
    * @return The file as a string.
    */
@@ -196,12 +196,12 @@ public class ConquestMapParser implements MapParser {
     String files =
         gameMap.getFileName().isEmpty()
             ? String.join(
-            "\n",
-            "author=NoOne",
-            "image=noImage.bmp",
-            "wrap=no",
-            "scroll=horizontal",
-            "warn=yes")
+                "\n",
+                "author=NoOne",
+                "image=noImage.bmp",
+                "wrap=no",
+                "scroll=horizontal",
+                "warn=yes")
             : String.join("\n", gameMap.getFileSectionData());
 
     Map<String, Country> gameCountries = gameMap.getCountries();

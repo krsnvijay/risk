@@ -53,10 +53,10 @@ public class Runner extends Application {
   /** ScrollPane for scrollable cards in hand. */
   private ScrollPane cardScroller = new ScrollPane();
 
-  /** An Array of Labels for cards **/
+  /** An Array of Labels for cards * */
   private ArrayList<Label> cardLabels = new ArrayList<>();
 
-  /** A Temporary Map of Players mapped to cards they have in hand **/
+  /** A Temporary Map of Players mapped to cards they have in hand * */
   private Map<String, List<String>> cardLabelStringsTempMap = new HashMap<>();
 
   /** Constructor for the runner class. */
@@ -85,6 +85,42 @@ public class Runner extends Application {
    */
   public static void main(String[] args) {
     launch(args);
+  }
+
+  /** Initiates and processes the command line for the whole game. */
+  public static void processCommandline() {
+    GameMap gameMap = GameMap.getGameMap();
+    gameMap.setCurrentContext(Context.MAIN_MENU);
+    display("Welcome to risk game", false);
+    display("Type help to see available commands", false);
+    while (true) {
+      String command = CLI.input.nextLine();
+      boolean commandStatus = gameMap.getCurrentContext().runCommand(gameMap, command.trim());
+      if (!commandStatus) {
+        display("Invalid command, use help to check the list of available commands", false);
+      }
+    }
+  }
+
+  /**
+   * Returns the name of a phase.
+   *
+   * @param context the Context enum to get the name of the phase.
+   * @return the String with a user-friendly name.
+   */
+  public static String getPhaseName(Context context) {
+    switch (context) {
+      case GAME_ATTACK:
+        return "Attack Phase";
+      case GAME_FORTIFY:
+        return "Fortify Phase";
+      case GAME_REINFORCE:
+        return "Reinforcement Phase";
+      case GAME_SETUP:
+        return "Setup Phase";
+      default:
+        return "Game not started...";
+    }
   }
 
   /**
@@ -159,9 +195,7 @@ public class Runner extends Application {
         });
   }
 
-  /**
-   * Update the whole card view
-   */
+  /** Update the whole card view */
   public void updateCardView() {
     String currPlayer = GameMap.getGameMap().getCurrentPlayer().getStrategy().getPlayerName();
     if (cardLabelStringsTempMap.containsKey(currPlayer)) {
@@ -188,47 +222,12 @@ public class Runner extends Application {
 
   /**
    * Update the termporary map of cards in hand for each player
+   *
    * @param cardsInHandStrings a list of names for each card in hand
    */
   public void updateCardLabelsTemp(List<String> cardsInHandStrings) {
     String currPlayer = GameMap.getGameMap().getCurrentPlayer().getStrategy().getPlayerName();
     cardLabelStringsTempMap.put(currPlayer, cardsInHandStrings);
-  }
-
-  /** Initiates and processes the command line for the whole game. */
-  public static void processCommandline() {
-    GameMap gameMap = GameMap.getGameMap();
-    gameMap.setCurrentContext(Context.MAIN_MENU);
-    display("Welcome to risk game", false);
-    display("Type help to see available commands", false);
-    while (true) {
-      String command = CLI.input.nextLine();
-      boolean commandStatus = gameMap.getCurrentContext().runCommand(gameMap, command.trim());
-      if (!commandStatus) {
-        display("Invalid command, use help to check the list of available commands", false);
-      }
-    }
-  }
-
-  /**
-   * Returns the name of a phase.
-   *
-   * @param context the Context enum to get the name of the phase.
-   * @return the String with a user-friendly name.
-   */
-  public static String getPhaseName(Context context) {
-    switch (context) {
-      case GAME_ATTACK:
-        return "Attack Phase";
-      case GAME_FORTIFY:
-        return "Fortify Phase";
-      case GAME_REINFORCE:
-        return "Reinforcement Phase";
-      case GAME_SETUP:
-        return "Setup Phase";
-      default:
-        return "Game not started...";
-    }
   }
 
   /**
