@@ -8,6 +8,7 @@ import utils.CLI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -47,6 +48,10 @@ public class BattleController {
      * The defending player.
      */
     private Player defendingPlayer;
+  /**
+   * The attacking player.
+   */
+  private Player attackingPlayer;
   /** An instance of the Game Map. */
   private GameMap gameMap;
 
@@ -79,6 +84,7 @@ public class BattleController {
     if (!command.contains("-allout")) {
       numOfDiceAttacker = Integer.parseInt(commandSplit[3]);
     }
+    attackingPlayer = gameMap.getCurrentPlayer();
     defendingPlayer = gameMap.getPlayersList().stream().filter(player -> player.getStrategy().getPlayerName().equals(defendingCountry.getOwnerName())).findFirst().get();
     defenderName = defendingPlayer.getStrategy().getPlayerName();
     isAllOutEnabled = command.contains("-allout");
@@ -307,6 +313,14 @@ public class BattleController {
   public int getNumOfArmiesToMoveFromAttacker() {
     if (isNoInputEnabled) {
       isNoInputEnabled = false;
+      Predicate<Integer> validateNumOfArmiesToMove = (armies) -> armies > numOfDiceAttacker && armies <= attackingCountry.getNumberOfArmies();
+      if (!(attackingPlayer.getStrategy() instanceof PlayerHuman)) {
+        // TODO handle attackmove for each strategy
+        // Attack
+        if (validateNumOfArmiesToMove.test(attackingCountry.getNumberOfArmies() / 2)) {
+          numOfArmiesToMove = attackingCountry.getNumberOfArmies() / 2;
+        } else numOfArmiesToMove = numOfDiceAttacker;
+      }
       return numOfArmiesToMove;
     }
     while (true) {

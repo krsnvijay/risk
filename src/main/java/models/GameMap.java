@@ -54,13 +54,17 @@ public class GameMap extends Observable {
   /**
    * The constructor for the GameMap.
    */
-  private GameMap() {
+  public GameMap() {
     super();
     this.borders = new HashMap<>();
     this.fileSectionData = new ArrayList<>();
     this.countries = new HashMap<>();
     this.continents = new HashMap<>();
     this.fileName = "";
+  }
+
+  public static int getCurrentPlayerIndex() {
+    return currentPlayerIndex;
   }
 
   /**

@@ -58,7 +58,8 @@ public enum Command {
   DEFEND("^defend (\\d+)$", null, "defend <numOfDice>"),
   ATTACK_MOVE("^attackmove (\\d+)$", null, "attackmove <armyCount>"),
   SHOW_MAP("^showmap$", EditorController::processShowMapCommand, "showmap"),
-  SHOW_MAP_OWNERSHIP("^showmap$", GameController::processShowMapCommand, "showmap");
+  SHOW_MAP_OWNERSHIP("^showmap$", GameController::processShowMapCommand, "showmap"),
+  SAVE_GAME("^savegame (.+)$", GameController::processSaveGameCommand, "savegame <fileName>");
   String regex;
   BiPredicate<GameMap, String> operation;
   String usage;

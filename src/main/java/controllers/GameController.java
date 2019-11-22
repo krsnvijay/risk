@@ -5,6 +5,8 @@ import models.Country;
 import models.GameMap;
 import models.player.Player;
 import models.player.PlayerHuman;
+import utils.GameStateDirector;
+import utils.RiskGameStateBuilder;
 
 import java.util.ArrayList;
 
@@ -34,6 +36,22 @@ public class GameController {
     } else {
       return false;
     }
+  }
+
+  public static boolean processSaveGameCommand(GameMap gameMap, String command) {
+    String fileLocation = command.split(" ", 2)[1];
+    RiskGameStateBuilder riskGameStateBuilder = new RiskGameStateBuilder();
+    GameStateDirector gameStateDirector = new GameStateDirector();
+    gameStateDirector.setBuilder(riskGameStateBuilder);
+    gameStateDirector.constructGameState();
+    try {
+      return gameStateDirector.saveState(fileLocation);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      e.printStackTrace();
+      return false;
+    }
+
   }
 
   /**
