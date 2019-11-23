@@ -1,6 +1,7 @@
 package models;
 
 import models.player.Player;
+import models.player.PlayerRandom;
 import org.junit.Before;
 import org.junit.Test;
 import utils.DominationMapParser;
@@ -11,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -83,8 +87,35 @@ public class PlayerRandomTest {
     GameMap.setRandomGenerator(23);
     player_1.getStrategy().reinforce(gameMap, reinforcedCountry.getName(), numOfArmiesToReinforce);
     assertEquals(originalArmyCount + numOfArmiesToReinforce, reinforcedCountry.getNumberOfArmies());
+  }
+
+  @Test
+  public void attackTest() {
+    PlayerRandom player_1 = new PlayerRandom(PLAYER_1);
+    Random randomGenerator = new Random(42);
+    GameMap.setRandomGenerator(42);
+    String result = player_1.randomAttack(gameMap);
+    assertThat(result, not(containsString("-noattack")));
+    result = player_1.randomAttack(gameMap);
+    assertThat(result, containsString("-noattack"));
 
 
   }
 
+  @Test
+  public void fortifyTest() {
+    ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
+    PlayerRandom player_1 = new PlayerRandom(PLAYER_1);
+    Random randomGenerator = new Random(42);
+    GameMap.setRandomGenerator(42);
+    Country fortifyFromCountry = countries.get(randomGenerator.nextInt(countries.size()));
+    int originalArmy = fortifyFromCountry.getNumberOfArmies();
+    Country fortifyToCountry = countries.get(randomGenerator.nextInt(countries.size()));
+    randomGenerator = new Random(42);
+    GameMap.setRandomGenerator(42);
+    int fortifyArmies = randomGenerator.nextInt();
+//      player_1.fortify(gameMap,fortifyFromCountry, fortifyToCountry,fortifyArmies);
+    int resultArmies = fortifyFromCountry.getNumberOfArmies();
+    assertEquals(fortifyArmies, originalArmy - resultArmies);
+  }
 }
