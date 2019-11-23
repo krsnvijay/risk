@@ -403,6 +403,7 @@ public class GameMap extends Observable {
    * @return boolean to indicate status
    */
   public boolean removeGamePlayer(String playerName) {
+    Player current_player = getCurrentPlayer();
     Optional<Player> p1 =
         playersList.stream()
             .filter(player -> player.getStrategy().getPlayerName().equals(playerName))
@@ -410,6 +411,7 @@ public class GameMap extends Observable {
 
     if (p1.isPresent()) {
       playersList.remove(p1.get());
+      currentPlayerIndex = playersList.indexOf(current_player);
       return true;
     }
     return false;

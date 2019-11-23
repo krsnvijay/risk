@@ -1,6 +1,7 @@
 package models.player;
 
 import controllers.BattleController;
+import controllers.GameController;
 import models.Card;
 import models.Country;
 import models.GameMap;
@@ -36,7 +37,6 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
     this.setPlayerName(name);
   }
 
-
   /**
    * Update the CardExchangeView with the context
    *
@@ -53,18 +53,40 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
    * @return the command by the random player
    */
   public String randomAttack(GameMap gameMap) {
-    ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
-    Country attackFromCountry = countries.get(randomGenerator.nextInt(countries.size()));
-    ArrayList<String> attackToCountries =
-        new ArrayList<>(gameMap.getBorders().get(attackFromCountry.getName()));
-    String attackToCountry =
-        attackToCountries.get(randomGenerator.nextInt(attackToCountries.size()));
     boolean continueAttack = randomGenerator.nextBoolean();
-    String attackCommand = null;
-    if (continueAttack)
+    if(!continueAttack) {
+      return "attack -noattack";
+    }
+
+    ArrayList<Country> countries =
+        Player.getCountriesByOwnership(playerName, gameMap).stream()
+            .filter(c -> c.getNumberOfArmies() > 1)
+            .collect(Collectors.toCollection(ArrayList::new));
+    if(countries.isEmpty()) {
+      return "attack -noattack";
+    }
+    Country attackFromCountry = countries.get(randomGenerator.nextInt(countries.size()));
+    ArrayList<String> attackToCountriesNames =
+        new ArrayList<>(gameMap.getBorders().get(attackFromCountry.getName()));
+    ArrayList<Country> attackToCountries =
+        attackToCountriesNames.stream()
+            .map(gameMap.getCountries()::get)
+            .filter(c -> !c.getOwnerName().equals(playerName))
+            .collect(Collectors.toCollection(ArrayList::new));
+    if(attackToCountries.isEmpty()) {
+      return "attack -noattack";
+    }
+    Country attackToCountry =
+        attackToCountries.get(randomGenerator.nextInt(attackToCountries.size()));
+    String attackCommand;
+    if (!attackToCountries.isEmpty() && attackToCountry != null) {
       attackCommand =
-          String.format("attack %s %s -allout", attackFromCountry.getName(), attackToCountry);
-    else attackCommand = "attack -noattack";
+          String.format(
+              "attack %s %s -allout", attackFromCountry.getName(), attackToCountry.getName());
+    }
+    else {
+      attackCommand = "attack -noattack";
+    }
     return attackCommand;
   }
 
@@ -77,12 +99,18 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
    */
   @Override
   public boolean attack(GameMap gameMap, String command) {
-    String attackCommand = null;
-    do {
+    String attackCommand = randomAttack(gameMap);
+    while (!attackCommand.contains("-noattack")) {
+      if (GameController.validateAttack(gameMap, attackCommand)) {
+        display(attackCommand, true);
+        BattleController battleController = new BattleController(gameMap, attackCommand);
+        battleController.setNoInputEnabled(true);
+        battleController.startBattle();
+      } else {
+        display("Invalid command", false);
+      }
       attackCommand = randomAttack(gameMap);
-      BattleController battleController = new BattleController(gameMap, attackCommand);
-      battleController.startBattle();
-    } while (!attackCommand.contains("-noattack"));
+    }
     return true;
   }
 
