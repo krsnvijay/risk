@@ -1,6 +1,7 @@
 package models.player;
 
 import controllers.BattleController;
+import controllers.GameController;
 import models.Card;
 import models.Country;
 import models.GameMap;
@@ -34,32 +35,36 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
     super.addObserver(object);
   }
 
-  private Map.Entry<String, Country> getStrongestCountryAttackReinforce(GameMap gameMap) {
+  private Map.Entry<String, Country> getStrongestCountryAttackReinforce(
+      GameMap gameMap, String op) {
     ArrayList<Country> countriesOwnedByPlayer =
         Player.getCountriesByOwnership(this.getPlayerName(), gameMap);
-    countriesOwnedByPlayer =
-        countriesOwnedByPlayer.stream()
-            .sorted(Comparator.comparingInt(Country::getNumberOfArmies).reversed())
-            .collect(toCollection(ArrayList::new));
-    Map.Entry<String, Country> resEntry = null;
-    for (Country c : countriesOwnedByPlayer) {
-      boolean noOpponentNeighbor =
-          gameMap.getBorders().get(c.getName()).stream()
-                  .filter(
-                      neighbor ->
-                          !gameMap
-                              .getCountries()
-                              .get(neighbor)
-                              .getOwnerName()
-                              .equals(this.playerName))
-                  .count()
-              == 0;
-      if (!noOpponentNeighbor) {
-        resEntry = new AbstractMap.SimpleEntry<String, Country>(c.getName(), c);
-        break;
-      }
+
+    if (op.equals("attack")) {
+      countriesOwnedByPlayer =
+          countriesOwnedByPlayer.stream()
+              .filter(c -> c.getNumberOfArmies() > 1)
+              .sorted(Comparator.comparingInt(Country::getNumberOfArmies).reversed())
+              .collect(toCollection(ArrayList::new));
+    } else {
+      countriesOwnedByPlayer =
+          countriesOwnedByPlayer.stream()
+              .sorted(Comparator.comparingInt(Country::getNumberOfArmies).reversed())
+              .collect(toCollection(ArrayList::new));
     }
-    return resEntry;
+
+    Optional<Country> resEntry =
+        countriesOwnedByPlayer.stream()
+            .filter(
+                country ->
+                    !gameMap.getBorders().get(country.getName()).stream()
+                        .map(gameMap.getCountries()::get)
+                        .allMatch(neighbor -> neighbor.getOwnerName().equals(this.playerName)))
+            .findFirst();
+
+    if (resEntry.isPresent())
+      return new AbstractMap.SimpleEntry<>(resEntry.get().getName(), resEntry.get());
+    else return null;
   }
 
   private Map.Entry<String, Country> getStrongestCountryFortify(GameMap gameMap) {
@@ -73,15 +78,9 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
     for (Country c : countriesOwnedByPlayer) {
       boolean noOwnedNeighbor =
           gameMap.getBorders().get(c.getName()).stream()
-                  .filter(
-                      neighbor ->
-                          gameMap
-                              .getCountries()
-                              .get(neighbor)
-                              .getOwnerName()
-                              .equals(this.playerName))
-                  .count()
-              == 0;
+              .noneMatch(
+                  neighbor ->
+                      gameMap.getCountries().get(neighbor).getOwnerName().equals(this.playerName));
       if (!noOwnedNeighbor) {
         resEntry = new AbstractMap.SimpleEntry<String, Country>(c.getName(), c);
         break;
@@ -90,10 +89,18 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
     return resEntry;
   }
 
-  private void attackUtil(GameMap gameMap) {
-    Map.Entry<String, Country> countryWithMaxArmies = getStrongestCountryAttackReinforce(gameMap);
+  private void attackUtil(GameMap gameMap, Map.Entry<String, Country> countryWithMaxArmies) {
+    if (countryWithMaxArmies == null) {
+      display("No strongest country left to attack", true);
+      GameController.assignedCard = false;
+      GameController.changeToNextPhase(gameMap);
+      return;
+    }
     String countryToAttack =
         gameMap.getBorders().get(countryWithMaxArmies.getKey()).stream()
+            .filter(
+                neighbor ->
+                    !gameMap.getCountries().get(neighbor).getOwnerName().equals(this.playerName))
             .reduce(
                 null,
                 (minArmiesNeighbor, country) -> {
@@ -107,15 +114,20 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
 
     String command =
         String.format("attack %s %s -allout", countryWithMaxArmies.getKey(), countryToAttack);
-    BattleController battleController = new BattleController(gameMap, command);
-    battleController.startBattle();
+    if (GameController.validateAttack(gameMap, command)) {
+      BattleController battleController = new BattleController(gameMap, command);
+      battleController.setNoInputEnabled(true);
+      battleController.startBattle();
+    }
   }
 
   @Override
   public boolean attack(GameMap gameMap, String blankCommand) {
     // recursively with strongest valid country until he can't attack
     while (gameMap.getCurrentContext().name().contains("ATTACK")) {
-      attackUtil(gameMap);
+      Map.Entry<String, Country> countryWithMaxArmies =
+          getStrongestCountryAttackReinforce(gameMap, "attack");
+      attackUtil(gameMap, countryWithMaxArmies);
     }
     return true;
   }
@@ -126,12 +138,17 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
     // check if cardExchange is possible
     // perform cardExchange and then reinforce
     PlayerAggressive currPlayer = (PlayerAggressive) gameMap.getCurrentPlayer().getStrategy();
-    if (cardsInHand.size() > 3) {
+    if (cardsInHand.size() >= 5) {
       currPlayer.exchangeCardsForArmies(Player.getCardExchangeIndices(this.getCardsInHand()));
     }
     int armiesToReinforce = currPlayer.getNumberOfArmies();
-    return gameMap.placeArmy(
-        getStrongestCountryAttackReinforce(gameMap).getKey(), armiesToReinforce);
+    String countryToReinforce = getStrongestCountryAttackReinforce(gameMap, "reinforce").getKey();
+    gameMap.placeArmy(countryToReinforce, armiesToReinforce);
+    display(
+        String.format(
+            "%s reinforced %s with %d armies", currPlayer, countryToReinforce, armiesToReinforce),
+        true);
+    return true;
   }
 
   @Override
@@ -140,44 +157,77 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
     // check if fortify possible
     // aggregate armies in this country FROM the next strongest country
     boolean result = false;
-    String currPlayerName = gameMap.getCurrentPlayer().getStrategy().getPlayerName();
-    Country fCountry = findStrongestAlongDFSPath(gameMap, currPlayerName);
-    if (fCountry == null) return true; // "fortify -none"
 
-    String fCountryStr = fCountry.getName();
-    int armiesToMove = fCountry.getNumberOfArmies() - 1;
-    if (gameMap.getCountries().get(fCountryStr).removeArmies(armiesToMove)) {
-      gameMap.getCountries().get(toCountry).addArmies(armiesToMove);
+    String currPlayerName = gameMap.getCurrentPlayer().getStrategy().getPlayerName();
+    Map.Entry<String, Country> tCountryEntry = getStrongestCountryFortify(gameMap);
+    Country tCountry = tCountryEntry == null ? null : tCountryEntry.getValue();
+    Country fCountry;
+    String fCountryStr = null;
+    String tCountryStr = null;
+    if (tCountry != null) {
+      fCountry = findStrongestAlongDFSPath(gameMap, currPlayerName, tCountry.getName());
+      if (fCountry == null) {
+        display(String.format("%s chose not to fortify", currPlayerName), true);
+        return true;
+      }
+      fCountryStr = fCountry.getName();
+      tCountryStr = tCountry.getName();
+    }
+
+    if (fCountryStr != null && tCountryStr != null) {
+      int fCountryArmies = gameMap.getCountries().get(fCountryStr).getNumberOfArmies();
+      int armiesToMove = 0;
+
+      if (fCountryArmies < 2) {
+        display(String.format("%s chose not to fortify", currPlayerName), true);
+        return true;
+      } else {
+        armiesToMove = gameMap.getCountries().get(fCountryStr).getNumberOfArmies() - 1;
+        boolean isArmyRemoved = gameMap.getCountries().get(fCountryStr).removeArmies(armiesToMove);
+        if (isArmyRemoved) {
+          gameMap.getCountries().get(tCountryStr).addArmies(armiesToMove);
+          result = true;
+        }
+      }
+
+      if (result) {
+        this.turnCount++;
+        display(
+            String.format(
+                "%s Fortified %s with %d army(s) from %s",
+                currPlayerName, tCountryStr, armiesToMove, fCountryStr),
+            true);
+      }
+    } else {
+      display(String.format("%s chose not to fortify", currPlayerName), true);
       result = true;
     }
-    if (result) this.turnCount++;
-
     return result;
   }
 
-  private Country findStrongestAlongDFSPath(GameMap gameMap, String currPlayerName) {
+  private Country findStrongestAlongDFSPath(
+      GameMap gameMap, String currPlayerName, String maxCountry) {
     ArrayList<Country> countriesOwnedByPlayer =
         Player.getCountriesByOwnership(currPlayerName, gameMap);
     ArrayList<String> countriesOwnedByPlayerStrings =
         countriesOwnedByPlayer.stream().map(Country::getName).collect(toCollection(ArrayList::new));
 
+    Map<String, Set<String>> copyMapBorders = new HashMap<>(gameMap.getBorders());
     Map<String, Set<String>> filteredGameMap =
-        gameMap.getBorders().entrySet().stream()
+        copyMapBorders.entrySet().stream()
             .filter(entry -> countriesOwnedByPlayerStrings.contains(entry.getKey()))
             .map(
-                entry -> {
-                  // perform side-effect
-                  entry.setValue(
-                      entry.getValue().stream()
-                          .filter(countriesOwnedByPlayerStrings::contains)
-                          .collect(toSet()));
-                  return entry;
-                })
+                entry ->
+                    new AbstractMap.SimpleEntry<>(
+                        entry.getKey(),
+                        entry.getValue().stream()
+                            .filter(countriesOwnedByPlayerStrings::contains)
+                            .collect(toSet())))
             .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-    String maxCountry = getStrongestCountryFortify(gameMap).getKey();
     ArrayList<String> DFSNeighbors =
         new ArrayList<>(DFSUtil(gameMap, filteredGameMap, new HashSet<>(), maxCountry));
+    DFSNeighbors.remove(maxCountry);
     String fromFortifyCountry =
         DFSNeighbors.isEmpty() ? "none" : getFromFortifyCountry(gameMap, DFSNeighbors);
 
@@ -191,15 +241,15 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
       Set<String> visited,
       String start) {
     visited.add(start);
-    Map<String, Country> countryList = gameMap.getCountries();
     for (String neighbor : filteredGameMap.get(start)) {
-      DFSUtil(gameMap, filteredGameMap, visited, neighbor);
+      if (!visited.contains(neighbor)) {
+        DFSUtil(gameMap, filteredGameMap, visited, neighbor);
+      }
     }
     return visited;
   }
 
   private String getFromFortifyCountry(GameMap gameMap, ArrayList<String> DFSNeighbors) {
-    DFSNeighbors.remove(0);
     ArrayList<Country> sortedReverse =
         DFSNeighbors.stream()
             .map(neighbor -> gameMap.getCountries().get(neighbor))
@@ -352,12 +402,12 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
           .getDeck()
           .addAll(
               cardsToAddToDeck); // add the exchanged cards to deck after removing from player hand
-
+      display("EXCHANGING CARDS!", true);
       display("Acquired " + armiesAcquired + " through card exchange", false);
     } else {
       display(
           "The set provided is not valid. Valid set: 3 cards of same type or 3 cards of different type",
-          false);
+          true);
     }
   }
 }

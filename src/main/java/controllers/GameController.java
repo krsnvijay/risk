@@ -129,7 +129,7 @@ public class GameController {
     String[] commandSplit = command.split(" ");
     String countryName = commandSplit[1];
     int armiesToPlace = Integer.parseInt(commandSplit[2]);
-    boolean result = currentPlayer.getStrategy().reinforce(gameMap, countryName, armiesToPlace);
+    boolean result = new PlayerHuman(null).reinforce(gameMap, countryName, armiesToPlace);
     if (result) {
       display(
           String.format(
@@ -230,7 +230,7 @@ public class GameController {
     String toCountry = commandSplit[2];
     int armyToMove = Integer.parseInt(commandSplit[3]);
     boolean result =
-        currentPlayer.getStrategy().fortify(gameMap, fromCountry, toCountry, armyToMove);
+        new PlayerHuman(null).fortify(gameMap, fromCountry, toCountry, armyToMove);
     if (result) {
       display(
           String.format(
@@ -424,7 +424,7 @@ public class GameController {
             "%s owned by %s declared an attack on %s owned by %s",
             attackingCountry.getName(), attackerName, defendingCountry.getName(), defenderName),
         true);
-    return currentPlayer.getStrategy().attack(gameMap, command);
+    return new PlayerHuman(null).attack(gameMap, command);
   }
 
   /**
