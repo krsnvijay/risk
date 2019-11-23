@@ -12,6 +12,10 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
+/** test class to check the functionality of PlayerAggresive.java
+ * {@link PlayerAggressive}
+ * @author Siddharth Singh
+ */
 public class PlayerAggressiveTest {
   public static final String PLAYER_1 = "Player1";
   public static final String PLAYER_2 = "Player2";
@@ -28,7 +32,7 @@ public class PlayerAggressiveTest {
    */
   @Before
   public void setUp() throws Exception {
-    File riskMap = new File("src/test/resources/risk.map");
+    File riskMap = new File("src/test/resources/simple.map");
     MapParser mapParser = new DominationMapParser();
     gameMap = mapParser.loadMap(riskMap.getPath());
     reason = "";
