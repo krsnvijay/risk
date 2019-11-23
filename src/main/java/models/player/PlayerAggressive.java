@@ -18,7 +18,7 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
   /** Number of armies traded in for each set */
   private static int armiesTradedForSet = 0;
   /** This instance variable holds the name of the player. */
-  private String playerName = "Aggressor";
+  private String playerName;
   /** Stores the number of armies a player has. */
   private int numberOfArmies;
   /** Stores the cards currently held by the player. */

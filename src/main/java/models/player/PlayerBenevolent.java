@@ -1,5 +1,6 @@
 package models.player;
 
+import controllers.GameController;
 import models.Card;
 import models.Country;
 import models.GameMap;
@@ -22,7 +23,7 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
   /** Number of armies traded in for each set */
   private static int armiesTradedForSet = 0;
   /** This instance variable holds the name of the player. */
-  private String playerName = "Benevolent";
+  private String playerName;
   /** Stores the number of armies a player has. */
   private int numberOfArmies;
   /** Stores the cards currently held by the player. */
@@ -57,6 +58,7 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
    */
   @Override
   public boolean attack(GameMap gameMap, String command) {
+    GameController.performAttackNone(gameMap);
     return true;
   }
 
@@ -76,6 +78,8 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
     weakestCountry.ifPresent(
         c -> {
           gameMap.placeArmy(c.getName(), armiesToPlace);
+          display(String.format("%s reinforced by %s using %d armies.",
+              c.getName(), playerName, armiesToPlace), true);
         });
     if (cardsInHand.size() > 3) {
       this.exchangeCardsForArmies(Player.getCardExchangeIndices(this.getCardsInHand()));
@@ -112,13 +116,17 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
             Country target = strongestNeighbor.get();
             int halfTheArmies = (target.getNumberOfArmies() / 2);
 
-            if (halfTheArmies < 3) {
+            if (halfTheArmies == 0) {
               display(String.format("%s chose not to fortify", playerName), true);
+              this.turnCount++;
+              return;
             }
 
             boolean isArmyRemoved = target.removeArmies(halfTheArmies);
             if (isArmyRemoved) {
               weakest.addArmies(halfTheArmies);
+              display(String.format("%s fortified by %s using %d armies.",
+                  weakest.getName(), playerName, halfTheArmies), true);
             }
             this.turnCount++;
           }
@@ -271,7 +279,7 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
           .getDeck()
           .addAll(
               cardsToAddToDeck); // add the exchanged cards to deck after removing from player hand
-
+      display(String.format("%s exchanges 3 cards for armies.", playerName), true);
       display("Acquired " + armiesAcquired + " through card exchange", false);
     } else {
       display(

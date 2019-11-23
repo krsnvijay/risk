@@ -179,6 +179,13 @@ public class BattleController {
    */
   public boolean startBattle() {
     gameMap.setCurrentContext(Context.GAME_ATTACK_BATTLE_DEFENDER);
+    if(isNoInputEnabled) {
+      display(
+          String.format(
+              "%s owned by %s declared an attack on %s owned by %s",
+              attackingCountry.getName(), attackerName, defendingCountry.getName(), defenderName),
+          true);
+    }
     if (isAllOutEnabled) {
       display("Attacker enabled allout, will always choose max dice", true);
       while (gameMap.getCurrentContext() != Context.GAME_ATTACK
