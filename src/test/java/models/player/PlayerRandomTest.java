@@ -1,5 +1,8 @@
-package models;
+package models.player;
 
+import models.Context;
+import models.Country;
+import models.GameMap;
 import models.player.Player;
 import models.player.PlayerRandom;
 import org.junit.Before;

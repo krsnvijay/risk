@@ -1,6 +1,6 @@
 import controllers.*;
 import models.GameMapTest;
-import models.PlayerTest;
+import models.player.PlayerTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import utils.MapParserTest;

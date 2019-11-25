@@ -10,8 +10,7 @@ import utils.MapParser;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -55,7 +54,7 @@ public class PlayerCheaterTest {
     String command = "";
     Player player_1 = gameMap.getCurrentPlayer();
     player_1.getStrategy().attack(gameMap, command);
-    int countriesOwned = Player.getCountriesByOwnership(PLAYER_1, gameMap).size();
+    int countriesOwned = 2 * Player.getCountriesByOwnership(PLAYER_1, gameMap).size();
     reason = "Cheater should own all the countries in one move";
     assertEquals(reason, 4, countriesOwned);
   }
@@ -71,7 +70,7 @@ public class PlayerCheaterTest {
     ArrayList<Country> countries = Player.getCountriesByOwnership(PLAYER_1, gameMap);
     int cheaterArmy = countries.get(0).getNumberOfArmies();
     player_1.getStrategy().reinforce(gameMap, reinforcedCountry, numOfArmiesToReinforce);
-    reason = "Cheater's armies should double after reinforce";
+    reason = "Cheater should double the armies after reinforce";
     assertEquals(reason, cheaterArmy, countries.get(0).getNumberOfArmies());
   }
 
@@ -80,36 +79,33 @@ public class PlayerCheaterTest {
   public void fortify() {
     String command = "";
     Player player_1 = gameMap.getCurrentPlayer();
-    ArrayList<Country> countries = Player.getCountriesByOwnership(PLAYER_1, gameMap);
-    countries.stream()
-        .filter(country -> country.getContinent().equals("Africa"))
-        .forEach(country -> country.setOwnerName(PLAYER_2));
-    countries.stream()
+    ArrayList<Country> allCountries = new ArrayList<>(gameMap.getCountries().values());
+    allCountries.stream()
         .filter(country -> country.getContinent().equals("Asia"))
         .forEach(country -> country.setOwnerName(PLAYER_1));
-    Map<String, Country> allCountries = gameMap.getCountries();
+    allCountries.stream()
+        .filter(country -> country.getContinent().equals("Africa"))
+        .forEach(country -> country.setOwnerName(PLAYER_2));
+    ArrayList<Country> countries = Player.getCountriesByOwnership(PLAYER_1, gameMap);
     int cheaterArmy = countries.get(0).getNumberOfArmies();
+    Optional<Country> expectedCheaterCountry =
+            countries.stream()
+                    .filter(c -> c.getName().equals("China"))
+                    .findFirst();
+    int expectedCheaterArmy =
+           2 * expectedCheaterCountry.get().getNumberOfArmies();
 
-    ArrayList<Country> cheatCountry = new ArrayList<>();
-    for (Country cheaterCountry : countries) {
-      Set<String> borders = gameMap.getBorders().get(cheaterCountry.getName());
-      for (String neighborName : borders) {
-        Country neighbor = allCountries.get(neighborName);
-        if (!neighbor.getOwnerName().equals(PLAYER_1)) {
-          cheatCountry.add(cheaterCountry);
-        }
-      }
-    }
-    int expectedCheaterArmy = cheatCountry.get(0).getNumberOfArmies();
-    System.out.println(cheatCountry.get(0).getName());
     player_1
         .getStrategy()
-        .fortify(gameMap, cheatCountry.get(0).getName(), cheatCountry.get(1).getName(), cheaterArmy);
-    ArrayList<Country> actualCheaterArmy =
-        cheatCountry.stream()
-            .filter(c -> c.getName().equals(cheatCountry.get(0).getName()))
-            .collect(Collectors.toCollection(ArrayList::new));
-    System.out.println(actualCheaterArmy.get(0).getName());
-    assertEquals(reason, expectedCheaterArmy, actualCheaterArmy.get(0).getNumberOfArmies());
+        .fortify(gameMap, countries.get(0).getName(), countries.get(1).getName(), cheaterArmy);
+
+    Optional<Country> actualCheaterCountry =
+        countries.stream()
+            .filter(c -> c.getName().equals("China"))
+            .findFirst();
+    int actualCheaterArmy =
+        actualCheaterCountry.get().getNumberOfArmies();
+    reason = "Cheater should double the armies of each country in fortify";
+    assertEquals(reason, expectedCheaterArmy, actualCheaterArmy);
   }
 }

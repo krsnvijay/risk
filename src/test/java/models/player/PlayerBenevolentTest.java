@@ -10,13 +10,14 @@ import utils.MapParser;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
+import java.util.Comparator;
+import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-/** test class to check the functionality of PlayerCheater.java
- * {@link PlayerBenevolent}
+/**
+ * test class to check the functionality of PlayerCheater.java {@link PlayerBenevolent}
+ *
  * @author Siddharth Singh
  */
 public class PlayerBenevolentTest {
@@ -44,31 +45,63 @@ public class PlayerBenevolentTest {
     gameMap.addGamePlayer(PLAYER_2, "human");
     gameMap.setCurrentContext(Context.GAME_SETUP);
     gameMap.gameSetup();
-    gameMap.placeAll();
     GameMap.setCurrentPlayerIndex(0);
   }
 
-  /**
-   * check if player reinforces the weakest country that
-   * belongs to Benevolent Player
-   */
+  /** check if player reinforces the weakest country that belongs to Benevolent Player */
   @Test
   public void reinforce() {
-    Map<String, Country> allCountries = gameMap.getCountries();
-    Collection<Country> countries = gameMap.getCountries().values();
+    Player player_1 = gameMap.getCurrentPlayer();
+    ArrayList<Country> countries = new ArrayList<>(gameMap.getCountries().values());
     countries.stream()
-            .filter(country -> country.getContinent().equals("Africa"))
-            .forEach(country -> country.setOwnerName(PLAYER_2));
+        .filter(country -> country.getContinent().equals("Asia"))
+        .forEach(country -> country.setOwnerName(PLAYER_1));
     countries.stream()
-            .filter(country -> country.getContinent().equals("Asia"))
-            .forEach(country -> country.setOwnerName(PLAYER_1));
-
+        .filter(country -> country.getContinent().equals("Africa"))
+        .forEach(country -> country.setOwnerName(PLAYER_2));
+    Optional<Country> weakestCountry =
+        countries.stream()
+            .min(Comparator.comparing(Country::getNumberOfArmies))
+            .filter(c -> c.getOwnerName().equals(PLAYER_1));
+    int originalArmyCount = weakestCountry.get().getNumberOfArmies();
+    int numOfArmiesToReinforce = Player.calculateReinforcements(gameMap);
+    player_1
+        .getStrategy()
+        .reinforce(gameMap, weakestCountry.get().getName(), numOfArmiesToReinforce);
+    reason = "Benevolent player should reinforce the weakest country only";
+    assertEquals(
+        reason,
+        originalArmyCount + numOfArmiesToReinforce,
+        weakestCountry.get().getNumberOfArmies());
   }
 
-  /**
-   * check if player fortifies the weakest country that
-   * belongs to Benevolent Player
-   */
+  /** check if player fortifies the weakest country that belongs to Benevolent Player */
   @Test
-  public void fortify() {}
+  public void fortify() {
+    Player player_2 = gameMap.getCurrentPlayer();
+    ArrayList<Country> countries = new ArrayList<>(gameMap.getCountries().values());
+    countries.stream()
+        .filter(country -> country.getContinent().equals("Asia"))
+        .forEach(country -> country.setOwnerName(PLAYER_1));
+    countries.stream()
+        .filter(country -> country.getContinent().equals("Africa"))
+        .forEach(country -> country.setOwnerName(PLAYER_2));
+    Optional<Country> weakestCountry =
+        countries.stream()
+            .min(Comparator.comparing(Country::getNumberOfArmies))
+            .filter(c -> c.getOwnerName().equals(PLAYER_1));
+    int originalArmy = weakestCountry.get().getNumberOfArmies();
+    Optional<Country> strongestCountry =
+        countries.stream()
+            .max(Comparator.comparing(Country::getNumberOfArmies))
+            .filter(c -> c.getOwnerName().equals(PLAYER_1));
+    strongestCountry.get().setNumberOfArmies(10);
+    player_2
+        .getStrategy()
+        .fortify(
+            gameMap, weakestCountry.get().getName(), weakestCountry.get().getName(), originalArmy);
+    int fortifyArmies = weakestCountry.get().getNumberOfArmies();
+    reason = "Benevolent player should fortify with 5 armies";
+    assertEquals(reason, 5, fortifyArmies);
+  }
 }
