@@ -62,11 +62,20 @@ public class GameMap extends Observable {
   /**
    * random Generator for the game
    */
+  /**
+   * number of turns in a game
+   */
+  public static int numberOfRounds = 0;
+  /**
+   * check if the game finishes
+   */
+  public static boolean isGameOver = false;
+  /**
+   * random Generator for the game
+   */
   private static Random randomGenerator = new Random();
 
-  /**
-   * The constructor for the GameMap.
-   */
+  /** The constructor for the GameMap. */
   public GameMap() {
     super();
     this.borders = new HashMap<>();
@@ -123,6 +132,12 @@ public class GameMap extends Observable {
       gameMap = new GameMap();
     }
     return gameMap;
+  }
+
+  public static void destroyGameMap() {
+    gameMap = null;
+    GameMap.numberOfRounds = 0;
+    isGameOver = false;
   }
 
   /**

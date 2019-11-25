@@ -3,11 +3,9 @@ package controllers;
 import models.Command;
 import models.Context;
 import models.GameMap;
-import models.player.Player;
 import utils.MapAdaptor;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import static views.ConsoleView.display;
@@ -105,7 +103,6 @@ public class MainController {
       String[] subCommandSplit = subCommand.split(" ");
       String subCommandType = subCommandSplit[0];
       String playerName = subCommandSplit[1];
-      ArrayList<Player> playersList = gameMap.getPlayersList();
       if (subCommandType.equals("add")) {
         String strategy = subCommandSplit[2];
         result = gameMap.addGamePlayer(playerName, strategy);

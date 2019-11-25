@@ -191,6 +191,9 @@ public class BattleController {
       while (gameMap.getCurrentContext() != Context.GAME_ATTACK
           && attackingCountry.getNumberOfArmies() > 1) {
         attemptAttack();
+        if (GameController.isTournament && GameMap.isGameOver) {
+          return true;
+        }
       }
     } else {
       attemptAttack();
@@ -200,6 +203,7 @@ public class BattleController {
 
     if (attackingCountry.getNumberOfArmies() == 1 && !isAttackPossible(attackerName, gameMap)) {
       display("Moving to next phase, No attack move possible", true);
+      GameController.assignedCard = false;
       GameController.changeToNextPhase(gameMap);
     }
     return true;
@@ -301,6 +305,9 @@ public class BattleController {
     for (boolean result : results) {
       if (result) {
         successfulAttack();
+        if (GameController.isTournament && GameMap.isGameOver) {
+          return;
+        }
       } else {
         successfulDefence();
       }
@@ -463,7 +470,11 @@ public class BattleController {
       if (Player.checkPlayerOwnsAllTheCountries(attackerName, gameMap)) {
         // Player Won the Game, Exit
         display(String.format("%s(attacker) won the game!", attackerName), true);
-        System.exit(0);
+        GameMap.isGameOver = true;
+        if (GameController.isTournament) {
+          return;
+        } else
+          System.exit(0);
       } else {
         // Change to initial attack phase where player can choose to battle again
         display("Ending battle, choose another attack move", true);

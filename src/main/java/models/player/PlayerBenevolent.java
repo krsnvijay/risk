@@ -7,7 +7,6 @@ import models.GameMap;
 import views.CardExchangeView;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static views.ConsoleView.display;
 
@@ -24,8 +23,6 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
   private int numberOfArmies;
   /** Stores the cards currently held by the player. */
   private ArrayList<Card> cardsInHand = new ArrayList<>();
-  /** How many turns have elapsed */
-  private int turnCount = 0;
 
   /**
    * The constructor for the Benevolent strategy class.
@@ -114,7 +111,6 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
 
             if (halfTheArmies == 0) {
               display(String.format("%s chose not to fortify", playerName), true);
-              this.turnCount++;
               return;
             }
 
@@ -124,7 +120,6 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
               display(String.format("%s fortified by %s using %d armies.",
                   weakest.getName(), playerName, halfTheArmies), true);
             }
-            this.turnCount++;
           }
         });
     return true;

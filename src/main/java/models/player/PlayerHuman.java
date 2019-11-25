@@ -5,10 +5,9 @@ import models.Card;
 import models.GameMap;
 import views.CardExchangeView;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static views.ConsoleView.display;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Observable;
 
 /**
  * This is the Player class which handles every player.
@@ -25,8 +24,6 @@ public class PlayerHuman extends Observable implements PlayerStrategy {
   private int numberOfArmies;
   /** Stores the cards currently held by the player. */
   private ArrayList<Card> cardsInHand = new ArrayList<>();
-  /** How many turns have elapsed */
-  private int turnCount = 0;
 
   /**
    * This constructor initializes the class.
@@ -149,7 +146,6 @@ public class PlayerHuman extends Observable implements PlayerStrategy {
       gameMap.getCountries().get(toCountry).addArmies(armyToMove);
       result = true;
     }
-    if (result) this.turnCount++;
     return result;
   }
 

@@ -1,11 +1,17 @@
 package models.player;
 
+import controllers.GameController;
 import models.Card;
 import models.Country;
 import models.GameMap;
 import views.CardExchangeView;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Set;
 import java.util.stream.Collectors;
+
 import static views.ConsoleView.display;
 
 /**
@@ -27,6 +33,7 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
 
   /**
    * The constructor for the Cheater strategy class.
+   *
    * @param name the name of the player.
    */
   public PlayerCheater(String name) {
@@ -35,6 +42,7 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
 
   /**
    * Registers this class as an observer
+   *
    * @param object the CardExchangeView to register with.
    */
   public void addObserver(CardExchangeView object) {
@@ -51,21 +59,48 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
   @Override
   public boolean attack(GameMap gameMap, String command) {
     display(String.format("%s attacks and captures all opposing neighbours.", playerName), true);
-    ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap).stream()
-        .filter(c -> c.getNumberOfArmies() > 2).collect(Collectors.toCollection(ArrayList::new));
+    playerName = gameMap.getCurrentPlayer().getStrategy().getPlayerName();
+    ArrayList<Country> countries =
+        Player.getCountriesByOwnership(playerName, gameMap).stream()
+            .filter(c -> c.getNumberOfArmies() > 2)
+            .collect(Collectors.toCollection(ArrayList::new));
     Map<String, Country> allCountries = gameMap.getCountries();
-    for(Country cheaterCountry: countries) {
+    for (Country cheaterCountry : countries) {
       Set<String> borders = gameMap.getBorders().get(cheaterCountry.getName());
-      for(String neighborName : borders) {
+      for (String neighborName : borders) {
         Country neighbor = allCountries.get(neighborName);
-        if(!neighbor.getOwnerName().equals(playerName)) {
+        if (!neighbor.getOwnerName().equals(playerName)) {
           neighbor.setOwnerName(playerName);
-          neighbor.setNumberOfArmies(cheaterCountry.getNumberOfArmies()/2);
-          cheaterCountry.removeArmies(cheaterCountry.getNumberOfArmies()/2);
+          neighbor.setNumberOfArmies(cheaterCountry.getNumberOfArmies() / 2);
+          cheaterCountry.removeArmies(cheaterCountry.getNumberOfArmies() / 2);
         }
-        if(cheaterCountry.getNumberOfArmies() == 1) break;
+        if (cheaterCountry.getNumberOfArmies() == 1) break;
       }
     }
+    if (!GameController.assignedCard) {
+      gameMap.assignCard();
+      GameController.assignedCard = true;
+      display(
+          playerName
+              + " currently has "
+              + gameMap.getCurrentPlayer().getStrategy().getCardsInHand().stream()
+              .map(Card::getName)
+              .collect(Collectors.joining(" "))
+              + " card(s).",
+          false);
+    }
+    GameController.assignedCard = false;
+    if (allCountries.entrySet().stream()
+        .allMatch(c -> c.getValue().getOwnerName().equals(playerName))) {
+      display(String.format("%s(attacker) won the game!", playerName), true);
+      if (GameController.isTournament) {
+        GameMap.isGameOver = true;
+        return true;
+      } else {
+        System.exit(0);
+      }
+    }
+
     return true;
   }
 
@@ -79,18 +114,21 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
    */
   @Override
   public boolean reinforce(GameMap gameMap, String countryToPlace, int armiesToPlace) {
-    display(String.format("%s Reinforces, all owned countries have double the armies now.", playerName), true);
+    display(
+        String.format("%s Reinforces, all owned countries have double the armies now.", playerName),
+        true);
+    if (cardsInHand.size() >= 5) {
+      this.exchangeCardsForArmies(Player.getCardExchangeIndices(this.getCardsInHand()));
+    }
     ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
     gameMap.getCurrentPlayer().getStrategy().setNumberOfArmies(0);
     countries.forEach(country -> country.addArmies(country.getNumberOfArmies()));
-    if(cardsInHand.size() > 3) {
-      this.exchangeCardsForArmies(Player.getCardExchangeIndices(this.getCardsInHand()));
-    }
     return true;
   }
 
   /**
-   * The Cheater's fortify will double armies on all countries with neighbors belonging to other players.
+   * The Cheater's fortify will double armies on all countries with neighbors belonging to other
+   * players.
    *
    * @param gameMap the GameMap instance
    * @param fromCountry the country to move from
@@ -100,20 +138,22 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
    */
   @Override
   public boolean fortify(GameMap gameMap, String fromCountry, String toCountry, int armyToMove) {
-    display(String.format("%s Fortifies, all countries with opposing neighbors " +
-        "have double the armies now.", playerName), true);
+    display(
+        String.format(
+            "%s Fortifies, all countries with opposing neighbors " + "have double the armies now.",
+            playerName),
+        true);
     ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
     Map<String, Country> allCountries = gameMap.getCountries();
-    for(Country cheaterCountry: countries) {
+    for (Country cheaterCountry : countries) {
       Set<String> borders = gameMap.getBorders().get(cheaterCountry.getName());
-      for(String neighborName : borders) {
+      for (String neighborName : borders) {
         Country neighbor = allCountries.get(neighborName);
-        if(!neighbor.getOwnerName().equals(playerName)) {
+        if (!neighbor.getOwnerName().equals(playerName)) {
           cheaterCountry.addArmies(cheaterCountry.getNumberOfArmies());
         }
       }
     }
-    turnCount++;
     return true;
   }
 
@@ -203,6 +243,5 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
   public void subtractArmies(int count) {
     this.numberOfArmies -= count;
   }
-
 
 }

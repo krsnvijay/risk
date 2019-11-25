@@ -20,8 +20,6 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
   private int numberOfArmies;
   /** Stores the cards currently held by the player. */
   private ArrayList<Card> cardsInHand = new ArrayList<>();
-  /** How many turns have elapsed */
-  private int turnCount = 0;
 
   public PlayerAggressive(String name) {
     this.setPlayerName(name);
@@ -60,7 +58,12 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
 
     if (resEntry.isPresent())
       return new AbstractMap.SimpleEntry<>(resEntry.get().getName(), resEntry.get());
-    else return null;
+    else {
+      // SHOULD NEVER HAPPEN
+      System.out.println(countriesOwnedByPlayer.stream().map(Country::getName).collect(joining(" ")));
+      //countriesOwnedByPlayer.forEach(c -> { System.out.println(gameMap.getBorders().get(c.getName()) + " " + gameMap.getBorders().get(c.getOwnerName())); });
+      return null;
+    }
   }
 
   private Map.Entry<String, Country> getStrongestCountryFortify(GameMap gameMap) {
@@ -121,6 +124,9 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
   public boolean attack(GameMap gameMap, String blankCommand) {
     // recursively with strongest valid country until he can't attack
     while (gameMap.getCurrentContext().name().contains("ATTACK")) {
+      if (GameController.isTournament && GameMap.isGameOver) {
+        return true;
+      }
       Map.Entry<String, Country> countryWithMaxArmies =
           getStrongestCountryAttackReinforce(gameMap, "attack");
       attackUtil(gameMap, countryWithMaxArmies);
@@ -187,7 +193,6 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
       }
 
       if (result) {
-        this.turnCount++;
         display(
             String.format(
                 "%s Fortified %s with %d army(s) from %s",

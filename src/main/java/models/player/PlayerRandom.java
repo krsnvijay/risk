@@ -7,14 +7,23 @@ import models.Country;
 import models.GameMap;
 import views.CardExchangeView;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toCollection;
 import static views.ConsoleView.display;
 
 public class PlayerRandom extends Observable implements PlayerStrategy {
-
+  /**
+   * Maintains the number of sets traded in game
+   */
+  private static int numberOfTradedSet = 0;
+  /**
+   * Number of armies traded in for each set
+   */
+  private static int armiesTradedForSet = 0;
   /**
    * This instance variable holds the name of the player.
    */
@@ -27,10 +36,7 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
    * Stores the cards currently held by the player.
    */
   private ArrayList<Card> cardsInHand = new ArrayList<>();
-  /**
-   * How many turns have elapsed
-   */
-  private int turnCount = 0;
+
   /**
    * Generate random numbers for the player.
    */
@@ -113,6 +119,9 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
         BattleController battleController = new BattleController(gameMap, attackCommand);
         battleController.setNoInputEnabled(true);
         battleController.startBattle();
+        if (GameController.isTournament && GameMap.isGameOver) {
+          return true;
+        }
       } else {
         display("Invalid command", false);
       }
@@ -139,7 +148,7 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
             "%s has placed %d army(s) in %s",
             playerName, armiesToPlace, reinforcedCountry.getName()),
         true);
-    if (cardsInHand.size() > 3) {
+    if (cardsInHand.size() >= 5) {
       this.exchangeCardsForArmies(Player.getCardExchangeIndices(getCardsInHand()));
     }
     return true;
@@ -190,7 +199,6 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
     return String.format("fortify %s %s %d", fortifyFromCountry.getName(), fortifyToCountry.getName(), fortifyArmies);
 
   }
-
 
 
   /**

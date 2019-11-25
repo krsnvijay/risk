@@ -23,6 +23,8 @@ public class GameController {
   /** This boolean is false if a card hasn't been assigned to the current player. */
   public static boolean assignedCard = false;
 
+  public static boolean isTournament = false;
+
   /**
    * Processes reinforce command from the cli
    *
@@ -310,8 +312,16 @@ public class GameController {
       currentPlayer.getStrategy().reinforce(gameMap, null, currentPlayer.getStrategy().getNumberOfArmies());
       gameMap.setCurrentContext(Context.GAME_ATTACK);
       currentPlayer.getStrategy().attack(gameMap, null);
+      if (GameController.isTournament && GameMap.isGameOver) {
+        return;
+      }
       gameMap.setCurrentContext(Context.GAME_FORTIFY);
       currentPlayer.getStrategy().fortify(gameMap, null, null, -1);
+      if (gameMap.getCurrentContext().name().equals("GAME_FORTIFY") &&
+          gameMap.getPlayersList().indexOf(gameMap.getCurrentPlayer()) == gameMap.getPlayersList().size() - 1) {
+        GameMap.numberOfRounds++;
+        if (GameMap.numberOfRounds > TournamentController.maxNumberOfTurnsProperty) return;
+      }
       changeToNextPhase(gameMap);
       return;
     }

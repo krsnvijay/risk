@@ -29,6 +29,10 @@ public enum Command {
       "editneighbor -add <countryName1> <countryName2> -remove <countryName1> <countryName2>"),
   VALIDATE_MAP("^validatemap$", EditorController::processValidateMapCommand, "validatemap"),
   SAVE_MAP("^savemap (.+)$", EditorController::processSaveMapCommand, "savemap <fileLocation>"),
+  START_TOURNAMENT(
+      "^tournament -M (([\\S]+) ){1,5}-P ((aggressive|random|benevolent|cheater) ){2,4}-G [1-5] -D [0-9]{2}$",
+      TournamentController::startTournament,
+      "tournament -M <list of map files> -P <list of player strategies -G <number of games> -D <max number of turns>"),
   GAME_PLAYER(
       "^gameplayer( -(add ([^ ]+) (aggressive|random|benevolent|cheater|human)|remove ([^ ]+)))+$",
       MainController::processGamePlayerCommand,
