@@ -38,6 +38,27 @@ public class GameMap extends Observable {
   private String fileName;
   /** The current phase of the game. */
   private Context currentContext;
+  /** Maintains the number of sets traded in game */
+  private static int numberOfTradedSet = 0;
+  /** Number of armies traded in for each set */
+  private static int armiesTradedForSet = 0;
+
+  public static int getNumberOfTradedSet() {
+    return numberOfTradedSet;
+  }
+
+  public static void setNumberOfTradedSet(int numberOfTradedSet) {
+    GameMap.numberOfTradedSet = numberOfTradedSet;
+  }
+
+  public static int getArmiesTradedForSet() {
+    return armiesTradedForSet;
+  }
+
+  public static void setArmiesTradedForSet(int armiesTradedForSet) {
+    GameMap.armiesTradedForSet = armiesTradedForSet;
+  }
+
   /**
    * random Generator for the game
    */
@@ -397,7 +418,7 @@ public class GameMap extends Observable {
   }
 
   /**
-   * Removes a game player from the current state
+   * Removes a game player from the current models.state
    *
    * @param playerName player to add
    * @return boolean to indicate status

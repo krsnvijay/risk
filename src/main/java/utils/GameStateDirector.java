@@ -3,7 +3,7 @@ package utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import models.GameMap;
-import models.GameState;
+import models.state.GameState;
 
 import java.io.*;
 
@@ -15,12 +15,16 @@ public class GameStateDirector {
   }
 
   public void constructGameState() {
-    builder.buildPlayers();
-    builder.buildCurrentPlayer();
+    builder.createGameState();
+    builder.buildPlayersList();
+    builder.buildDeck();
+    builder.buildBorders();
     builder.buildContinents();
     builder.buildCountries();
-    builder.buildBorders();
-    builder.buildDeck();
+    builder.buildCurrentContext();
+    builder.buildCurrentPlayerIndex();
+    builder.buildNumberOfTradedSet();
+    builder.buildArmiesTradedForSet();
   }
 
   public GameState getGameState() {

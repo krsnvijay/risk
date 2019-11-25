@@ -18,10 +18,7 @@ import static views.ConsoleView.display;
  */
 public class PlayerHuman extends Observable implements PlayerStrategy {
 
-  /** Maintains the number of sets traded in game */
-  private static int numberOfTradedSet = 0;
-  /** Number of armies traded in for each set */
-  private static int armiesTradedForSet = 0;
+
   /** This instance variable holds the name of the player. */
   private String playerName;
   /** Stores the number of armies a player has. */
@@ -81,6 +78,11 @@ public class PlayerHuman extends Observable implements PlayerStrategy {
     this.numberOfArmies = numberOfArmies;
   }
 
+  @Override
+  public String getStrategyType() {
+    return "human";
+  }
+
   /** This is an override for pretty printing the name. */
   @Override
   public String toString() {
@@ -118,58 +120,6 @@ public class PlayerHuman extends Observable implements PlayerStrategy {
     notifyObservers();
   }
 
-  /**
-   * Exchange the card for armies.
-   *
-   * @param indices the positions of the cards in the list.
-   */
-  public void exchangeCardsForArmies(int[] indices) {
-    Set<String> cardSet = new HashSet<>();
-    for (int index : indices) {
-      if (index >= 0 && index < cardsInHand.size()) {
-        cardSet.add(cardsInHand.get(index).getCardValue());
-      } else {
-        display("One OR more of your card indices are INCORRECT", false);
-        return;
-      }
-    }
-    if (cardSet.size() == 1 || cardSet.size() == 3) {
-      numberOfTradedSet++;
-      int armiesAcquired = giveArmies();
-      numberOfArmies += armiesAcquired;
-
-      ArrayList<Card> cardsToAddToDeck = new ArrayList<>();
-      for (int index : indices) {
-        cardsToAddToDeck.add(cardsInHand.get(index));
-      }
-
-      ArrayList<Integer> listIndices =
-          Arrays.stream(indices)
-              .boxed()
-              .sorted(Comparator.reverseOrder())
-              .collect(Collectors.toCollection(ArrayList::new));
-
-      ArrayList<Card> resultCardsInHand = new ArrayList<>();
-      for (int i = 0; i < cardsInHand.size(); i++) {
-        if (!listIndices.contains(i)) {
-          resultCardsInHand.add(cardsInHand.get(i));
-        }
-      }
-      setCardsInHand(resultCardsInHand);
-
-      Collections.shuffle(cardsToAddToDeck);
-      GameMap.getGameMap()
-          .getDeck()
-          .addAll(
-              cardsToAddToDeck); // add the exchanged cards to deck after removing from player hand
-
-      display("Acquired " + armiesAcquired + " through card exchange", false);
-    } else {
-      display(
-          "The set provided is not valid. Valid set: 3 cards of same type or 3 cards of different type",
-          false);
-    }
-  }
 
   /**
    * Reinforce a currently owned country with an army
@@ -203,24 +153,7 @@ public class PlayerHuman extends Observable implements PlayerStrategy {
     return result;
   }
 
-  /**
-   * This method gives armies to the player
-   *
-   * @return int with the number of armies.
-   */
-  public int giveArmies() {
-    if (numberOfTradedSet == 1) {
-      armiesTradedForSet += 4;
-    } else if (numberOfTradedSet < 6) {
-      armiesTradedForSet += 2;
-    } else if (numberOfTradedSet == 6) {
-      armiesTradedForSet += 3;
-    } else {
-      armiesTradedForSet += 5;
-    }
 
-    return armiesTradedForSet;
-  }
 
   /**
    * This method removes armies from the player

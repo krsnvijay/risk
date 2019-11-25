@@ -51,7 +51,7 @@ public enum Context {
 }
 ```
 
-The `GameMap` is the singleton object holding the current state of the game. A reference to this object will be used while processing most gameplay commands. The validations and management of the game phases is all done within the `GameController`.
+The `GameMap` is the singleton object holding the current models.state of the game. A reference to this object will be used while processing most gameplay commands. The validations and management of the game phases is all done within the `GameController`.
 
 We implemented the Observer pattern to handle view updation. Our `GameMap`, `Player`, and `WorldDomination` classes are the subjects that extend the Observable Java class.
 The observer interface is implemented in the `CardExchangeView`, `PhaseView`, and `WDView` in the GUI.

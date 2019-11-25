@@ -40,8 +40,8 @@ public class PlayerBenevolentTest {
     gameMap = mapParser.loadMap(riskMap.getPath());
     reason = "";
     gameMap.setPlayersList(new ArrayList<>());
-    gameMap.addGamePlayer(PLAYER_1, "Benevolent");
-    gameMap.addGamePlayer(PLAYER_2, "Human");
+    gameMap.addGamePlayer(PLAYER_1, "benevolent");
+    gameMap.addGamePlayer(PLAYER_2, "human");
     gameMap.setCurrentContext(Context.GAME_SETUP);
     gameMap.gameSetup();
     gameMap.placeAll();

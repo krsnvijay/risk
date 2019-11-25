@@ -81,7 +81,7 @@ public class Player {
    * Calculates bonus armies if a player owns a continent
    *
    * @param playerName current player name
-   * @param gameMap contains map state
+   * @param gameMap contains map models.state
    * @return bonus armies
    */
   public static int getBonusArmiesIfPlayerOwnsContinents(String playerName, GameMap gameMap) {
@@ -114,7 +114,7 @@ public class Player {
   /**
    * Calculate armies for reinforcement phase
    *
-   * @param gameMap contains map state
+   * @param gameMap contains map models.state
    * @return armies count
    */
   public static int calculateReinforcements(GameMap gameMap) {
