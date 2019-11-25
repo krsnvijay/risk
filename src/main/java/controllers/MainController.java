@@ -3,6 +3,8 @@ package controllers;
 import models.Command;
 import models.Context;
 import models.GameMap;
+import models.player.Player;
+import utils.GamePersistenceHandler;
 import utils.MapAdaptor;
 
 import java.io.FileNotFoundException;
@@ -152,5 +154,22 @@ public class MainController {
       display("\t" + validCommand.getUsage(), false);
     }
     return true;
+  }
+  /**
+   * Processes loadgame command from the cli
+   *
+   * @param gameMap contains game state
+   * @param command cli command from the user
+   * @return true to indicate status
+   */
+  public static boolean processLoadGameCommand(GameMap gameMap, String command) {
+    String fileLocation = command.split(" ", 2)[1];
+    try {
+      return GamePersistenceHandler.loadState(fileLocation);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      e.printStackTrace();
+      return false;
+    }
   }
 }

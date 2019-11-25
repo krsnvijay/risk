@@ -93,8 +93,8 @@ public class ConquestMapParser implements MapParser {
    */
   private Country deserializeCountry(String countryLine) {
     String[] splitCountryLine = countryLine.split(",");
-    String name = splitCountryLine[0];
-    String continent = splitCountryLine[3];
+    String name = splitCountryLine[0].replace(' ', '-');
+    String continent = splitCountryLine[3].replace(' ', '-');
     int x = Integer.parseInt(splitCountryLine[1]);
     int y = Integer.parseInt(splitCountryLine[2]);
     return new Country(name, continent, x, y);
@@ -108,7 +108,7 @@ public class ConquestMapParser implements MapParser {
    */
   private Continent deserializeContinent(String continentLine) {
     String[] splitContinentLine = continentLine.split("=");
-    String name = splitContinentLine[0];
+    String name = splitContinentLine[0].replace(' ', '-');
     int value = Integer.parseInt(splitContinentLine[1]);
     return new Continent(name, value);
   }
@@ -122,7 +122,10 @@ public class ConquestMapParser implements MapParser {
   private Map.Entry<String, Set<String>> deserializeBorder(String borderLine) {
     String[] splitBorderLine = borderLine.split(",");
     String key = splitBorderLine[0];
-    Set<String> value = Arrays.stream(splitBorderLine, 4, splitBorderLine.length).collect(toSet());
+    Set<String> value =
+        Arrays.stream(splitBorderLine, 4, splitBorderLine.length)
+            .map(str -> str.replace(' ', '-'))
+            .collect(toSet());
     return new AbstractMap.SimpleEntry<>(key, value);
   }
 
@@ -133,7 +136,7 @@ public class ConquestMapParser implements MapParser {
    * @return formatted continent line
    */
   private String serializeContinent(Continent continent) {
-    return String.format("%s=%d", continent.getName(), continent.getValue());
+    return String.format("%s=%d", continent.getName().replace('-', ' '), continent.getValue());
   }
 
   /**
@@ -148,10 +151,10 @@ public class ConquestMapParser implements MapParser {
     String continentName = country.getContinent();
     return String.format(
         "%s,%d,%d,%s,%s",
-        countryName,
+        countryName.replace('-', ' '),
         country.getX(),
         country.getY(),
-        country.getContinent(),
+        continentName.replace('-', ' '),
         serializeBorder(neighbors));
   }
 
@@ -162,7 +165,10 @@ public class ConquestMapParser implements MapParser {
    * @return formatted border line
    */
   private String serializeBorder(Set<Country> neighbors) {
-    return neighbors.stream().map(Country::getName).collect(joining(","));
+    return neighbors.stream()
+        .map(Country::getName)
+        .map(str -> str.replace('-', ' '))
+        .collect(joining(","));
   }
 
   /**

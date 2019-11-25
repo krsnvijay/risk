@@ -29,6 +29,8 @@ public class GameState {
   private int numberOfTradedSet = 0;
   /** Number of armies traded in for each set */
   private int armiesTradedForSet = 0;
+  /** Total cards introduced in the game */
+  private int cardCount = 0;
 
   public GameState() {
   }
@@ -69,6 +71,10 @@ public class GameState {
     return armiesTradedForSet;
   }
 
+  public int getCardCount() {
+    return cardCount;
+  }
+
   public void setPlayersList(ArrayList<PlayerState> playersList) {
     this.playersList = playersList;
   }
@@ -105,6 +111,10 @@ public class GameState {
     this.armiesTradedForSet = armiesTradedForSet;
   }
 
+  public void setCardCount(int cardCount) {
+    this.cardCount = cardCount;
+  }
+
   public static class GameStateBuilder {
     private ArrayList<PlayerState> playersList;
     private ArrayList<Card> deck;
@@ -115,6 +125,7 @@ public class GameState {
     private int currentPlayerIndex;
     private int numberOfTradedSet;
     private int armiesTradedForSet;
+    private int cardCount;
 
     private GameStateBuilder() {
     }
@@ -168,6 +179,11 @@ public class GameState {
       return this;
     }
 
+    public GameStateBuilder withCardCount(int cardCount) {
+      this.cardCount = cardCount;
+      return this;
+    }
+
     public GameState build() {
       GameState gameState = new GameState();
       gameState.setPlayersList(playersList);
@@ -179,6 +195,7 @@ public class GameState {
       gameState.setCurrentPlayerIndex(currentPlayerIndex);
       gameState.setNumberOfTradedSet(numberOfTradedSet);
       gameState.setArmiesTradedForSet(armiesTradedForSet);
+      gameState.setCardCount(cardCount);
       return gameState;
     }
   }

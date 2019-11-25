@@ -127,6 +127,7 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
       }
       attackCommand = randomAttack(gameMap);
     }
+    GameController.processAttackCommand(gameMap,attackCommand);
     return true;
   }
 
@@ -166,8 +167,10 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
   @Override
   public boolean fortify(GameMap gameMap, String fromCountry, String toCountry, int armyToMove) {
     String fortifyCommand = randomFortify(gameMap);
-    if (fortifyCommand.contains("-none"))
+    if (fortifyCommand.contains("-none")){
+      GameController.processFortifyCommand(gameMap,fortifyCommand);
       return true;
+    }
     if (GameController.validateFortify(gameMap, fortifyCommand))
       return GameController.processFortifyCommand(gameMap, fortifyCommand);
     return false;

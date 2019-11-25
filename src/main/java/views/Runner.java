@@ -1,5 +1,6 @@
 package views;
 
+import controllers.GameController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -89,13 +90,16 @@ public class Runner extends Application {
 
   /** Initiates and processes the command line for the whole game. */
   public static void processCommandline() {
-    GameMap gameMap = GameMap.getGameMap();
-    gameMap.setCurrentContext(Context.MAIN_MENU);
+    GameMap.getGameMap().setCurrentContext(Context.MAIN_MENU);
     display("Welcome to risk game", false);
     display("Type help to see available commands", false);
     while (true) {
+      if(GameMap.getGameMap().getCurrentContext() == Context.GAME_END_OF_TURN){
+        GameController.startPhaseLoop(GameMap.getGameMap());
+        continue;
+      }
       String command = CLI.input.nextLine();
-      boolean commandStatus = gameMap.getCurrentContext().runCommand(gameMap, command.trim());
+      boolean commandStatus = GameMap.getGameMap().getCurrentContext().runCommand(GameMap.getGameMap(), command.trim());
       if (!commandStatus) {
         display("Invalid command, use help to check the list of available commands", false);
       }

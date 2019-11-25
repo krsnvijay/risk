@@ -5,8 +5,7 @@ import models.Country;
 import models.GameMap;
 import models.player.Player;
 import models.player.PlayerHuman;
-import utils.GameStateDirector;
-import utils.RiskGameStateBuilder;
+import utils.GamePersistenceHandler;
 
 import java.util.ArrayList;
 
@@ -42,18 +41,13 @@ public class GameController {
 
   public static boolean processSaveGameCommand(GameMap gameMap, String command) {
     String fileLocation = command.split(" ", 2)[1];
-    RiskGameStateBuilder riskGameStateBuilder = new RiskGameStateBuilder();
-    GameStateDirector gameStateDirector = new GameStateDirector();
-    gameStateDirector.setBuilder(riskGameStateBuilder);
-    gameStateDirector.constructGameState();
     try {
-      return gameStateDirector.saveState(fileLocation);
+      return GamePersistenceHandler.saveState(fileLocation);
     } catch (Exception e) {
       System.out.println(e.getMessage());
       e.printStackTrace();
       return false;
     }
-
   }
 
   /**
@@ -293,7 +287,8 @@ public class GameController {
         break;
       case GAME_FORTIFY:
         gameMap.updatePlayerIndex();
-        startPhaseLoop(gameMap);
+        gameMap.setCurrentContext(Context.GAME_END_OF_TURN);
+//        startPhaseLoop(gameMap);
         break;
     }
   }
@@ -309,13 +304,16 @@ public class GameController {
     currentPlayer.getStrategy().setNumberOfArmies(Player.calculateReinforcements(gameMap));
     if (!(currentPlayer.getStrategy() instanceof PlayerHuman)) {
       display(currentPlayer.getStrategy().getPlayerName() + " AI's turn", true);
-      currentPlayer.getStrategy().reinforce(gameMap, null, currentPlayer.getStrategy().getNumberOfArmies());
+        display("[Reinforce]", false);
+        currentPlayer.getStrategy().reinforce(gameMap, null, currentPlayer.getStrategy().getNumberOfArmies());
+      display("[Attack]", false);
       gameMap.setCurrentContext(Context.GAME_ATTACK);
       currentPlayer.getStrategy().attack(gameMap, null);
       if (GameController.isTournament && GameMap.isGameOver) {
         return;
       }
-      gameMap.setCurrentContext(Context.GAME_FORTIFY);
+        display("[Fortify]", false);
+        gameMap.setCurrentContext(Context.GAME_FORTIFY);
       currentPlayer.getStrategy().fortify(gameMap, null, null, -1);
       if (gameMap.getCurrentContext().name().equals("GAME_FORTIFY") &&
           gameMap.getPlayersList().indexOf(gameMap.getCurrentPlayer()) == gameMap.getPlayersList().size() - 1) {

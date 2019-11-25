@@ -14,34 +14,23 @@ public class GameStateDirector {
     builder = gameStateBuilder;
   }
 
-  public void constructGameState() {
+  public void constructGameState(GameMap gameMap) {
     builder.createGameState();
-    builder.buildPlayersList();
-    builder.buildDeck();
-    builder.buildBorders();
-    builder.buildContinents();
-    builder.buildCountries();
-    builder.buildCurrentContext();
-    builder.buildCurrentPlayerIndex();
-    builder.buildNumberOfTradedSet();
-    builder.buildArmiesTradedForSet();
+    builder.buildPlayersList(gameMap);
+    builder.buildDeck(gameMap);
+    builder.buildBorders(gameMap);
+    builder.buildContinents(gameMap);
+    builder.buildCountries(gameMap);
+    builder.buildCurrentContext(gameMap);
+    builder.buildCurrentPlayerIndex(gameMap);
+    builder.buildNumberOfTradedSet(gameMap);
+    builder.buildArmiesTradedForSet(gameMap);
+    builder.buildCardCount(gameMap);
   }
 
   public GameState getGameState() {
     return builder.getGameState();
   }
 
-  public boolean saveState(String fileName) throws IOException {
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    gson.toJson(getGameState(), new FileWriter(fileName));
-    return true;
-  }
 
-  public boolean loadState(String fileName) throws FileNotFoundException {
-    Gson gson = new Gson();
-    BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
-    GameMap gameMap = gson.fromJson(bufferedReader, GameMap.class);
-    GameMap.modifyInstance(gameMap);
-    return true;
-  }
 }

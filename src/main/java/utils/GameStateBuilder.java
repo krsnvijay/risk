@@ -1,15 +1,7 @@
 package utils;
 
-import models.Card;
-import models.Context;
-import models.Continent;
-import models.Country;
+import models.GameMap;
 import models.state.GameState;
-import models.state.PlayerState;
-
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
 
 public abstract class GameStateBuilder {
   protected GameState gameState;
@@ -18,25 +10,31 @@ public abstract class GameStateBuilder {
     return gameState;
   }
 
+  public void setGameState(GameState gameState) {
+    gameState = gameState;
+  }
+
   public void createGameState() {
     gameState = new GameState();
   }
 
-  abstract void buildPlayersList();
+  abstract void buildPlayersList(GameMap gameMap);
 
-  abstract void buildDeck();
+  abstract void buildDeck(GameMap gameMap);
 
-  abstract void buildBorders();
+  abstract void buildBorders(GameMap gameMap);
 
-  abstract void buildContinents();
+  abstract void buildContinents(GameMap gameMap);
 
-  abstract void buildCountries();
+  abstract void buildCountries(GameMap gameMap);
 
-  abstract void buildCurrentContext();
+  abstract void buildCurrentContext(GameMap gameMap);
 
-  abstract void buildCurrentPlayerIndex();
+  abstract void buildCurrentPlayerIndex(GameMap gameMap);
 
-  abstract void buildNumberOfTradedSet();
+  abstract void buildNumberOfTradedSet(GameMap gameMap);
 
-  abstract void buildArmiesTradedForSet();
+  abstract void buildArmiesTradedForSet(GameMap gameMap);
+
+  abstract void buildCardCount(GameMap gameMap);
 }

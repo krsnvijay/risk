@@ -20,6 +20,14 @@ public class Card {
   /** Country of the card */
   private String country;
 
+  public static int getCardCount() {
+    return cardCount;
+  }
+
+  public static void setCardCount(int cardCount) {
+    Card.cardCount = cardCount;
+  }
+
   /**
    * The constructor for a Card object.
    *
