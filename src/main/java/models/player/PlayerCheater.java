@@ -77,6 +77,16 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
         if (cheaterCountry.getNumberOfArmies() == 1) break;
       }
     }
+    if (Player.checkPlayerOwnsAllTheCountries(playerName, gameMap)) {
+      display(String.format("%s(attacker) won the game!", playerName), true);
+      GameMap.isGameOver = true;
+      if (GameController.isTournament) {
+        return true;
+      }
+      else {
+        System.exit(0);
+      }
+    }
     if (!GameController.assignedCard) {
       gameMap.assignCard();
       GameController.assignedCard = true;
