@@ -5,10 +5,12 @@ import models.Country;
 import models.GameMap;
 import models.player.Player;
 import models.player.PlayerHuman;
+import models.player.PlayerStrategy;
 import utils.GamePersistenceHandler;
 
 import java.util.ArrayList;
 
+import static controllers.BattleController.isAttackOrFortifyMovePossible;
 import static views.ConsoleView.display;
 
 /**
@@ -61,12 +63,7 @@ public class GameController {
     if (command.contains("-noattack")) {
       return performAttackNone(gameMap);
     }
-
-    if (validateAttack(gameMap, command)) {
-      return performAttack(gameMap, command);
-    } else {
-      return false;
-    }
+    return validateAttack(gameMap, command) && performAttack(gameMap, command);
   }
 
   /**
@@ -80,11 +77,7 @@ public class GameController {
     if (command.contains("-none")) {
       return performFortifyNone(gameMap);
     }
-    if (validateFortify(gameMap, command)) {
-      return performFortify(gameMap, command);
-    } else {
-      return false;
-    }
+    return validateFortify(gameMap, command) && performFortify(gameMap, command);
   }
 
   /**
@@ -225,15 +218,16 @@ public class GameController {
     String fromCountry = commandSplit[1];
     String toCountry = commandSplit[2];
     int armyToMove = Integer.parseInt(commandSplit[3]);
-    boolean result =
-        new PlayerHuman(null).fortify(gameMap, fromCountry, toCountry, armyToMove);
+    boolean result = new PlayerHuman(null).fortify(gameMap, fromCountry, toCountry, armyToMove);
     if (result) {
       display(
           String.format(
               "%s Fortified %s with %d army(s) from %s",
               currentPlayer.getStrategy().getPlayerName(), toCountry, armyToMove, fromCountry),
           true);
-      changeToNextPhase(gameMap);
+      if (currentPlayer.getStrategy() instanceof PlayerHuman) {
+        changeToNextPhase(gameMap);
+      }
     } else {
       display(
           String.format("unable to fortify %s country with armies from %s", toCountry, fromCountry),
@@ -253,7 +247,9 @@ public class GameController {
     display(
         String.format("%s chose not to fortify", currentPlayer.getStrategy().getPlayerName()),
         true);
-    changeToNextPhase(gameMap);
+    if (currentPlayer.getStrategy() instanceof PlayerHuman) {
+      changeToNextPhase(gameMap);
+    }
     return true;
   }
 
@@ -276,19 +272,40 @@ public class GameController {
    */
   public static void changeToNextPhase(GameMap gameMap) {
     Context currentContext = gameMap.getCurrentContext();
+    PlayerStrategy currentPlayerStrategy = gameMap.getCurrentPlayer().getStrategy();
     switch (currentContext) {
+      case GAME_END_OF_TURN:
+        currentPlayerStrategy.setNumberOfArmies(Player.calculateReinforcements(gameMap));
+        display(
+            String.format(
+                "%s's (%s) turn",
+                currentPlayerStrategy.getPlayerName(), currentPlayerStrategy.getStrategyType()),
+            true);
+        gameMap.setCurrentContext(Context.GAME_REINFORCE);
+        display("[Reinforce]", false);
+        break;
       case GAME_REINFORCE:
         gameMap.setCurrentContext(Context.GAME_ATTACK);
-        display("[Attack]", false);
+        display("[Fortify]", false);
         break;
       case GAME_ATTACK:
         gameMap.setCurrentContext(Context.GAME_FORTIFY);
-        display("[Fortify]", false);
+        if(isAttackOrFortifyMovePossible(currentPlayerStrategy.getPlayerName(),gameMap)){
+          display("[Fortify]", false);
+        }
+        else {
+          display("No fortify move possible",true);
+          changeToNextPhase(gameMap);
+        }
         break;
       case GAME_FORTIFY:
+        display(
+            String.format(
+                "End of %s's (%s) turn",
+                currentPlayerStrategy.getPlayerName(), currentPlayerStrategy.getStrategyType()),
+            true);
         gameMap.updatePlayerIndex();
         gameMap.setCurrentContext(Context.GAME_END_OF_TURN);
-//        startPhaseLoop(gameMap);
         break;
     }
   }
@@ -299,38 +316,48 @@ public class GameController {
    * @param gameMap contains game state
    */
   public static void startPhaseLoop(GameMap gameMap) {
-    gameMap.setCurrentContext(Context.GAME_REINFORCE);
-    Player currentPlayer = gameMap.getCurrentPlayer();
-    currentPlayer.getStrategy().setNumberOfArmies(Player.calculateReinforcements(gameMap));
-    if (!(currentPlayer.getStrategy() instanceof PlayerHuman)) {
-      display(currentPlayer.getStrategy().getPlayerName() + " AI's turn", true);
-        display("[Reinforce]", false);
-        currentPlayer.getStrategy().reinforce(gameMap, null, currentPlayer.getStrategy().getNumberOfArmies());
-      display("[Attack]", false);
-      gameMap.setCurrentContext(Context.GAME_ATTACK);
-      currentPlayer.getStrategy().attack(gameMap, null);
-      if (GameController.isTournament && GameMap.isGameOver) {
-        return;
-      }
-        display("[Fortify]", false);
-        gameMap.setCurrentContext(Context.GAME_FORTIFY);
-      currentPlayer.getStrategy().fortify(gameMap, null, null, -1);
-      if (gameMap.getCurrentContext().name().equals("GAME_FORTIFY") &&
-          gameMap.getPlayersList().indexOf(gameMap.getCurrentPlayer()) == gameMap.getPlayersList().size() - 1) {
-        GameMap.numberOfRounds++;
-        if (GameMap.numberOfRounds > TournamentController.maxNumberOfTurnsProperty) return;
-      }
-      changeToNextPhase(gameMap);
+    gameMap.setCurrentContext(Context.GAME_END_OF_TURN);
+    changeToNextPhase(gameMap);
+    PlayerStrategy currentPlayerStrategy = gameMap.getCurrentPlayer().getStrategy();
+
+    // If human return to the CLI loop
+    if (currentPlayerStrategy instanceof PlayerHuman) {
       return;
     }
-    display(currentPlayer.getStrategy().getPlayerName() + "'s turn:", false);
-    display("[Reinforce]", false);
-    display(
-        String.format(
-            "%s has %d army(s) to reinforce",
-            currentPlayer.getStrategy().getPlayerName(),
-            currentPlayer.getStrategy().getNumberOfArmies()),
-        true);
+
+    // If not human perform all phases of strategies and return to the cli loop
+
+    // Perform Reinforce and change to Attack
+    currentPlayerStrategy.reinforce(gameMap, null, currentPlayerStrategy.getNumberOfArmies());
+    gameMap.setCurrentContext(Context.GAME_REINFORCE);
+    changeToNextPhase(gameMap);
+
+    // Perform Attack and change to Fortify
+
+    currentPlayerStrategy.attack(gameMap, null);
+    if (GameController.isTournament && GameMap.isGameOver) {
+      return;
+    }
+    gameMap.setCurrentContext(Context.GAME_ATTACK);
+    changeToNextPhase(gameMap);
+
+    // Perform Fortify and End current Player's turn
+    currentPlayerStrategy.fortify(gameMap, null, null, -1);
+    boolean isEndOfRound =
+        (gameMap.getCurrentContext() == Context.GAME_FORTIFY)
+            && (gameMap.getPlayersList().indexOf(gameMap.getCurrentPlayer())
+                == gameMap.getPlayersList().size() - 1);
+
+    // Stops game if turns exceeded limit at the end of the round
+    if (isEndOfRound) {
+      GameMap.numberOfRounds++;
+      if (isTournament && GameMap.numberOfRounds > TournamentController.maxNumberOfTurnsProperty) {
+        display("Turns Exceeded! Ending the tournament",true);
+        return;
+      }
+    }
+    gameMap.setCurrentContext(Context.GAME_FORTIFY);
+    changeToNextPhase(gameMap);
   }
 
   /**
@@ -448,7 +475,9 @@ public class GameController {
     if (GameController.assignedCard) {
       GameController.assignedCard = false;
     }
-    changeToNextPhase(gameMap);
+    if (currentPlayer.getStrategy() instanceof PlayerHuman) {
+      changeToNextPhase(gameMap);
+    }
     return true;
   }
 

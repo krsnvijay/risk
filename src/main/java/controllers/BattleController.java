@@ -83,7 +83,13 @@ public class BattleController {
             .findFirst()
             .get();
     attackingPlayer = gameMap.getCurrentPlayer();
-    defendingPlayer = gameMap.getPlayersList().stream().filter(player -> player.getStrategy().getPlayerName().equals(defendingCountry.getOwnerName())).findFirst().get();
+    defendingPlayer =
+        gameMap.getPlayersList().stream()
+            .filter(
+                player ->
+                    player.getStrategy().getPlayerName().equals(defendingCountry.getOwnerName()))
+            .findFirst()
+            .get();
     defenderName = defendingPlayer.getStrategy().getPlayerName();
     isAllOutEnabled = command.contains("-allout");
   }
@@ -95,7 +101,8 @@ public class BattleController {
    * @param gameMap contains game state
    * @return true if attack move is possible otherwise returns false
    */
-  public static boolean isAttackPossible(String attackerName, GameMap gameMap) {
+  public static boolean isAttackOrFortifyMovePossible(
+      String attackerName, GameMap gameMap) {
     return Player.getCountriesByOwnership(attackerName, gameMap).stream()
         .mapToInt(Country::getNumberOfArmies)
         .anyMatch(armyCount -> armyCount > 1);
@@ -179,7 +186,7 @@ public class BattleController {
    */
   public boolean startBattle() {
     gameMap.setCurrentContext(Context.GAME_ATTACK_BATTLE_DEFENDER);
-    if(isNoInputEnabled) {
+    if (isNoInputEnabled) {
       display(
           String.format(
               "%s owned by %s declared an attack on %s owned by %s",
@@ -201,10 +208,13 @@ public class BattleController {
       gameMap.setCurrentContext(Context.GAME_ATTACK);
     }
 
-    if (attackingCountry.getNumberOfArmies() == 1 && !isAttackPossible(attackerName, gameMap)) {
+    if (attackingCountry.getNumberOfArmies() == 1
+        && !isAttackOrFortifyMovePossible(attackerName, gameMap)) {
       display("Moving to next phase, No attack move possible", true);
       GameController.assignedCard = false;
-      GameController.changeToNextPhase(gameMap);
+      if (gameMap.getCurrentPlayer().getStrategy() instanceof PlayerHuman) {
+        GameController.changeToNextPhase(gameMap);
+      }
     }
     return true;
   }
@@ -325,7 +335,8 @@ public class BattleController {
   public int getNumOfArmiesToMoveFromAttacker() {
     if (isNoInputEnabled) {
       isNoInputEnabled = false;
-      Predicate<Integer> validateNumOfArmiesToMove = (armies) -> armies > numOfDiceAttacker && armies <= attackingCountry.getNumberOfArmies();
+      Predicate<Integer> validateNumOfArmiesToMove =
+          (armies) -> armies > numOfDiceAttacker && armies <= attackingCountry.getNumberOfArmies();
       if (!(attackingPlayer.getStrategy() instanceof PlayerHuman)) {
         // TODO handle attackmove for each strategy
         // Attack
@@ -473,8 +484,7 @@ public class BattleController {
         GameMap.isGameOver = true;
         if (GameController.isTournament) {
           return;
-        } else
-          System.exit(0);
+        } else System.exit(0);
       } else {
         // Change to initial attack phase where player can choose to battle again
         display("Ending battle, choose another attack move", true);

@@ -2,7 +2,6 @@
 .idea/
 .settings/
 *.iml
-!risk-game.iml
 *.metadata/
 *.classpath
 *.project
