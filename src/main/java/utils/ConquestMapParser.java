@@ -56,17 +56,17 @@ public class ConquestMapParser implements MapParser {
                     .collect(toMap(Continent::getName, Function.identity()));
             break;
           case "[Territories]":
-            while (scanner.hasNext()) {
+            do {
               countries.putAll(
-                  sectionData.stream()
-                      .map(this::deserializeCountry)
-                      .collect(toMap(Country::getName, Function.identity())));
+                      sectionData.stream()
+                              .map(this::deserializeCountry)
+                              .collect(toMap(Country::getName, Function.identity())));
               borders.putAll(
-                  sectionData.stream()
-                      .map(this::deserializeBorder)
-                      .collect(toMap(Map.Entry::getKey, Map.Entry::getValue)));
+                      sectionData.stream()
+                              .map(this::deserializeBorder)
+                              .collect(toMap(Map.Entry::getKey, Map.Entry::getValue)));
               sectionData = readSectionData.apply(scanner);
-            }
+            } while (sectionData.size() != 0);
             break;
         }
       }
@@ -82,6 +82,7 @@ public class ConquestMapParser implements MapParser {
     GameMap gameMap = GameMap.getGameMap();
     fileName = String.format("name %s map", fileName);
     gameMap.populateGameMap(fileSectionData, borders, continents, countries, fileName);
+    gameMap.setMapTypeDomination(false);
     return gameMap;
   }
 
@@ -121,7 +122,7 @@ public class ConquestMapParser implements MapParser {
    */
   private Map.Entry<String, Set<String>> deserializeBorder(String borderLine) {
     String[] splitBorderLine = borderLine.split(",");
-    String key = splitBorderLine[0];
+    String key = splitBorderLine[0].replace(' ', '-');
     Set<String> value =
         Arrays.stream(splitBorderLine, 4, splitBorderLine.length)
             .map(str -> str.replace(' ', '-'))

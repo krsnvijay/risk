@@ -97,6 +97,7 @@ public class DominationMapParser implements MapParser {
     GameMap gameMap = GameMap.getGameMap();
     fileName = String.format("name %s map", fileName);
     gameMap.populateGameMap(fileSectionData, borders, continents, countries, fileName);
+      gameMap.setMapTypeDomination(true);
     return gameMap;
   }
 

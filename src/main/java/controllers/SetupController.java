@@ -23,6 +23,10 @@ public class SetupController {
    * @return true if populated successfully, false if player count is not valid
    */
   public static boolean processPopulateCountriesCommand(GameMap gameMap, String command) {
+      if (gameMap.getPlayersList().size() > gameMap.getCountries().size()) {
+          display("No of countries in the map should be > no of players", false);
+          return false;
+      }
     boolean result = gameMap.gameSetup();
     if (result) {
       display("Populated countries randomly", false);

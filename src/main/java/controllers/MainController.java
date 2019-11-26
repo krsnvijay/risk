@@ -3,7 +3,6 @@ package controllers;
 import models.Command;
 import models.Context;
 import models.GameMap;
-import models.player.Player;
 import utils.GamePersistenceHandler;
 import utils.MapAdaptor;
 
@@ -112,7 +111,6 @@ public class MainController {
           display(String.format("Added %s", playerName), false);
         } else {
           display(String.format("%s already exists", playerName), false);
-          break;
         }
       } else {
         result = gameMap.removeGamePlayer(playerName);
@@ -120,7 +118,6 @@ public class MainController {
           display(String.format("Removed %s", playerName), false);
         } else {
           display(String.format("%s does not exist", playerName), false);
-          break;
         }
       }
     }

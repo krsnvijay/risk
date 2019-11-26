@@ -43,7 +43,7 @@ public class GameMap extends Observable {
   /** This maintains a list of players currently in the game. */
   public ArrayList<Player> playersList = new ArrayList<>();
   /** This maintains a log of phase-wise activity in the game */
-  public String phaseLog = "";
+  public StringBuilder phaseLog = new StringBuilder();
   /** This maintains a list of RISK cards in the deck. */
   public ArrayList<Card> deck = null;
   /** Contains the information in the [File] section. */
@@ -58,6 +58,10 @@ public class GameMap extends Observable {
   private String fileName;
   /** The current phase of the game. */
   private Context currentContext;
+  /**
+   * The type of the map, true if domination false for conquest
+   */
+  private boolean isMapTypeDomination = true;
 
   /** The constructor for the GameMap. */
   public GameMap() {
@@ -68,10 +72,6 @@ public class GameMap extends Observable {
       this.continents = new HashMap<>();
       this.fileName = "";
   }
-
-    /**
-     * random Generator for the game
-     */
 
     public static int getNumberOfTradedSet() {
         return numberOfTradedSet;
@@ -133,6 +133,24 @@ public class GameMap extends Observable {
     }
     Collections.shuffle(cardsInDeck);
     gameMap.setDeck(cardsInDeck);
+  }
+
+  /**
+   * getter for map type
+   *
+   * @return true for domination false for conquest
+   */
+  public boolean isMapTypeDomination() {
+    return isMapTypeDomination;
+  }
+
+  /**
+   * setter for map type
+   *
+   * @param mapTypeDomination boolean for appropriate map type
+   */
+  public void setMapTypeDomination(boolean mapTypeDomination) {
+    isMapTypeDomination = mapTypeDomination;
   }
 
   /**
@@ -807,7 +825,7 @@ public class GameMap extends Observable {
    * @return A string with the log.
    */
   public String getPhaseLog() {
-    return phaseLog;
+    return phaseLog.toString();
   }
 
   /**
@@ -818,9 +836,9 @@ public class GameMap extends Observable {
    */
   public void setPhaseLog(String phaseLog, boolean flushLog) {
     if (flushLog) {
-      this.phaseLog = "";
+      this.phaseLog = new StringBuilder();
     } else {
-      this.phaseLog += phaseLog + "\n";
+      this.phaseLog.append(phaseLog).append("\n");
     }
     setChanged();
     notifyObservers("PHASE_LOG");

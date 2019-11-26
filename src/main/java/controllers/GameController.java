@@ -360,7 +360,6 @@ public class GameController {
 
     // Stops game if turns exceeded limit at the end of the round
     if (isEndOfRound) {
-      GameMap.numberOfRounds++;
       if (isTournament && GameMap.numberOfRounds > TournamentController.maxNumberOfTurnsProperty) {
           display("Turns Exceeded! Ending the tournament", true);
         return;

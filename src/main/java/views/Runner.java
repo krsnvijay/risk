@@ -95,6 +95,7 @@ public class Runner extends Application {
     display("Type help to see available commands", false);
     while (true) {
       if(GameMap.getGameMap().getCurrentContext() == Context.GAME_END_OF_TURN){
+          GameMap.numberOfRounds++;
         GameController.startPhaseLoop(GameMap.getGameMap());
         continue;
       }

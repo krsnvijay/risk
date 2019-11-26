@@ -2,8 +2,7 @@ package controllers;
 
 import models.Context;
 import models.GameMap;
-import utils.DominationMapParser;
-import utils.MapParser;
+import utils.MapAdaptor;
 import utils.MapValidator;
 
 import java.util.Arrays;
@@ -45,7 +44,6 @@ public class EditorController {
           display(String.format("Removed continent: %s", continentName), false);
         } else {
           display(String.format("The continent %s does not exist", continentName), false);
-          break;
         }
       }
     }
@@ -73,7 +71,6 @@ public class EditorController {
           display(String.format("Added country: %s to %s", countryName, continentName), false);
         } else {
           display(String.format("The continent %s does not exist", continentName), false);
-          break;
         }
       } else {
         result = gameMap.removeCountry(countryName);
@@ -81,7 +78,6 @@ public class EditorController {
           display(String.format("Removed country: %s", countryName), false);
         } else {
           display(String.format("The country %s does not exist", countryName), false);
-          break;
         }
       }
     }
@@ -116,7 +112,6 @@ public class EditorController {
           display(
               String.format("One of the countries %s, %s does not exist", country2, country1),
               false);
-          break;
         }
       } else if (commandType.equals("remove")) {
         result = gameMap.removeBorder(country1, country2);
@@ -126,7 +121,6 @@ public class EditorController {
           display(
               String.format("One of the countries %s, %s does not exist", country2, country1),
               false);
-          break;
         }
       }
     }
@@ -162,9 +156,12 @@ public class EditorController {
     boolean result = false;
     boolean isMapValid = processValidateMapCommand(gameMap, command);
     if (isMapValid) {
-
-      MapParser mapParser = new DominationMapParser();
-      result = mapParser.saveMap(gameMap, fileLocation);
+        MapAdaptor mapAdaptor = new MapAdaptor();
+        try {
+            result = mapAdaptor.autoSaveMap(gameMap, fileLocation);
+        } catch (Exception e) {
+            display("Unable to save map " + e.getMessage(), true);
+        }
       if (result) {
         display("Game map saved to " + fileLocation, false);
         gameMap.setCurrentContext(Context.MAIN_MENU);
