@@ -6,7 +6,10 @@ import controllers.GameController;
 import models.GameMap;
 import models.state.GameState;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -34,7 +37,7 @@ public class GamePersistenceHandler {
         GameMapDirector gameMapDirector = new GameMapDirector();
         gameMapDirector.setBuilder(concreteGameMapBuilder);
         gameMapDirector.constructGameMap(gameState);
-        GameMap.modifyInstance(gameMapDirector.getGameState());
+        GameMap.modifyInstance(gameMapDirector.getGameMap());
         display("Loaded game state successfully!",true);
         GameController.startPhaseLoop(GameMap.getGameMap());
         return true;

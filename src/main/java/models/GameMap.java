@@ -62,6 +62,10 @@ public class GameMap extends Observable {
    * The type of the map, true if domination false for conquest
    */
   private boolean isMapTypeDomination = true;
+  /**
+   * variable that indicates if savegame command is possible
+   */
+  private boolean isSavePossible = true;
 
   /** The constructor for the GameMap. */
   public GameMap() {
@@ -842,5 +846,23 @@ public class GameMap extends Observable {
     }
     setChanged();
     notifyObservers("PHASE_LOG");
+  }
+
+  /**
+   * Getter for isSavePossible
+   *
+   * @return true of save game is allowed false if it isnt
+   */
+  public boolean getIsSavePossible() {
+    return isSavePossible;
+  }
+
+  /**
+   * Setter for isSavePossible
+   *
+   * @param isSavePossible true if save is allowed false if it isnt
+   */
+  public void setIsSavePossible(boolean isSavePossible) {
+    this.isSavePossible = isSavePossible;
   }
 }

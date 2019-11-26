@@ -24,7 +24,7 @@ public class GameMapDirector {
         builder.buildCardCount(gameState);
     }
 
-    public GameMap getGameState() {
+    public GameMap getGameMap() {
         return builder.getGameMap();
     }
 }

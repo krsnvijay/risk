@@ -164,8 +164,8 @@ public class MainController {
     try {
       return GamePersistenceHandler.loadState(fileLocation);
     } catch (Exception e) {
-      System.out.println(e.getMessage());
-      e.printStackTrace();
+      display("Invalid gamestate or file does not exist", true);
+      display(e.getMessage(), false);
       return false;
     }
   }

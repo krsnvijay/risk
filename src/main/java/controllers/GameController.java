@@ -35,6 +35,7 @@ public class GameController {
    */
   public static boolean processReinforceCommand(GameMap gameMap, String command) {
     if (validateReinforce(gameMap, command)) {
+        gameMap.setIsSavePossible(false);
       return performReinforce(gameMap, command);
     } else {
       return false;
@@ -42,11 +43,15 @@ public class GameController {
   }
 
   public static boolean processSaveGameCommand(GameMap gameMap, String command) {
+      if (!gameMap.getIsSavePossible()) {
+          display("Savegame can only be called at the start of the turn and no reinforcements must be made", true);
+          return false;
+      }
     String fileLocation = command.split(" ", 2)[1];
     try {
       return GamePersistenceHandler.saveState(fileLocation);
     } catch (Exception e) {
-      System.out.println(e.getMessage());
+        display("save game failed " + e.getMessage(), true);
       e.printStackTrace();
       return false;
     }
@@ -327,6 +332,7 @@ public class GameController {
 
     // If human return to the CLI loop
     if (currentPlayerStrategy instanceof PlayerHuman) {
+        gameMap.setIsSavePossible(true);
       return;
     }
 
