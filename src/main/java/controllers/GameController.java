@@ -359,18 +359,7 @@ public class GameController {
       // Perform Fortify if move is possible and End current Player's turn
     currentPlayerStrategy.fortify(gameMap, null, null, -1);
 
-    boolean isEndOfRound =
-            (gameMap.getCurrentContext() == Context.GAME_END_OF_TURN)
-            && (gameMap.getPlayersList().indexOf(gameMap.getCurrentPlayer())
-                == gameMap.getPlayersList().size() - 1);
 
-    // Stops game if turns exceeded limit at the end of the round
-    if (isEndOfRound) {
-      if (isTournament && GameMap.numberOfRounds > TournamentController.maxNumberOfTurnsProperty) {
-          display("Turns Exceeded! Ending the tournament", true);
-        return;
-      }
-    }
     gameMap.setCurrentContext(Context.GAME_FORTIFY);
     changeToNextPhase(gameMap);
   }

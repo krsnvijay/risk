@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static views.ConsoleView.display;
+
 public class TournamentController {
   public static int maxNumberOfTurnsProperty;
   private static Map<String, ArrayList<String>> resultTable = new HashMap<>();
@@ -40,14 +42,23 @@ public class TournamentController {
         }
         SetupController.processPopulateCountriesCommand(gameMap, null);
         StartUpController.processPlaceAllCommand(gameMap, null);
-        while (!GameMap.isGameOver) {
+          GameMap.numberOfRounds = 0;
+          while (!GameMap.isGameOver && GameMap.numberOfRounds < maxNumberOfTurnsProperty) {
           GameController.startPhaseLoop(GameMap.getGameMap());
+              GameMap.numberOfRounds++;
         }
+          String winner;
+          if (GameMap.numberOfRounds >= TournamentController.maxNumberOfTurnsProperty) {
+              display("Turns Exceeded! Ending the tournament", true);
+              winner = "Draw";
+          } else {
+              winner = gameMap.getCurrentPlayer().getStrategy().getPlayerName();
+          }
         // save the winners name
         if (!resultTable.containsKey(map)) {
           resultTable.put(map, new ArrayList<String>());
         }
-        resultTable.get(map).add(gameMap.getCurrentPlayer().getStrategy().getPlayerName());
+          resultTable.get(map).add(winner);
         GameMap.destroyGameMap();
       }
     }
