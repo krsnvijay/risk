@@ -68,7 +68,9 @@ public class StartUpController {
   public static boolean processPlaceAllCommand(GameMap gameMap, String command) {
     gameMap.placeAll();
     display("Placed player armies randomly in countries that they own", true);
-    startPhaseLoop(gameMap);
+      if (!GameController.isTournament) {
+          startPhaseLoop(gameMap);
+      }
     return true;
   }
 }

@@ -275,15 +275,20 @@ public class GameController {
     PlayerStrategy currentPlayerStrategy = gameMap.getCurrentPlayer().getStrategy();
     switch (currentContext) {
       case GAME_END_OF_TURN:
-          display("[Start Turn]", false);
+          display(String.format("[Start Turn - %d]", GameMap.numberOfRounds + 1), false);
         currentPlayerStrategy.setNumberOfArmies(Player.calculateReinforcements(gameMap));
         display(
             String.format(
-                "%s's (%s) turn",
+                    "<%s's (%s) turn>",
                 currentPlayerStrategy.getPlayerName(), currentPlayerStrategy.getStrategyType()),
             true);
         gameMap.setCurrentContext(Context.GAME_REINFORCE);
         display("[Reinforce]", false);
+          display(
+                  String.format(
+                          "%s has %d armies left to reinforce",
+                          currentPlayerStrategy.getPlayerName(), currentPlayerStrategy.getNumberOfArmies()),
+                  false);
         break;
       case GAME_REINFORCE:
         gameMap.setCurrentContext(Context.GAME_ATTACK);
@@ -300,10 +305,10 @@ public class GameController {
       case GAME_FORTIFY:
         display(
             String.format(
-                "End of %s's (%s) turn",
+                    "<End of %s's (%s) turn>",
                 currentPlayerStrategy.getPlayerName(), currentPlayerStrategy.getStrategyType()),
             true);
-          display("[End Turn]", false);
+          display(String.format("[End Turn - %d]", GameMap.numberOfRounds + 1), false);
         gameMap.updatePlayerIndex();
         gameMap.setCurrentContext(Context.GAME_END_OF_TURN);
         break;

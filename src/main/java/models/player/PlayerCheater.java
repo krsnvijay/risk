@@ -70,9 +70,25 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
       for (String neighborName : borders) {
         Country neighbor = allCountries.get(neighborName);
         if (!neighbor.getOwnerName().equals(playerName)) {
+            String originalOwner = neighbor.getOwnerName();
           neighbor.setOwnerName(playerName);
+            display(
+                    String.format(
+                            "Changing ownership of %s from %s to %s",
+                            neighbor.getName(), neighbor.getOwnerName(), playerName),
+                    true);
+            display(
+                    String.format(
+                            "Moved %d armies from %s to %s",
+                            cheaterCountry.getNumberOfArmies() / 2, cheaterCountry.getName(), neighbor.getName()),
+                    false);
           neighbor.setNumberOfArmies(cheaterCountry.getNumberOfArmies() / 2);
           cheaterCountry.removeArmies(cheaterCountry.getNumberOfArmies() / 2);
+            // Remove original owner if they have no ownership
+            if (Player.getCountriesByOwnership(originalOwner, gameMap).size() == 0) {
+                display(String.format("Removing %s from the game due to no ownership", originalOwner), true);
+                gameMap.removeGamePlayer(originalOwner);
+            }
         }
         if (cheaterCountry.getNumberOfArmies() == 1) break;
       }
@@ -132,7 +148,14 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
     }
     ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
     gameMap.getCurrentPlayer().getStrategy().setNumberOfArmies(0);
-    countries.forEach(country -> country.addArmies(country.getNumberOfArmies()));
+      countries.forEach(country -> {
+          display(
+                  String.format(
+                          "%s has placed %d army(s) in %s",
+                          playerName, country.getNumberOfArmies(), country.getName()),
+                  true);
+          country.addArmies(country.getNumberOfArmies());
+      });
     return true;
   }
 
@@ -160,6 +183,11 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
       for (String neighborName : borders) {
         Country neighbor = allCountries.get(neighborName);
         if (!neighbor.getOwnerName().equals(playerName)) {
+            display(
+                    String.format(
+                            "%s Fortified %s with %d army(s) from %s",
+                            playerName, neighbor.getName(), cheaterCountry.getNumberOfArmies(), cheaterCountry.getName()),
+                    true);
           cheaterCountry.addArmies(cheaterCountry.getNumberOfArmies());
         }
       }

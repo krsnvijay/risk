@@ -18,8 +18,28 @@ public class GameMap extends Observable {
 
   /** The singleton instance of the game's state */
   public static GameMap gameMap = null;
+    /**
+     * number of turns in a game
+     */
+    public static int numberOfRounds = 0;
+    /**
+     * check if the game finishes
+     */
+    public static boolean isGameOver = false;
   /** Maintains whose turn it is (index). */
   private static int currentPlayerIndex = 0;
+    /**
+     * Maintains the number of sets traded in game
+     */
+    private static int numberOfTradedSet = 0;
+    /**
+     * Number of armies traded in for each set
+     */
+    private static int armiesTradedForSet = 0;
+    /**
+     * random Generator for the game
+     */
+    private static Random randomGenerator = new Random();
   /** This maintains a list of players currently in the game. */
   public ArrayList<Player> playersList = new ArrayList<>();
   /** This maintains a log of phase-wise activity in the game */
@@ -38,56 +58,49 @@ public class GameMap extends Observable {
   private String fileName;
   /** The current phase of the game. */
   private Context currentContext;
-  /** Maintains the number of sets traded in game */
-  private static int numberOfTradedSet = 0;
-  /** Number of armies traded in for each set */
-  private static int armiesTradedForSet = 0;
-
-  public static int getNumberOfTradedSet() {
-    return numberOfTradedSet;
-  }
-
-  public static void setNumberOfTradedSet(int numberOfTradedSet) {
-    GameMap.numberOfTradedSet = numberOfTradedSet;
-  }
-
-  public static int getArmiesTradedForSet() {
-    return armiesTradedForSet;
-  }
-
-  public static void setArmiesTradedForSet(int armiesTradedForSet) {
-    GameMap.armiesTradedForSet = armiesTradedForSet;
-  }
-
-  /**
-   * random Generator for the game
-   */
-  /**
-   * number of turns in a game
-   */
-  public static int numberOfRounds = 0;
-  /**
-   * check if the game finishes
-   */
-  public static boolean isGameOver = false;
-  /**
-   * random Generator for the game
-   */
-  private static Random randomGenerator = new Random();
 
   /** The constructor for the GameMap. */
   public GameMap() {
-    super();
-    this.borders = new HashMap<>();
-    this.fileSectionData = new ArrayList<>();
-    this.countries = new HashMap<>();
-    this.continents = new HashMap<>();
-    this.fileName = "";
+      super();
+      this.borders = new HashMap<>();
+      this.fileSectionData = new ArrayList<>();
+      this.countries = new HashMap<>();
+      this.continents = new HashMap<>();
+      this.fileName = "";
   }
 
-  public static int getCurrentPlayerIndex() {
-    return currentPlayerIndex;
-  }
+    /**
+     * random Generator for the game
+     */
+
+    public static int getNumberOfTradedSet() {
+        return numberOfTradedSet;
+    }
+
+    public static void setNumberOfTradedSet(int numberOfTradedSet) {
+        GameMap.numberOfTradedSet = numberOfTradedSet;
+    }
+
+    public static int getArmiesTradedForSet() {
+        return armiesTradedForSet;
+    }
+
+    public static void setArmiesTradedForSet(int armiesTradedForSet) {
+        GameMap.armiesTradedForSet = armiesTradedForSet;
+    }
+
+    public static int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
+    }
+
+    /**
+     * Setter for currentPlayerIndex
+     *
+     * @param currentPlayerIndex index of the player to set to
+     */
+    public static void setCurrentPlayerIndex(int currentPlayerIndex) {
+        GameMap.currentPlayerIndex = currentPlayerIndex;
+    }
 
   /**
    * getter for random generator
@@ -157,15 +170,6 @@ public class GameMap extends Observable {
    */
   public static String showBorders(Map.Entry<String, Set<String>> border) {
     return String.format("%s %s", border.getKey(), String.join(" ", border.getValue()));
-  }
-
-  /**
-   * Setter for currentPlayerIndex
-   *
-   * @param currentPlayerIndex index of the player to set to
-   */
-  public static void setCurrentPlayerIndex(int currentPlayerIndex) {
-    GameMap.currentPlayerIndex = currentPlayerIndex;
   }
 
   /**

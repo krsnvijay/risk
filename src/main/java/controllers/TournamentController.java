@@ -3,10 +3,8 @@ package controllers;
 import models.GameMap;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class TournamentController {
   public static int maxNumberOfTurnsProperty;
@@ -25,14 +23,15 @@ public class TournamentController {
       for (int gameIndex = 0; gameIndex < numberOfGames; gameIndex++) {
         gameMap = GameMap.getGameMap();
         GameController.isTournament = true;
-
         // set players
-        String gamePlayerCmd =
-            String.format(
-                "gameplayer %s",
-                Arrays.stream(listOfPlayerStrategies)
-                    .map(strategy -> String.format("-add %s %s", strategy.toUpperCase(), strategy))
-                    .collect(Collectors.joining(" ")));
+        // Add index to game player names to make them unique
+        StringBuilder stringBuilder = new StringBuilder("gameplayer");
+        for (int idx = 0; idx < listOfPlayerStrategies.length; idx++) {
+          String strategy = listOfPlayerStrategies[idx];
+          stringBuilder.append(
+                  String.format(" -add %s-%d %s", strategy.toUpperCase(), idx, strategy));
+        }
+        String gamePlayerCmd = stringBuilder.toString();
         MainController.processGamePlayerCommand(gameMap, gamePlayerCmd);
         // load map
         String loadMapCmd = String.format("loadmap %s", map);
@@ -41,20 +40,14 @@ public class TournamentController {
         }
         SetupController.processPopulateCountriesCommand(gameMap, null);
         StartUpController.processPlaceAllCommand(gameMap, null);
-        if (GameMap.isGameOver) {
-          // save the winners name
-          if (!resultTable.containsKey(map)) {
-            resultTable.put(map, new ArrayList<String>());
-          }
-          resultTable.get(map).add(gameMap.getCurrentPlayer().getStrategy().getPlayerName());
-        } else {
-          // game hasn't completed but number of turns are over
-          // save DRAW as the result
-          if (!resultTable.containsKey(map)) {
-            resultTable.put(map, new ArrayList<String>());
-          }
-          resultTable.get(map).add("Draw");
+        while (!GameMap.isGameOver) {
+          GameController.startPhaseLoop(GameMap.getGameMap());
         }
+        // save the winners name
+        if (!resultTable.containsKey(map)) {
+          resultTable.put(map, new ArrayList<String>());
+        }
+        resultTable.get(map).add(gameMap.getCurrentPlayer().getStrategy().getPlayerName());
         GameMap.destroyGameMap();
       }
     }
