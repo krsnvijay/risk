@@ -3,6 +3,7 @@ package models.player;
 import controllers.BattleController;
 import controllers.GameController;
 import models.Card;
+import models.Context;
 import models.Country;
 import models.GameMap;
 import views.CardExchangeView;
@@ -92,7 +93,7 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
     if (countryWithMaxArmies == null) {
       display("No strongest country left to attack", true);
       GameController.assignedCard = false;
-      GameController.changeToNextPhase(gameMap);
+        gameMap.setCurrentContext(Context.GAME_FORTIFY);
       return;
     }
     String countryToAttack =

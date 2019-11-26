@@ -275,6 +275,7 @@ public class GameController {
     PlayerStrategy currentPlayerStrategy = gameMap.getCurrentPlayer().getStrategy();
     switch (currentContext) {
       case GAME_END_OF_TURN:
+          display("[Start Turn]", false);
         currentPlayerStrategy.setNumberOfArmies(Player.calculateReinforcements(gameMap));
         display(
             String.format(
@@ -286,15 +287,13 @@ public class GameController {
         break;
       case GAME_REINFORCE:
         gameMap.setCurrentContext(Context.GAME_ATTACK);
-        display("[Fortify]", false);
+          display("[Attack]", false);
         break;
       case GAME_ATTACK:
         gameMap.setCurrentContext(Context.GAME_FORTIFY);
-        if(isAttackOrFortifyMovePossible(currentPlayerStrategy.getPlayerName(),gameMap)){
           display("[Fortify]", false);
-        }
-        else {
-          display("No fortify move possible",true);
+          if (!isAttackOrFortifyMovePossible(currentPlayerStrategy.getPlayerName(), gameMap)) {
+              display("No fortify move possible", true);
           changeToNextPhase(gameMap);
         }
         break;
@@ -304,6 +303,7 @@ public class GameController {
                 "End of %s's (%s) turn",
                 currentPlayerStrategy.getPlayerName(), currentPlayerStrategy.getStrategyType()),
             true);
+          display("[End Turn]", false);
         gameMap.updatePlayerIndex();
         gameMap.setCurrentContext(Context.GAME_END_OF_TURN);
         break;
@@ -341,10 +341,15 @@ public class GameController {
     gameMap.setCurrentContext(Context.GAME_ATTACK);
     changeToNextPhase(gameMap);
 
-    // Perform Fortify and End current Player's turn
+      // If no fortify move is possible end turn
+      if (gameMap.getCurrentContext() == Context.GAME_END_OF_TURN) {
+          return;
+      }
+      // Perform Fortify if move is possible and End current Player's turn
     currentPlayerStrategy.fortify(gameMap, null, null, -1);
+
     boolean isEndOfRound =
-        (gameMap.getCurrentContext() == Context.GAME_FORTIFY)
+            (gameMap.getCurrentContext() == Context.GAME_END_OF_TURN)
             && (gameMap.getPlayersList().indexOf(gameMap.getCurrentPlayer())
                 == gameMap.getPlayersList().size() - 1);
 
@@ -352,7 +357,7 @@ public class GameController {
     if (isEndOfRound) {
       GameMap.numberOfRounds++;
       if (isTournament && GameMap.numberOfRounds > TournamentController.maxNumberOfTurnsProperty) {
-        display("Turns Exceeded! Ending the tournament",true);
+          display("Turns Exceeded! Ending the tournament", true);
         return;
       }
     }
