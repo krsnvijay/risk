@@ -24,12 +24,12 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
 
   /** This instance variable holds the name of the player. */
   private String playerName;
+
   /** Stores the number of armies a player has. */
   private int numberOfArmies;
+
   /** Stores the cards currently held by the player. */
   private ArrayList<Card> cardsInHand = new ArrayList<>();
-  /** How many turns have elapsed */
-  private int turnCount = 0;
 
   /**
    * The constructor for the Cheater strategy class.
@@ -231,6 +231,10 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
     this.numberOfArmies = numberOfArmies;
   }
 
+  /**
+   * Returns the strategy type
+   * @return A String with the strategy's name.
+   */
   @Override
   public String getStrategyType() {
     return "cheater";

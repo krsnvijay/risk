@@ -14,8 +14,10 @@ public class CardExchangeView implements Observer {
 
   /** Singleton CardExchangeView Instance * */
   private static CardExchangeView cardExchangeView = null;
+
   /** A cached Pool of threads to queue services on the UI thread * */
   private final ExecutorService service = Executors.newCachedThreadPool();
+
   /** Reference to the Runner instance on the UI thread * */
   private Runner appInstance;
 

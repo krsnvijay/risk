@@ -22,6 +22,12 @@ public class Player {
   /** The strategy for the Player. */
   private PlayerStrategy strategy = null;
 
+  /**
+   * The constructor to create a new Player. Assigns a strategy on creation.
+   *
+   * @param name The name of the player
+   * @param strategy The strategy for the player as a String.
+   */
   public Player(String name, String strategy) {
     switch (strategy) {
       case "random":

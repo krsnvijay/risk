@@ -42,8 +42,10 @@ public class BattleController {
 
   /** The name of the defending player. */
   private String defenderName;
+
   /** The defending player. */
   private Player defendingPlayer;
+
   /** The attacking player. */
   private Player attackingPlayer;
 
@@ -52,11 +54,13 @@ public class BattleController {
 
   /** The topmost card on the deck. */
   private Card topCard;
+
   /** The number of armies to move after winning a battle */
   private int numOfArmiesToMove = 0;
 
   /** Tracks if -allout is enabled. */
   private boolean isAllOutEnabled = false;
+
   /** Disable input from the user, flag used for unit tests */
   private boolean isNoInputEnabled = false;
 

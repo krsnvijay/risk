@@ -20,8 +20,10 @@ public class PlayerHuman extends Observable implements PlayerStrategy {
 
   /** This instance variable holds the name of the player. */
   private String playerName;
+
   /** Stores the number of armies a player has. */
   private int numberOfArmies;
+
   /** Stores the cards currently held by the player. */
   private ArrayList<Card> cardsInHand = new ArrayList<>();
 
@@ -35,6 +37,11 @@ public class PlayerHuman extends Observable implements PlayerStrategy {
     this.playerName = playerName;
   }
 
+  /**
+   * Adds the CardExchangeView as an observer to this class. Calls super to deal with it.
+   *
+   * @param object The CardExchangeView.
+   */
   public void addObserver(CardExchangeView object) {
     super.addObserver(object);
   }
@@ -75,6 +82,10 @@ public class PlayerHuman extends Observable implements PlayerStrategy {
     this.numberOfArmies = numberOfArmies;
   }
 
+  /**
+   * Returns the strategy type
+   * @return A String with the strategy's name.
+   */
   @Override
   public String getStrategyType() {
     return "human";
@@ -148,8 +159,6 @@ public class PlayerHuman extends Observable implements PlayerStrategy {
     }
     return result;
   }
-
-
 
   /**
    * This method removes armies from the player

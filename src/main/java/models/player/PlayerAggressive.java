@@ -23,8 +23,10 @@ import static views.ConsoleView.display;
 public class PlayerAggressive extends Observable implements PlayerStrategy {
   /** This instance variable holds the name of the player. */
   private String playerName;
+
   /** Stores the number of armies a player has. */
   private int numberOfArmies;
+
   /** Stores the cards currently held by the player. */
   private ArrayList<Card> cardsInHand = new ArrayList<>();
 
@@ -382,6 +384,10 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
     this.numberOfArmies = numberOfArmies;
   }
 
+  /**
+   * Returns the strategy type
+   * @return A String with the strategy's name.
+   */
   @Override
   public String getStrategyType() {
     return "aggressive";

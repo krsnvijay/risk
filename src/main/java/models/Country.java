@@ -31,12 +31,6 @@ public class Country {
   private Card card;
 
   /**
-   * This boolean checks whether the player needs to get a country's card. When the player captures
-   * the country, it is set to true. It won't be set to true in any other scenario.
-   */
-  private boolean playerNeedsCardAdded = false;
-
-  /**
    * The constructor for the Country class.
    *
    * @param name The name of the Country.

@@ -18,93 +18,121 @@ public class GameMap extends Observable {
 
   /** The singleton instance of the game's state */
   public static GameMap gameMap = null;
-    /**
-     * number of turns in a game
-     */
-    public static int numberOfRounds = 0;
-    /**
-     * check if the game finishes
-     */
-    public static boolean isGameOver = false;
+
+  /** number of turns in a game */
+  public static int numberOfRounds = 0;
+
+  /** check if the game finishes */
+  public static boolean isGameOver = false;
+
   /** Maintains whose turn it is (index). */
   private static int currentPlayerIndex = 0;
-    /**
-     * Maintains the number of sets traded in game
-     */
-    private static int numberOfTradedSet = 0;
-    /**
-     * Number of armies traded in for each set
-     */
-    private static int armiesTradedForSet = 0;
-    /**
-     * random Generator for the game
-     */
-    private static Random randomGenerator = new Random();
+
+  /** Maintains the number of sets traded in game */
+  private static int numberOfTradedSet = 0;
+
+  /** Number of armies traded in for each set */
+  private static int armiesTradedForSet = 0;
+
+  /** random Generator for the game */
+  private static Random randomGenerator = new Random();
+
   /** This maintains a list of players currently in the game. */
   public ArrayList<Player> playersList = new ArrayList<>();
+
   /** This maintains a log of phase-wise activity in the game */
   public StringBuilder phaseLog = new StringBuilder();
+
   /** This maintains a list of RISK cards in the deck. */
   public ArrayList<Card> deck = null;
+
   /** Contains the information in the [File] section. */
   private ArrayList<String> fileSectionData;
+
   /** Stores an adjacency list of all borders. */
   private Map<String, Set<String>> borders;
+
   /** Stores a map of all continents. */
   private Map<String, Continent> continents;
+
   /** Stores a map of all countries. */
   private Map<String, Country> countries;
+
   /** The name of the map file. */
   private String fileName;
+
   /** The current phase of the game. */
   private Context currentContext;
-  /**
-   * The type of the map, true if domination false for conquest
-   */
+
+  /** The type of the map, true if domination false for conquest */
   private boolean isMapTypeDomination = true;
-  /**
-   * variable that indicates if savegame command is possible
-   */
+
+  /** variable that indicates if savegame command is possible */
   private boolean isSavePossible = true;
 
   /** The constructor for the GameMap. */
   public GameMap() {
-      super();
-      this.borders = new HashMap<>();
-      this.fileSectionData = new ArrayList<>();
-      this.countries = new HashMap<>();
-      this.continents = new HashMap<>();
-      this.fileName = "";
+    super();
+    this.borders = new HashMap<>();
+    this.fileSectionData = new ArrayList<>();
+    this.countries = new HashMap<>();
+    this.continents = new HashMap<>();
+    this.fileName = "";
   }
 
-    public static int getNumberOfTradedSet() {
-        return numberOfTradedSet;
-    }
+  /**
+   * Returns the number of card sets traded in.
+   *
+   * @return An integer.
+   */
+  public static int getNumberOfTradedSet() {
+    return numberOfTradedSet;
+  }
 
-    public static void setNumberOfTradedSet(int numberOfTradedSet) {
-        GameMap.numberOfTradedSet = numberOfTradedSet;
-    }
+  /**
+   * Sets the number of card sets traded in.
+   *
+   * @param numberOfTradedSet An integer.
+   */
+  public static void setNumberOfTradedSet(int numberOfTradedSet) {
+    GameMap.numberOfTradedSet = numberOfTradedSet;
+  }
 
-    public static int getArmiesTradedForSet() {
-        return armiesTradedForSet;
-    }
+  /**
+   * Gets the number of armies traded for a card set.
+   *
+   * @return An integer.
+   */
+  public static int getArmiesTradedForSet() {
+    return armiesTradedForSet;
+  }
 
-    public static void setArmiesTradedForSet(int armiesTradedForSet) {
-        GameMap.armiesTradedForSet = armiesTradedForSet;
-    }
+  /**
+   * Sets the number of armies traded for a card set.
+   *
+   * @param armiesTradedForSet An integer.
+   */
+  public static void setArmiesTradedForSet(int armiesTradedForSet) {
+    GameMap.armiesTradedForSet = armiesTradedForSet;
+  }
 
-    public static int getCurrentPlayerIndex() {
-        return currentPlayerIndex;
-    }
+  /**
+   * Gets the current player's index in the list.
+   *
+   * @return An integer representing the index.
+   */
+  public static int getCurrentPlayerIndex() {
+    return currentPlayerIndex;
+  }
 
-    /**
-     * Setter for currentPlayerIndex
-     *
-     * @param currentPlayerIndex index of the player to set to
-     */
-    public static void setCurrentPlayerIndex(int currentPlayerIndex) {
-        GameMap.currentPlayerIndex = currentPlayerIndex;
-    }
+  /**
+   * Setter for currentPlayerIndex
+   *
+   * @param currentPlayerIndex index of the player to set to
+   */
+  public static void setCurrentPlayerIndex(int currentPlayerIndex) {
+    GameMap.currentPlayerIndex = currentPlayerIndex;
+  }
 
   /**
    * getter for random generator
@@ -169,6 +197,9 @@ public class GameMap extends Observable {
     return gameMap;
   }
 
+  /**
+   * Destroys the GameMap object resetting the state.
+   */
   public static void destroyGameMap() {
     gameMap = null;
     GameMap.numberOfRounds = 0;
@@ -176,7 +207,7 @@ public class GameMap extends Observable {
   }
 
   /**
-   * Setter for gamemap instance, used in case a map is loaded from file.
+   * Setter for GameMap instance, used in case a map is loaded from file.
    *
    * @param gameMap contains game state
    */

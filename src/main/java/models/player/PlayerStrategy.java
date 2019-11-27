@@ -42,27 +42,74 @@ public interface PlayerStrategy {
    */
   boolean fortify(GameMap gameMap, String fromCountry, String toCountry, int armyToMove);
 
+  /**
+   * For adding a card to the Player's hand.
+   *
+   * @param card The Card object.
+   */
   void addCard(Card card);
 
+  /**
+   * To subtract armies from the Player.
+   * @param count The integer count of armies to subtract.
+   */
   void subtractArmies(int count);
 
+  /**
+   * Gets the cards in hand for the Player.
+   *
+   * @return An ArrayList of Card objects.
+   */
   ArrayList<Card> getCardsInHand();
 
+  /**
+   * Sets the cards in hand for the Player.
+   *
+   * @param cardsInHand An ArrayList of Card objects.
+   */
   void setCardsInHand(ArrayList<Card> cardsInHand);
 
+  /**
+   * Returns the Player's name.
+   *
+   * @return A String with the Player's name.
+   */
   String getPlayerName();
 
+  /**
+   * Sets the Player's name.
+   *
+   * @param playerName A String with the Player's name.
+   */
   void setPlayerName(String playerName);
 
+  /**
+   * Gets the number of armies the Player has.
+   *
+   * @return An integer representing the number of armies.
+   */
   int getNumberOfArmies();
 
+  /**
+   * Sets the number of armies the Player has.
+   *
+   * @param numberOfArmies An integer representing the number of armies.
+   */
   void setNumberOfArmies(int numberOfArmies);
 
+  /**
+   * Returns the strategy type
+   * @return A String with the strategy's name.
+   */
   String getStrategyType();
 
+  /**
+   * Adds the CardExchangeView as an Observer to the Player.
+   *
+   * @param instance The CardExchangeView.
+   */
   void addObserver(CardExchangeView instance);
 
-  public
   /**
    * Exchange the card for armies.
    *

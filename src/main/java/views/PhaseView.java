@@ -16,8 +16,10 @@ import java.util.concurrent.Executors;
 public class PhaseView implements Observer {
   /** stores previous phase * */
   private static String prevPhase = "PREV";
+
   /** Service for thread handling. */
   private final ExecutorService service = Executors.newCachedThreadPool();
+
   /** Instance of the Runner class. */
   private Runner appInstance;
 

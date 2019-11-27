@@ -9,194 +9,221 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * This class maintains the entire state of the game for serialization (saving/loading).
+ *
+ * @author Vijay
+ * @version 1.0
+ */
 public class GameState {
 
   /** This maintains a list of players currently in the game. */
   private ArrayList<PlayerState> playersList = new ArrayList<>();
+
   /** This maintains a list of RISK cards in the deck. */
   private ArrayList<Card> deck = null;
+
   /** Stores an adjacency list of all borders. */
   private Map<String, Set<String>> borders;
+
   /** Stores a map of all continents. */
   private Map<String, Continent> continents;
+
   /** Stores a map of all countries. */
   private Map<String, Country> countries;
+
   /** The current phase of the game. */
   private Context currentContext;
+
   /** Maintains whose turn it is (index). */
   private int currentPlayerIndex = 0;
+
   /** Maintains the number of sets traded in game */
   private int numberOfTradedSet = 0;
+
   /** Number of armies traded in for each set */
   private int armiesTradedForSet = 0;
+
   /** Total cards introduced in the game */
   private int cardCount = 0;
 
-  public GameState() {
-  }
-
+  /**
+   * Gets the list of players stored in the state.
+   *
+   * @return ArrayList of PlayerState objects.
+   */
   public ArrayList<PlayerState> getPlayersList() {
     return playersList;
   }
 
+  /**
+   * Gets the deck of Cards for the game.
+   *
+   * @return An ArrayList of Cards (the deck).
+   */
   public ArrayList<Card> getDeck() {
     return deck;
   }
 
+  /**
+   * Gets the borders for the map.
+   *
+   * @return A Map object with the borders.
+   */
   public Map<String, Set<String>> getBorders() {
     return borders;
   }
 
+  /**
+   * Gets the continents in the map.
+   *
+   * @return A Map object with the continents.
+   */
   public Map<String, Continent> getContinents() {
     return continents;
   }
 
+  /**
+   * Gets the countries in the map.
+   *
+   * @return A Map object with the countries.
+   */
   public Map<String, Country> getCountries() {
     return countries;
   }
 
+  /**
+   * Gets the current context for the game.
+   *
+   * @return A Context enum object.
+   */
   public Context getCurrentContext() {
     return currentContext;
   }
 
+  /**
+   * Gets the index for the current player in the playersList.
+   *
+   * @return An integer representing the current player index.
+   */
   public int getCurrentPlayerIndex() {
     return currentPlayerIndex;
   }
 
+  /**
+   * Gets the number of card sets that have been traded.
+   *
+   * @return An integer representing the number of card sets that have been traded.
+   */
   public int getNumberOfTradedSet() {
     return numberOfTradedSet;
   }
 
+  /**
+   * Gets the number of armies that have been traded for a card set.
+   *
+   * @return An integer representing the number of armies traded.
+   */
   public int getArmiesTradedForSet() {
     return armiesTradedForSet;
   }
 
+  /**
+   * Gets the number of cards.
+   *
+   * @return An integer representing the number of cards.
+   */
   public int getCardCount() {
     return cardCount;
   }
 
+  /**
+   * Sets the players list.
+   *
+   * @param playersList the player list.
+   */
   public void setPlayersList(ArrayList<PlayerState> playersList) {
     this.playersList = playersList;
   }
 
+  /**
+   * Sets the deck of cards.
+   *
+   * @param deck the deck as an ArrayList.
+   */
   public void setDeck(ArrayList<Card> deck) {
     this.deck = deck;
   }
 
+  /**
+   * Sets the borders list for the map.
+   *
+   * @param borders A map of borders.
+   */
   public void setBorders(Map<String, Set<String>> borders) {
     this.borders = borders;
   }
 
+  /**
+   * Sets the continents for the map.
+   *
+   * @param continents A map of continents.
+   */
   public void setContinents(Map<String, Continent> continents) {
     this.continents = continents;
   }
 
+  /**
+   * Sets the countries for the map.
+   *
+   * @param countries A map of countries.
+   */
   public void setCountries(Map<String, Country> countries) {
     this.countries = countries;
   }
 
+  /**
+   * Sets the current game context.
+   *
+   * @param currentContext A Context object.
+   */
   public void setCurrentContext(Context currentContext) {
     this.currentContext = currentContext;
   }
 
+  /**
+   * Sets the current player index.
+   *
+   * @param currentPlayerIndex An integer.
+   */
   public void setCurrentPlayerIndex(int currentPlayerIndex) {
     this.currentPlayerIndex = currentPlayerIndex;
   }
 
+  /**
+   * Sets the number of traded card sets.
+   *
+   * @param numberOfTradedSet An integer.
+   */
   public void setNumberOfTradedSet(int numberOfTradedSet) {
     this.numberOfTradedSet = numberOfTradedSet;
   }
 
+  /**
+   * Sets number of armies traded for sets.
+   *
+   * @param armiesTradedForSet An integer.
+   */
   public void setArmiesTradedForSet(int armiesTradedForSet) {
     this.armiesTradedForSet = armiesTradedForSet;
   }
 
+  /**
+   * Sets the count of cards.
+   *
+   * @param cardCount An integer.
+   */
   public void setCardCount(int cardCount) {
     this.cardCount = cardCount;
-  }
-
-  public static class GameStateBuilder {
-    private ArrayList<PlayerState> playersList;
-    private ArrayList<Card> deck;
-    private Map<String, Set<String>> borders;
-    private Map<String, Continent> continents;
-    private Map<String, Country> countries;
-    private Context currentContext;
-    private int currentPlayerIndex;
-    private int numberOfTradedSet;
-    private int armiesTradedForSet;
-    private int cardCount;
-
-    private GameStateBuilder() {
-    }
-
-    public static GameStateBuilder aGameState() {
-      return new GameStateBuilder();
-    }
-
-    public GameStateBuilder withPlayersList(ArrayList<PlayerState> playersList) {
-      this.playersList = playersList;
-      return this;
-    }
-
-    public GameStateBuilder withDeck(ArrayList<Card> deck) {
-      this.deck = deck;
-      return this;
-    }
-
-    public GameStateBuilder withBorders(Map<String, Set<String>> borders) {
-      this.borders = borders;
-      return this;
-    }
-
-    public GameStateBuilder withContinents(Map<String, Continent> continents) {
-      this.continents = continents;
-      return this;
-    }
-
-    public GameStateBuilder withCountries(Map<String, Country> countries) {
-      this.countries = countries;
-      return this;
-    }
-
-    public GameStateBuilder withCurrentContext(Context currentContext) {
-      this.currentContext = currentContext;
-      return this;
-    }
-
-    public GameStateBuilder withCurrentPlayerIndex(int currentPlayerIndex) {
-      this.currentPlayerIndex = currentPlayerIndex;
-      return this;
-    }
-
-    public GameStateBuilder withNumberOfTradedSet(int numberOfTradedSet) {
-      this.numberOfTradedSet = numberOfTradedSet;
-      return this;
-    }
-
-    public GameStateBuilder withArmiesTradedForSet(int armiesTradedForSet) {
-      this.armiesTradedForSet = armiesTradedForSet;
-      return this;
-    }
-
-    public GameStateBuilder withCardCount(int cardCount) {
-      this.cardCount = cardCount;
-      return this;
-    }
-
-    public GameState build() {
-      GameState gameState = new GameState();
-      gameState.setPlayersList(playersList);
-      gameState.setDeck(deck);
-      gameState.setBorders(borders);
-      gameState.setContinents(continents);
-      gameState.setCountries(countries);
-      gameState.setCurrentContext(currentContext);
-      gameState.setCurrentPlayerIndex(currentPlayerIndex);
-      gameState.setNumberOfTradedSet(numberOfTradedSet);
-      gameState.setArmiesTradedForSet(armiesTradedForSet);
-      gameState.setCardCount(cardCount);
-      return gameState;
-    }
   }
 }

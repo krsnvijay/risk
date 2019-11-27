@@ -31,13 +31,13 @@ public class MapAdaptor {
     }
   }
 
-    public boolean autoSaveMap(GameMap gameMap, String fileName) throws Exception {
-        if (gameMap.isMapTypeDomination()) {
-            return dominationMapParser.saveMap(gameMap, fileName);
-        } else {
-            return conquestMapParser.saveMap(gameMap, fileName);
-        }
+  public boolean autoSaveMap(GameMap gameMap, String fileName) throws Exception {
+    if (gameMap.isMapTypeDomination()) {
+      return dominationMapParser.saveMap(gameMap, fileName);
+    } else {
+      return conquestMapParser.saveMap(gameMap, fileName);
     }
+  }
 
   private boolean isMapTypeConquest(String fileName) throws FileNotFoundException {
     Scanner sc = new Scanner(new File(fileName));

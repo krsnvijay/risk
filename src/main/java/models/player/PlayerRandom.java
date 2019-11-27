@@ -15,23 +15,23 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toCollection;
 import static views.ConsoleView.display;
 
+/**
+ * This class implements the Random player strategy.
+ *
+ * @author Siddharth
+ * @version 1.0
+ */
 public class PlayerRandom extends Observable implements PlayerStrategy {
-  /**
-   * Maintains the number of sets traded in game
-   */
-  private static int numberOfTradedSet = 0;
-  /**
-   * Number of armies traded in for each set
-   */
-  private static int armiesTradedForSet = 0;
   /**
    * This instance variable holds the name of the player.
    */
   private String playerName = "Random";
+
   /**
    * Stores the number of armies a player has.
    */
   private int numberOfArmies;
+
   /**
    * Stores the cards currently held by the player.
    */
@@ -176,6 +176,12 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
     return false;
   }
 
+  /**
+   * Handles the fortify command, randomly.
+   *
+   * @param gameMap The GameMap object.
+   * @return The command to execute for the fortify phase.
+   */
   private String randomFortify(GameMap gameMap) {
     boolean shouldFortify = GameMap.getRandomGenerator().nextBoolean();
     if (!shouldFortify)
@@ -202,7 +208,6 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
     return String.format("fortify %s %s %d", fortifyFromCountry.getName(), fortifyToCountry.getName(), fortifyArmies);
 
   }
-
 
   /**
    * This method removes armies from the player
@@ -249,6 +254,10 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
     this.numberOfArmies = numberOfArmies;
   }
 
+  /**
+   * Returns the strategy type
+   * @return A String with the strategy's name.
+   */
   @Override
   public String getStrategyType() {
     return "random";
@@ -292,6 +301,4 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
     setChanged();
     notifyObservers();
   }
-
-
 }

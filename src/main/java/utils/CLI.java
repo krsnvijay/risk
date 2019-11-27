@@ -17,8 +17,10 @@ public class CLI {
 
   /** The scanner object for reading input from the console. */
   public static Scanner input;
+
   /** A Map of all the valid commands for a specific Context. */
   static Map<Context, ArrayList<String>> validCommands = new HashMap<>();
+
   /** The singleton instance of the CLI class. */
   private static CLI cli = null;
 

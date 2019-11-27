@@ -19,15 +19,17 @@ import static views.ConsoleView.display;
 public class PlayerBenevolent extends Observable implements PlayerStrategy {
   /** This instance variable holds the name of the player. */
   private String playerName;
+
   /** Stores the number of armies a player has. */
   private int numberOfArmies;
+
   /** Stores the cards currently held by the player. */
   private ArrayList<Card> cardsInHand = new ArrayList<>();
 
   /**
    * The constructor for the Benevolent strategy class.
    *
-   * @param name
+   * @param name The name of the Player.
    */
   public PlayerBenevolent(String name) {
     this.setPlayerName(name);
@@ -138,10 +140,10 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
   /**
    * This method sets the name of the player.
    *
-   * @param playername the name of the player.
+   * @param playerName the name of the player.
    */
-  public void setPlayerName(String playername) {
-    this.playerName = playername;
+  public void setPlayerName(String playerName) {
+    this.playerName = playerName;
   }
 
   /**
@@ -162,6 +164,11 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
     this.numberOfArmies = numberOfArmies;
   }
 
+  /**
+   * Returns the name of this strategy as a String.
+   *
+   * @return A String with the name of the strategy.
+   */
   @Override
   public String getStrategyType() {
     return "benevolent";
@@ -212,10 +219,4 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
   public void subtractArmies(int count) {
     this.numberOfArmies -= count;
   }
-
-  /**
-   * Exchange the card for armies.
-   *
-   * @param indices the positions of the cards in the list.
-   */
 }

@@ -21,9 +21,7 @@ public class MainController {
 
   /**
    * Process editmap command from the user loads a map and changes the context to allow the user to
-   * execute map editor commands
-   *
-   * <p>Creates a map file if it doesn't exist
+   * execute map editor commands. Creates a map file if it doesn't exist.
    *
    * @param gameMap contains game state
    * @param command cli command from the user
@@ -152,6 +150,7 @@ public class MainController {
     }
     return true;
   }
+
   /**
    * Processes loadgame command from the cli
    *

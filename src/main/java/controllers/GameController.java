@@ -24,6 +24,7 @@ public class GameController {
   /** This boolean is false if a card hasn't been assigned to the current player. */
   public static boolean assignedCard = false;
 
+  /** This boolean is false for normal gameplay and true for tournament mode. */
   public static boolean isTournament = false;
 
   /**
@@ -42,6 +43,13 @@ public class GameController {
     }
   }
 
+  /**
+   * This command processes the save game to capture the current state of the game and serializing it.
+   *
+   * @param gameMap The GameMap variable
+   * @param command The command as a String
+   * @return A boolean representing the result of the command.
+   */
   public static boolean processSaveGameCommand(GameMap gameMap, String command) {
       if (!gameMap.getIsSavePossible()) {
           display("Savegame can only be called at the start of the turn and no reinforcements must be made", true);

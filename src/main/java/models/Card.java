@@ -11,19 +11,25 @@ public class Card {
   /** Total cards introduced in the game */
   private static int cardCount = 0;
 
-  /** The name of the player who owns the card. */
-  private String owner;
-
   /** Stores the typeOfCard enum */
   private typeOfCard type;
 
   /** Country of the card */
   private String country;
 
+  /**
+   * Gets the number of cards.
+   *
+   * @return An integer representing the count.
+   */
   public static int getCardCount() {
     return cardCount;
   }
 
+  /**
+   * Sets the number of cards.
+   * @param cardCount An integer representing the count.
+   */
   public static void setCardCount(int cardCount) {
     Card.cardCount = cardCount;
   }
@@ -35,8 +41,6 @@ public class Card {
    */
   public Card(String country) {
     super();
-    // change the owner to deck during the start of the game
-    this.owner = null;
     this.country = country;
     this.type = typeOfCard.values()[cardCount % 3];
     cardCount++;
@@ -95,6 +99,9 @@ public class Card {
     CAVALRY("Cavalry"),
     ARTILLERY("Artillery");
 
+    /**
+     * Holds the value for the card.
+     */
     public String value;
 
     /**
