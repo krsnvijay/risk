@@ -101,8 +101,6 @@ public class PlayerRandomTest {
     assertThat(result, not(containsString("-noattack")));
     result = player_1.randomAttack(gameMap);
     assertThat(result, containsString("-noattack"));
-
-
   }
 
   @Test

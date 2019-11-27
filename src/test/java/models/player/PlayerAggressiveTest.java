@@ -1,6 +1,7 @@
 package models.player;
 
 import models.Context;
+import models.Country;
 import models.GameMap;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,11 +10,15 @@ import utils.MapParser;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-/** test class to check the functionality of PlayerAggresive.java
- * {@link PlayerAggressive}
+/**
+ * test class to check the functionality of PlayerAggresive.java {@link PlayerAggressive}
+ *
  * @author Siddharth Singh
  */
 public class PlayerAggressiveTest {
@@ -38,22 +43,81 @@ public class PlayerAggressiveTest {
     reason = "";
     gameMap.setPlayersList(new ArrayList<>());
     gameMap.addGamePlayer(PLAYER_1, "aggressive");
-    gameMap.addGamePlayer(PLAYER_2, "human");
+    gameMap.addGamePlayer(PLAYER_2, "benevolent");
     gameMap.setCurrentContext(Context.GAME_SETUP);
     gameMap.gameSetup();
-    gameMap.placeAll();
     GameMap.setCurrentPlayerIndex(0);
   }
 
+  /** check if player attacks from the strongest country that belongs to Aggressive Player */
   @Test
-  public void attack() {}
+  public void attack() {
+    Player player_1 = gameMap.getCurrentPlayer();
+    ArrayList<Country> countries = new ArrayList<>(gameMap.getCountries().values());
+    countries.stream()
+        .filter(country -> country.getContinent().equals("Asia"))
+        .forEach(country -> country.setOwnerName(PLAYER_1));
+    countries.stream()
+        .filter(country -> country.getContinent().equals("Africa"))
+        .forEach(country -> country.setOwnerName(PLAYER_2));
+    player_1.getStrategy().attack(gameMap, null);
+    Country attackCountry =
+        countries.stream().filter(c -> c.getOwnerName().equals(PLAYER_1)).findFirst().get();
+  }
 
+  /** check if player reinforces the strongest country that belongs to Aggressive Player */
   @Test
-  public void reinforce() {}
+  public void reinforce() {
+    Player player_1 = gameMap.getCurrentPlayer();
+    ArrayList<Country> countries = new ArrayList<>(gameMap.getCountries().values());
+    countries.stream()
+        .filter(c -> c.getContinent().equals("Asia"))
+        .forEach(c -> c.setOwnerName(PLAYER_1));
+    countries.stream()
+        .filter(c -> c.getContinent().equals("Africa"))
+        .forEach(c -> c.setOwnerName(PLAYER_2));
+    Optional<Country> strongestCountry =
+        countries.stream()
+            .max(Comparator.comparing(Country::getNumberOfArmies))
+            .filter(c -> c.getOwnerName().equals(PLAYER_1));
+    int originalArmyCount = strongestCountry.get().getNumberOfArmies();
+    int numOfArmiesToReinforce = Player.calculateReinforcements(gameMap);
+    player_1.getStrategy().setNumberOfArmies(numOfArmiesToReinforce);
+    player_1
+        .getStrategy()
+        .reinforce(gameMap, strongestCountry.get().getName(), numOfArmiesToReinforce);
+    assertEquals(
+        originalArmyCount + numOfArmiesToReinforce, strongestCountry.get().getNumberOfArmies());
+  }
 
+  /** check if player fortifies from the strongest country that belongs to Aggressive Player */
   @Test
-  public void fortify() {}
+  public void fortify() {
 
-  @Test
-  public void exchangeCardsForArmies() {}
+    ArrayList<Country> countries = new ArrayList<>(gameMap.getCountries().values());
+    // gameMap.placeAll();
+    Player player_1 = gameMap.getCurrentPlayer();
+    countries.stream()
+        .filter(c -> c.getName().equals("Egypt"))
+        .forEach(c -> c.setOwnerName(PLAYER_1));
+    countries.stream()
+        .filter(c -> c.getName().equals("India"))
+        .forEach(c -> c.setOwnerName(PLAYER_1));
+    ArrayList<Country> attackCountries =
+        countries.stream()
+            .sorted(Comparator.comparing(Country::getNumberOfArmies).reversed())
+            .filter(c -> c.getOwnerName().equals(PLAYER_1))
+            .collect(Collectors.toCollection(ArrayList::new));
+    attackCountries.get(0).setNumberOfArmies(10);
+    attackCountries.get(1).setNumberOfArmies(5);
+    Country strongestCountry = attackCountries.get(0);
+    Country strongerCountry = attackCountries.get(1);
+    int expectedFortifyArmies =
+        strongestCountry.getNumberOfArmies() + strongerCountry.getNumberOfArmies() - 1;
+    player_1
+        .getStrategy()
+        .fortify(gameMap, strongestCountry.getName(), strongerCountry.getName(), 0);
+    int actualFortifyArmies = strongestCountry.getNumberOfArmies();
+    assertEquals(expectedFortifyArmies, actualFortifyArmies);
+  }
 }
