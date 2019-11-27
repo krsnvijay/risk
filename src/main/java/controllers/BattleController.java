@@ -3,6 +3,7 @@ package controllers;
 import models.*;
 import models.player.Player;
 import models.player.PlayerHuman;
+import models.player.PlayerStrategy;
 import utils.CLI;
 
 import java.util.ArrayList;
@@ -216,7 +217,8 @@ public class BattleController {
         && !isAttackOrFortifyMovePossible(attackerName, gameMap)) {
       display("Moving to next phase, No attack move possible", true);
       GameController.assignedCard = false;
-      if (gameMap.getCurrentPlayer().getStrategy() instanceof PlayerHuman) {
+      PlayerStrategy strategy = gameMap.getCurrentPlayer().getStrategy();
+      if (strategy instanceof PlayerHuman) {
         GameController.changeToNextPhase(gameMap);
       }
     }
@@ -455,10 +457,11 @@ public class BattleController {
       if (!GameController.assignedCard) {
         gameMap.assignCard();
         GameController.assignedCard = true;
+        PlayerStrategy strategy = gameMap.getCurrentPlayer().getStrategy();
         display(
-            gameMap.getCurrentPlayer().getStrategy().getPlayerName()
+            strategy.getPlayerName()
                 + " currently has "
-                + gameMap.getCurrentPlayer().getStrategy().getCardsInHand().stream()
+                + strategy.getCardsInHand().stream()
                     .map(Card::getName)
                     .collect(Collectors.joining(" "))
                 + " card(s).",
