@@ -8,10 +8,31 @@ import java.util.Map;
 
 import static views.ConsoleView.display;
 
+/**
+ * This is the Controller for the Tournament
+ *
+ * @author Warren White
+ * @author Siddharth Singh
+ * @version 1.0
+ */
 public class TournamentController {
+  /**
+   * a property holding the max. number of turns for each game
+   */
   public static int maxNumberOfTurnsProperty;
+
+  /**
+   * a map that holds the results table
+   */
   private static Map<String, ArrayList<String>> resultTable = new HashMap<>();
 
+  /**
+   * starts the tournament based on command
+   *
+   * @param gameMap the GameMap instance / the reference to game map
+   * @param command the command
+   * @return successful / failed execution of the tournament
+   */
   public static boolean startTournament(GameMap gameMap, String command) {
     String[] commandSplitOne = command.split(" -M ");
     String[] commandSplitTwo = commandSplitOne[1].split(" -P ");
@@ -31,34 +52,35 @@ public class TournamentController {
         for (int idx = 0; idx < listOfPlayerStrategies.length; idx++) {
           String strategy = listOfPlayerStrategies[idx];
           stringBuilder.append(
-                  String.format(" -add %s-%d %s", strategy.toUpperCase(), idx, strategy));
+              String.format(" -add %s-%d %s", strategy.toUpperCase(), idx, strategy));
         }
         String gamePlayerCmd = stringBuilder.toString();
         MainController.processGamePlayerCommand(gameMap, gamePlayerCmd);
         // load map
         String loadMapCmd = String.format("loadmap %s", map);
         if (!MainController.processLoadMapCommand(gameMap, loadMapCmd)) {
+          GameMap.destroyGameMap();
           continue;
         }
         SetupController.processPopulateCountriesCommand(gameMap, null);
         StartUpController.processPlaceAllCommand(gameMap, null);
-          GameMap.numberOfRounds = 0;
-          while (!GameMap.isGameOver && GameMap.numberOfRounds < maxNumberOfTurnsProperty) {
+        GameMap.numberOfRounds = 0;
+        while (!GameMap.isGameOver && GameMap.numberOfRounds < maxNumberOfTurnsProperty) {
           GameController.startPhaseLoop(GameMap.getGameMap());
-              GameMap.numberOfRounds++;
+          GameMap.numberOfRounds++;
         }
-          String winner;
-          if (GameMap.numberOfRounds >= TournamentController.maxNumberOfTurnsProperty) {
-              display("Turns Exceeded! Ending the tournament", true);
-              winner = "Draw";
-          } else {
-              winner = gameMap.getCurrentPlayer().getStrategy().getPlayerName();
-          }
+        String winner;
+        if (GameMap.numberOfRounds >= TournamentController.maxNumberOfTurnsProperty) {
+          display("Turns Exceeded! Ending the current game", true);
+          winner = "Draw";
+        } else {
+          winner = gameMap.getCurrentPlayer().getStrategy().getPlayerName();
+        }
         // save the winners name
         if (!resultTable.containsKey(map)) {
           resultTable.put(map, new ArrayList<String>());
         }
-          resultTable.get(map).add(winner);
+        resultTable.get(map).add(winner);
         GameMap.destroyGameMap();
       }
     }

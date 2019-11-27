@@ -14,6 +14,12 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.*;
 import static views.ConsoleView.display;
 
+/**
+ * This is the Strategy for the Aggressive player.
+ *
+ * @author Warren White
+ * @version 1.0
+ */
 public class PlayerAggressive extends Observable implements PlayerStrategy {
   /** This instance variable holds the name of the player. */
   private String playerName;
@@ -22,14 +28,33 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
   /** Stores the cards currently held by the player. */
   private ArrayList<Card> cardsInHand = new ArrayList<>();
 
+  /**
+   * The constructor for the Aggressive Player Strategy
+   *
+   * @param name the name of the agressive player
+   */
   public PlayerAggressive(String name) {
     this.setPlayerName(name);
   }
 
+  /**
+   * Adds an observer by a call to the
+   * 'super' implementation of addObserver
+   *
+   * @param object
+   */
   public void addObserver(CardExchangeView object) {
     super.addObserver(object);
   }
 
+  /**
+   * Gets the strongest country to reinforce
+   * (OR) attack from using the Aggressive strategy
+   *
+   * @param gameMap reference to the whole game map
+   * @param op either "attack" or "reinforce"
+   * @return the Map Entry of the described strongest country
+   */
   private Map.Entry<String, Country> getStrongestCountryAttackReinforce(
       GameMap gameMap, String op) {
     ArrayList<Country> countriesOwnedByPlayer =
@@ -61,12 +86,17 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
       return new AbstractMap.SimpleEntry<>(resEntry.get().getName(), resEntry.get());
     else {
       // SHOULD NEVER HAPPEN
-      System.out.println(countriesOwnedByPlayer.stream().map(Country::getName).collect(joining(" ")));
-      //countriesOwnedByPlayer.forEach(c -> { System.out.println(gameMap.getBorders().get(c.getName()) + " " + gameMap.getBorders().get(c.getOwnerName())); });
       return null;
     }
   }
 
+  /**
+   * Gets the strongest country to fortify
+   * from using the Aggressive strategy
+   *
+   * @param gameMap reference to the whole game map
+   * @return the Map Entry of the described strongest country
+   */
   private Map.Entry<String, Country> getStrongestCountryFortify(GameMap gameMap) {
     ArrayList<Country> countriesOwnedByPlayer =
         Player.getCountriesByOwnership(this.getPlayerName(), gameMap);
@@ -89,11 +119,17 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
     return resEntry;
   }
 
+  /**
+   * Utility to perform the attack until no attack possible
+   *
+   * @param gameMap a reference to the game map
+   * @param countryWithMaxArmies country which has the max. armies to attack from
+   */
   private void attackUtil(GameMap gameMap, Map.Entry<String, Country> countryWithMaxArmies) {
     if (countryWithMaxArmies == null) {
       display("No strongest country left to attack", true);
       GameController.assignedCard = false;
-        gameMap.setCurrentContext(Context.GAME_FORTIFY);
+      gameMap.setCurrentContext(Context.GAME_FORTIFY);
       return;
     }
     String countryToAttack =
@@ -121,6 +157,13 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
     }
   }
 
+  /**
+   * Performs the attack using the Aggressive Strategy
+   *
+   * @param gameMap the GameMap instance / reference to game map
+   * @param blankCommand a placeholder command
+   * @return successful/failed attack execution
+   */
   @Override
   public boolean attack(GameMap gameMap, String blankCommand) {
     // recursively with strongest valid country until he can't attack
@@ -135,6 +178,15 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
     return true;
   }
 
+  /**
+   * Performs reinforce using the Aggressive Strategy
+   *
+   * @param gameMap the GameMap instance / reference to game map
+   * @param countryToPlace the country to place armies on
+   * @param armiesToPlace the number of armies to place
+   *
+   * @return successful/failed reinforce execution
+   */
   @Override
   public boolean reinforce(GameMap gameMap, String countryToPlace, int armiesToPlace) {
     // move all armies to strongest country
@@ -154,6 +206,16 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
     return true;
   }
 
+  /**
+   * Performs fortify using the Aggressive Strategy
+   *
+   * @param gameMap the GameMap instance / reference to game map
+   * @param fromCountry the country from which armies are drawn
+   * @param toCountry the country to which armies are transferred
+   * @param armyToMove the number of armies to place
+   *
+   * @return successful/failed reinforce execution
+   */
   @Override
   public boolean fortify(GameMap gameMap, String fromCountry, String toCountry, int armyToMove) {
     // get the country with max number of armies
@@ -207,6 +269,13 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
     return result;
   }
 
+  /**
+   * Finds the strongest country to fortify from along DFS path
+   * @param gameMap an instance of GameMap / reference to the game map
+   * @param currPlayerName the name of the current player
+   * @param maxCountry the country with max. armies to be fortified
+   * @return the country instance from which fortification will be done
+   */
   private Country findStrongestAlongDFSPath(
       GameMap gameMap, String currPlayerName, String maxCountry) {
     ArrayList<Country> countriesOwnedByPlayer =
@@ -237,6 +306,15 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
     return null;
   }
 
+  /**
+   * Utility to perform Depth-First Search
+   *
+   * @param gameMap the GameMap instance / a reference to the game map
+   * @param filteredGameMap a filtered game map containing only countries & borders owned by current player
+   * @param visited a set containing the visited countries along DFS path
+   * @param start the starting point for the depth-first search
+   * @return the set of visited countries in the DFS path
+   */
   private Set<String> DFSUtil(
       GameMap gameMap,
       Map<String, Set<String>> filteredGameMap,
@@ -251,6 +329,13 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
     return visited;
   }
 
+  /**
+   * Reverse sorts the DFS neighbors based on number of armies
+   *
+   * @param gameMap the GameMap instance / a reference to the game map
+   * @param DFSNeighbors the neighbors on the DFS path
+   * @return the String value of the country with max. armies along the DFS path
+   */
   private String getFromFortifyCountry(GameMap gameMap, ArrayList<String> DFSNeighbors) {
     ArrayList<Country> sortedReverse =
         DFSNeighbors.stream()

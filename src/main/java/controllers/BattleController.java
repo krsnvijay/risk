@@ -338,7 +338,6 @@ public class BattleController {
       Predicate<Integer> validateNumOfArmiesToMove =
           (armies) -> armies > numOfDiceAttacker && armies <= attackingCountry.getNumberOfArmies();
       if (!(attackingPlayer.getStrategy() instanceof PlayerHuman)) {
-        // TODO handle attackmove for each strategy
         // Attack
         if (validateNumOfArmiesToMove.test(attackingCountry.getNumberOfArmies() / 2)) {
           numOfArmiesToMove = attackingCountry.getNumberOfArmies() / 2;
