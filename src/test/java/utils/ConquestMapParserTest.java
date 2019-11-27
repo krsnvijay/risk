@@ -16,15 +16,18 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
- * test class to check the functionalities of MapParser.java {@link MapParser}
+ * test class to check the functionalities of ConquestMapParser.java {@link ConquestMapParser}
  *
- * @author SabariVenkadesh
+ * @author Vijay Krishna
  */
-public class MapParserTest {
-
-  /** gameMap loads the invalid risk map from the resources folder */
+public class ConquestMapParserTest {
+  /**
+   * gameMap loads the invalid risk map from the resources folder
+   */
   private GameMap gameMap;
-  /** reason displays the reason for the failed condition */
+  /**
+   * reason displays the reason for the failed condition
+   */
   private String reason;
 
   /**
@@ -35,11 +38,12 @@ public class MapParserTest {
   @Before
   public void setUp() throws Exception {
     // Load Risk map from resource folder
-    File riskMap = new File("src/test/resources/risk.map");
-    MapParser mapParser = new DominationMapParser();
+    File riskMap = new File("src/test/resources/conquest-world.map");
+    MapParser mapParser = new ConquestMapParser();
     gameMap = mapParser.loadMap(riskMap.getPath());
     reason = "";
   }
+
   /**
    * checks the map has been loaded and parsed successfully
    *
@@ -47,10 +51,10 @@ public class MapParserTest {
    */
   @Test
   public void loadMap() throws Exception {
-    GameMap gameMapInvalid = null;
-    File testMap = new File("src/test/resources/mapparserinvalid.map");
-    MapParser mapParser = new DominationMapParser();
-    gameMapInvalid = mapParser.loadMap(testMap.getPath());
+    GameMap gameMap = null;
+    File testMap = new File("src/test/resources/conquest-world.map");
+    MapParser mapParser = new ConquestMapParser();
+    gameMap = mapParser.loadMap(testMap.getPath());
     Scanner scan = new Scanner(testMap);
     StringBuilder sb = new StringBuilder();
     String temp = "", str = "";
@@ -60,26 +64,19 @@ public class MapParserTest {
 
     assertThat(
         sb.toString(),
-        either(containsString("name"))
-            .or(containsString("[file]"))
-            .or(containsString("[countries]"))
-            .or(containsString("[continents]"))
-            .or(containsString("[borders]")));
+        either(containsString("[Map]"))
+            .or(containsString("[Continents]"))
+            .or(containsString("[Territories]")));
     scan.close();
   }
 
-  /**
-   * checks the map has been saved in a file successfully
-   *
-   * @throws IOException when file location is invalid
-   */
   @Test
   public void saveMap() throws IOException {
-    DominationMapParser mapParser = new DominationMapParser();
+    ConquestMapParser mapParser = new ConquestMapParser();
     Files.write(
-        Paths.get("src/test/resources/mapparsersavetest.map"),
-        mapParser.serializeMap(gameMap, "mapparsersavetest").getBytes());
-    File saveTestFile = new File("src/test/resources/mapparsersavetest.map");
+        Paths.get("src/test/resources/conquestmapparsersavetest.map"),
+        mapParser.serializeMap(gameMap, "conquestmapparsersavetest").getBytes());
+    File saveTestFile = new File("src/test/resources/conquestmapparsersavetest.map");
     assertTrue(saveTestFile.exists());
   }
 }

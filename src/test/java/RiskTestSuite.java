@@ -3,7 +3,7 @@ import models.GameMapTest;
 import models.player.PlayerTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import utils.MapParserTest;
+import utils.DominationMapParserTest;
 import utils.MapValidatorTest;
 
 @RunWith(Suite.class)
@@ -18,6 +18,6 @@ import utils.MapValidatorTest;
   GameMapTest.class,
   PlayerTest.class,
   MapValidatorTest.class,
-  MapParserTest.class
+    DominationMapParserTest.class
 })
 public class RiskTestSuite {}
