@@ -31,6 +31,7 @@ public class SetupController {
     boolean result = gameMap.gameSetup();
     if (result) {
         display("Populated countries randomly", false);
+        gameMap.setCurrentContext(Context.GAME_STARTUP);
         if (!GameController.isTournament && gameMap.getPlayersList().stream().anyMatch(player -> !(player.getStrategy() instanceof PlayerHuman))) {
             display("Executing 'placeall' since there exists an AI player!", true);
             StartUpController.processPlaceAllCommand(gameMap, "placeall");
