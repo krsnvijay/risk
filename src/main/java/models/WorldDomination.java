@@ -42,6 +42,10 @@ public class WorldDomination extends Observable {
     return worldDomination;
   }
 
+  public static void destroyInstance() {
+    worldDomination = null;
+  }
+
   /** Refreshes the attributes and notifies the observers to update the WD View. */
   public void recomputeAttributes() {
     List<Context> excludedContexts =

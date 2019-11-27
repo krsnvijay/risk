@@ -60,6 +60,12 @@ public class Runner extends Application {
   /** A Temporary Map of Players mapped to cards they have in hand * */
   private Map<String, List<String>> cardLabelStringsTempMap = new HashMap<>();
 
+  /** Holds a reference to the phase view **/
+  public static PhaseView phaseViewRef;
+
+  /** Holds a reference to the World Domination View **/
+  public static WDView wdViewRef;
+
   /** Constructor for the runner class. */
   public Runner() {
     rootPlayerLabel = new Label("Game Not Started!");
@@ -376,7 +382,10 @@ public class Runner extends Application {
       WorldDomination.getInstance().addObserver(wdView);
       ObserverList.add(phaseView);
 
-      CardExchangeView _cardExchangeView = new CardExchangeView(this);
+      wdViewRef = wdView;
+      phaseViewRef = phaseView;
+
+      CardExchangeView cardExchangeView = new CardExchangeView(this);
 
       primaryStage.setTitle("Risk by Group 2");
       VBox vbox = new VBox();

@@ -3,8 +3,10 @@ package controllers;
 import models.Command;
 import models.Context;
 import models.GameMap;
+import models.WorldDomination;
 import utils.GamePersistenceHandler;
 import utils.MapAdaptor;
+import views.Runner;
 
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -161,7 +163,16 @@ public class MainController {
   public static boolean processLoadGameCommand(GameMap gameMap, String command) {
     String fileLocation = command.split(" ", 2)[1];
     try {
-      return GamePersistenceHandler.loadState(fileLocation);
+      GamePersistenceHandler.loadState(fileLocation);
+      // add back observers
+      WorldDomination.destroyInstance();
+      GameMap.getGameMap().addObserver(Runner.phaseViewRef);
+      WorldDomination.getInstance().addObserver(Runner.wdViewRef);
+      Runner.phaseViewRef.update(GameMap.getGameMap(),"CURRENT_PLAYER");
+      Runner.phaseViewRef.update(GameMap.getGameMap(),"CURRENT_CONTEXT");
+      Runner.wdViewRef.update(WorldDomination.getInstance(), null);
+      // finish
+      return true;
     } catch (Exception e) {
       display("Invalid gamestate or file does not exist", true);
       display(e.getMessage(), false);

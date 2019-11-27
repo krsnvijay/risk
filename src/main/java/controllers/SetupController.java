@@ -3,6 +3,7 @@ package controllers;
 import models.Context;
 import models.GameMap;
 import models.player.Player;
+import models.player.PlayerHuman;
 
 import static views.ConsoleView.display;
 
@@ -29,21 +30,25 @@ public class SetupController {
       }
     boolean result = gameMap.gameSetup();
     if (result) {
-      display("Populated countries randomly", false);
-      gameMap.setCurrentContext(Context.GAME_STARTUP);
-      display("[Game Startup Phase]", false);
-      Player currentPlayer = gameMap.getCurrentPlayer();
-      display(
-          String.format("%s's turn to place an army", currentPlayer.getStrategy().getPlayerName()),
-          false);
-      display(
-          String.format(
-              "%s has %d armies left to place",
-              currentPlayer.getStrategy().getPlayerName(),
-              currentPlayer.getStrategy().getNumberOfArmies()),
-          false);
+        display("Populated countries randomly", false);
+        if (!GameController.isTournament && gameMap.getPlayersList().stream().anyMatch(player -> !(player.getStrategy() instanceof PlayerHuman))) {
+            display("Executing 'placeall' since there exists an AI player!", true);
+            StartUpController.processPlaceAllCommand(gameMap, "placeall");
+        } else {
+            display("[Game Startup Phase]", false);
+            Player currentPlayer = gameMap.getCurrentPlayer();
+            display(
+                    String.format("%s's turn to place an army", currentPlayer.getStrategy().getPlayerName()),
+                    false);
+            display(
+                    String.format(
+                            "%s has %d armies left to place",
+                            currentPlayer.getStrategy().getPlayerName(),
+                            currentPlayer.getStrategy().getNumberOfArmies()),
+                    false);
+        }
     } else {
-      display("The player list should be > 1 and <= 6", false);
+        display("The player list should be > 1 and <= 6", false);
     }
     return result;
   }
