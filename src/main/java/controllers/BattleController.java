@@ -242,7 +242,6 @@ public class BattleController {
       return calculateMaxDiceForDefender();
     }
     if (!(defendingPlayer.getStrategy() instanceof PlayerHuman)) {
-      // TODO: Change num of defender dice according to strategy
       return calculateMaxDiceForDefender();
     }
     if (isNoInputEnabled) {
