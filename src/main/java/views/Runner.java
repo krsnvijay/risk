@@ -94,13 +94,14 @@ public class Runner extends Application {
     display("Welcome to risk game", false);
     display("Type help to see available commands", false);
     while (true) {
-      if(GameMap.getGameMap().getCurrentContext() == Context.GAME_END_OF_TURN){
-          GameMap.numberOfRounds++;
+      if (GameMap.getGameMap().getCurrentContext() == Context.GAME_END_OF_TURN) {
+        GameMap.numOfTurns++;
         GameController.startPhaseLoop(GameMap.getGameMap());
         continue;
       }
       String command = CLI.input.nextLine();
-      boolean commandStatus = GameMap.getGameMap().getCurrentContext().runCommand(GameMap.getGameMap(), command.trim());
+      boolean commandStatus =
+          GameMap.getGameMap().getCurrentContext().runCommand(GameMap.getGameMap(), command.trim());
       if (!commandStatus) {
         display("Invalid command, use help to check the list of available commands", false);
       }

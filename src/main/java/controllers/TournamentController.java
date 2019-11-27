@@ -67,7 +67,7 @@ public class TournamentController {
         GameMap.numberOfRounds = 0;
         while (!GameMap.isGameOver && GameMap.numberOfRounds < maxNumberOfTurnsProperty) {
           GameController.startPhaseLoop(GameMap.getGameMap());
-          GameMap.numberOfRounds++;
+          GameMap.numOfTurns++;
         }
         String winner;
         if (GameMap.numberOfRounds >= TournamentController.maxNumberOfTurnsProperty) {

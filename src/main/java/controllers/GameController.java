@@ -285,10 +285,14 @@ public class GameController {
    */
   public static void changeToNextPhase(GameMap gameMap) {
     Context currentContext = gameMap.getCurrentContext();
-    PlayerStrategy currentPlayerStrategy = gameMap.getCurrentPlayer().getStrategy();
+    Player player = gameMap.getCurrentPlayer();
+    PlayerStrategy currentPlayerStrategy = player.getStrategy();
     switch (currentContext) {
       case GAME_END_OF_TURN:
-          display(String.format("[Start Turn - %d]", GameMap.numberOfRounds + 1), false);
+        if (GameMap.getCurrentPlayerIndex() == 0) {
+          display(String.format("[Start Round - %d]", GameMap.numberOfRounds + 1), true);
+        }
+        display(String.format("[Start Turn - %d]", GameMap.numOfTurns + 1), false);
         currentPlayerStrategy.setNumberOfArmies(Player.calculateReinforcements(gameMap));
         display(
             String.format(
@@ -321,8 +325,12 @@ public class GameController {
                     "<End of %s's (%s) turn>",
                 currentPlayerStrategy.getPlayerName(), currentPlayerStrategy.getStrategyType()),
             true);
-          display(String.format("[End Turn - %d]", GameMap.numberOfRounds + 1), false);
+        display(String.format("[End Turn - %d]", GameMap.numOfTurns + 1), false);
         gameMap.updatePlayerIndex();
+        if (GameMap.getCurrentPlayerIndex() == GameMap.getGameMap().getPlayersList().size() - 1) {
+          display(String.format("[End Round - %d]", GameMap.numberOfRounds + 1), true);
+          GameMap.numberOfRounds++;
+        }
         gameMap.setCurrentContext(Context.GAME_END_OF_TURN);
         break;
     }

@@ -19,7 +19,9 @@ public class GameMap extends Observable {
   /** The singleton instance of the game's state */
   public static GameMap gameMap = null;
 
-  /** number of turns in a game */
+  /**
+   * number of rounds in a game
+   */
   public static int numberOfRounds = 0;
 
   /** check if the game finishes */
@@ -69,6 +71,11 @@ public class GameMap extends Observable {
 
   /** variable that indicates if savegame command is possible */
   private boolean isSavePossible = true;
+
+  /**
+   * variable to store number of turns
+   */
+  public static int numOfTurns = 0;
 
   /** The constructor for the GameMap. */
   public GameMap() {
@@ -132,6 +139,24 @@ public class GameMap extends Observable {
    */
   public static void setCurrentPlayerIndex(int currentPlayerIndex) {
     GameMap.currentPlayerIndex = currentPlayerIndex;
+  }
+
+  /**
+   * getter for number of turns
+   *
+   * @return int number of turns
+   */
+  public static int getNumOfTurns() {
+    return numOfTurns;
+  }
+
+  /**
+   * Setter for numOfTurns
+   *
+   * @param numOfTurns int to set the number of turns to
+   */
+  public void setNumOfTurns(int numOfTurns) {
+    GameMap.numOfTurns = numOfTurns;
   }
 
   /**

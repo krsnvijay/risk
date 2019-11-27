@@ -1,0 +1,63 @@
+[Map]
+author=Sean O'Connor
+warn=yes
+image=world (small).bmp
+wrap=yes
+scroll=horizontal
+
+[Continents]
+Africa=3
+Asia=7
+Australia=2
+Europe=5
+North America=5
+South America=2
+
+[Territories]
+Egypt,181,130,Africa,Southern Europe,East Africa,North Africa,Middle East
+Madagascar,207,181,Africa,East Africa,South Africa
+Congo,177,164,Africa,East Africa,North Africa,South Africa
+North Africa,159,139,Africa,Southern Europe,Brazil,East Africa,Western Europe,Congo,Egypt
+East Africa,192,153,Africa,Madagascar,North Africa,South Africa,Middle East,Congo,Egypt
+South Africa,180,186,Africa,East Africa,Madagascar,Congo
+
+Ural,243,64,Asia,Siberia,Ukraine,Afghanistan,China
+Afghanistan,230,108,Asia,Ukraine,India,China,Middle East,Ural
+Siam,270,139,Asia,Indonesia,India,China
+Mongolia,296,101,Asia,Siberia,China,Japan,Kamchatka,Irkutsk
+China,269,112,Asia,Siam,Siberia,Mongolia,India,Afghanistan,Ural
+Siberia,274,68,Asia,Yatusk,Mongolia,China,Irkutsk,Ural
+Kamchatka,344,65,Asia,Yatusk,Alaska,Mongolia,Japan,Irkutsk
+Middle East,206,123,Asia,Southern Europe,East Africa,Ukraine,India,Afghanistan,Egypt
+Japan,322,104,Asia,Mongolia,Kamchatka
+Yatusk,320,52,Asia,Siberia,Kamchatka,Irkutsk
+India,242,128,Asia,Siam,Afghanistan,China,Middle East
+Irkutsk,299,76,Asia,Yatusk,Siberia,Mongolia,Kamchatka
+
+Eastern Australia,334,189,Australia,Western Australia,New Guinea
+Western Australia,313,188,Australia,Indonesia,Eastern Australia,New Guinea
+New Guinea,329,158,Australia,Indonesia,Western Australia,Eastern Australia
+Indonesia,292,159,Australia,Siam,Western Australia,New Guinea
+
+Northern Europe,177,90,Europe,Southern Europe,Western Europe,Ukraine,Scandinavia,Great Britain
+Scandinavia,170,74,Europe,Iceland,Ukraine,Northern Europe,Great Britain
+Iceland,144,67,Europe,Scandinavia,Great Britain,Greenland
+Great Britain,156,91,Europe,Western Europe,Iceland,Scandinavia,Northern Europe
+Ukraine,202,84,Europe,Southern Europe,Scandinavia,Afghanistan,Northern Europe,Middle East,Ural
+Western Europe,160,109,Europe,Southern Europe,North Africa,Northern Europe,Great Britain
+Southern Europe,184,102,Europe,Western Europe,Ukraine,North Africa,Northern Europe,Middle East,Egypt
+
+Alberta,58,67,North America,Alaska,Western United States,Northwest Territory,Ontario
+Northwest Territory,59,42,North America,Alaska,Alberta,Ontario,Greenland
+Western United States,59,95,North America,Alberta,Ontario,Central America,Eastern United States
+Alaska,30,46,North America,Northwest Territory,Alberta,Kamchatka
+Central America,75,123,North America,Western United States,Venezuala,Eastern United States
+Quebec,106,75,North America,Ontario,Greenland,Eastern United States
+Eastern United States,84,97,North America,Western United States,Ontario,Central America,Quebec
+Ontario,80,72,North America,Western United States,Northwest Territory,Alberta,Greenland,Quebec,Eastern United States
+Greenland,121,30,North America,Iceland,Northwest Territory,Ontario,Quebec
+
+Brazil,115,165,South America,North Africa,Argentina,Venezuala,Peru
+Argentina,104,203,South America,Brazil,Peru
+Venezuala,94,146,South America,Brazil,Peru,Central America
+Peru,91,168,South America,Brazil,Argentina,Venezuala
