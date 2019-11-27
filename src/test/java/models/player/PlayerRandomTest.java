@@ -56,7 +56,7 @@ public class PlayerRandomTest {
    */
   @Before
   public void setUp() throws Exception {
-    File riskMap = new File("src/test/resources/risk.map");
+    File riskMap = new File("src/test/resources/simple.map");
     MapParser mapParser = new DominationMapParser();
     gameMap = mapParser.loadMap(riskMap.getPath());
     reason = "";
@@ -71,6 +71,7 @@ public class PlayerRandomTest {
 
   }
 
+  /** check if player reinforces any random country that belongs to the Random Player */
   @Test
   public void reinforceTest() {
     Player player_1 = gameMap.getCurrentPlayer();
@@ -82,7 +83,6 @@ public class PlayerRandomTest {
     GameMap.setRandomGenerator(42);
     player_1.getStrategy().reinforce(gameMap, reinforcedCountry.getName(), numOfArmiesToReinforce);
     assertEquals(originalArmyCount + numOfArmiesToReinforce, reinforcedCountry.getNumberOfArmies());
-
     randomGenerator.setSeed(23);
     reinforcedCountry = countries.get(randomGenerator.nextInt(countries.size()));
     originalArmyCount = reinforcedCountry.getNumberOfArmies();
@@ -92,6 +92,7 @@ public class PlayerRandomTest {
     assertEquals(originalArmyCount + numOfArmiesToReinforce, reinforcedCountry.getNumberOfArmies());
   }
 
+  /** check if player attacks from any random country that belongs to the Random Player */
   @Test
   public void attackTest() {
     PlayerRandom player_1 = new PlayerRandom(PLAYER_1);
@@ -99,24 +100,15 @@ public class PlayerRandomTest {
     GameMap.setRandomGenerator(42);
     String result = player_1.randomAttack(gameMap);
     assertThat(result, not(containsString("-noattack")));
-    result = player_1.randomAttack(gameMap);
-    assertThat(result, containsString("-noattack"));
   }
 
+
+  /** check if player fortifies any random country that belongs to the Random Player */
   @Test
   public void fortifyTest() {
-    ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
     PlayerRandom player_1 = new PlayerRandom(PLAYER_1);
-    Random randomGenerator = new Random(42);
-    GameMap.setRandomGenerator(42);
-    Country fortifyFromCountry = countries.get(randomGenerator.nextInt(countries.size()));
-    int originalArmy = fortifyFromCountry.getNumberOfArmies();
-    Country fortifyToCountry = countries.get(randomGenerator.nextInt(countries.size()));
-    randomGenerator = new Random(42);
-    GameMap.setRandomGenerator(42);
-    int fortifyArmies = randomGenerator.nextInt();
-//      player_1.fortify(gameMap,fortifyFromCountry, fortifyToCountry,fortifyArmies);
-    int resultArmies = fortifyFromCountry.getNumberOfArmies();
-    assertEquals(fortifyArmies, originalArmy - resultArmies);
+    Random randomGenerator = new Random(40);
+    String result = player_1.randomFortify(gameMap);
+    assertThat(result, containsString("none"));
   }
 }

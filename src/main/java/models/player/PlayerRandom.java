@@ -182,7 +182,7 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
    * @param gameMap The GameMap object.
    * @return The command to execute for the fortify phase.
    */
-  private String randomFortify(GameMap gameMap) {
+  public String randomFortify(GameMap gameMap) {
     boolean shouldFortify = GameMap.getRandomGenerator().nextBoolean();
     if (!shouldFortify)
       return "fortify -none";
