@@ -1,4 +1,114 @@
 # Refactors
+This document contains information on the refactors we made.
+
+# From Build 3
+Our main focus of *build#3* is to polish our code and ensure everything stays optimised. The tournament mode is going to execute a lot of calls very fast and we want to keep everything in check.
+
+## Potential Refactoring Targets
+* Implementation of Strategy pattern changes how our Player class behaves.
+* Making the code more understandable and efficient by caching chained calls to methods.
+* Renaming classes and variables for understanding and consistency.
+* Handling the number of method calls and information in memory.
+* Implementation of the Adaptor pattern to read Conquest map files as well as the Dominance game files (as before).
+
+## Refactoring Operations
+These are the refactoring operations we performed.
+
+### Implementation of the Strategy pattern
+For the last two builds, we had one Player class that dealt with human players. With the implementation of the strategy pattern, our Player class was refactored into `PlayerHuman`. The methods from that class which were common to every strategy were moved into the `Player` class, ex. `getCountriesByOwnership()` or `calculateReinforcements(GameMap gameMap)`.
+
+This new `Player` class holds an instance of `PlayerStrategy` hence holding an instance of a strategy through Composition. Our original code still passed the tests since we refactored instances of the 'old' `Player` into `player.getStrategy()` to get an instance of `PlayerStrategy` -- `PlayerHuman`.
+
+```java
+public class Player {
+  private PlayerStrategy strategy = null;
+  
+  public Player(String name, String strategy) {
+    switch (strategy) {
+      case "random":
+        this.setStrategy(new PlayerRandom(name));
+        break;
+      case "aggressive":
+        this.setStrategy(new PlayerAggressive(name));
+        break;
+      case "benevolent":
+        this.setStrategy(new PlayerBenevolent(name));
+        break;
+      case "cheater":
+        this.setStrategy(new PlayerCheater(name));
+        break;
+      case "human":
+        this.setStrategy(new PlayerHuman(name));
+        break;
+    }
+  }
+  
+  public static int calculateReinforcements(GameMap gameMap) {
+    String playerName = gameMap.getCurrentPlayer().strategy.getPlayerName();
+    int ownedCountries = getCountriesByOwnership(playerName, gameMap).size();
+    int allReinforcementArmies = getBonusArmiesIfPlayerOwnsContinents(playerName, gameMap);
+
+    if (ownedCountries < 9) {
+      allReinforcementArmies += 3;
+    }
+    allReinforcementArmies += ownedCountries / 3;
+    return allReinforcementArmies;
+  }
+  
+  // ...
+  
+  public PlayerStrategy getStrategy() {
+    return strategy;
+  }
+
+  public void setStrategy(PlayerStrategy strategy) {
+    this.strategy = strategy;
+  }
+
+  public void attack(GameMap gameMap, String command) {
+    strategy.attack(gameMap, command);
+  }
+
+  public void reinforce(GameMap gameMap, String countryToPlace, int armiesToPlace) {
+    strategy.reinforce(gameMap, countryToPlace, armiesToPlace);
+  }
+  
+  public void fortify(GameMap gameMap, String fromCountry, String toCountry, int armyToMove) {
+    strategy.fortify(gameMap, fromCountry, toCountry, armyToMove);
+  }
+}
+```
+
+The old `Player` class looks like this now:
+
+```java
+public class PlayerHuman extends Observable implements PlayerStrategy {
+
+  private String playerName;
+  private int numberOfArmies;
+ 
+  public PlayerHuman(String playerName) {
+    super();
+    this.playerName = playerName;
+  }
+  
+  public boolean reinforce(GameMap gameMap, String countryToPlace, int armiesToPlace) {
+    //...
+  }
+
+  public boolean fortify(GameMap gameMap, String fromCountry, String toCountry, int armyToMove) {
+    //...
+  }
+  
+  public boolean attack(GameMap gameMap, String command) {
+    //...
+  }
+```
+
+### Caching calls to long method chains
+
+
+# From Build 2
 Our main focus of *build#2* is to improve the code that processes and validates the user input from the cli.
 
 In *build#1* each command is handled and validated inside their own separate loop. 
@@ -8,7 +118,7 @@ First the input is matched with a list of possible commands in the current conte
 If there is a match then the command is sent to an appropriate controller where it can be processed further.
 Unlike the previous build we use regex to validate the input, this allows us to detect errors in the cli usage very early on in the pipeline.
  
-# Potential Refactoring Targets
+## Potential Refactoring Targets
 * Context validation of command
 * Command syntax validation
 * Command option validation
@@ -18,8 +128,10 @@ Unlike the previous build we use regex to validate the input, this allows us to 
 * Delegate console output to display() in Views, which also works with the GUI to show feedback
 * Refactor GameMap class to a singleton that is observable 
 
-# Refactoring Operations
-## Command syntax validation
+## Refactoring Operations
+These are the refactoring operations we performed.
+
+### Command syntax validation
 The commands allowed in the game are stored as enums where each type contains the regex pattern, the controller method ref that processes the command and its usage.
 Refactoring is done by extracting methods, validation , usage from ```GameRunner, Runner``` of *build#1*.
 Convenience methods like ```validate, getUsage, runOperation``` are added for ease of use.
@@ -106,7 +218,7 @@ public enum Command {
   }
 }
 ```
-## Context validation of command
+### Context validation of command
 The commands allowed in each context of the game are stored in an enum.
 Convenience methods like ```validate, getMatchedCommand, runCommand``` are added for ease of use.
 
@@ -155,7 +267,7 @@ public enum Context {
   }
 }
 ```
-## Command option validation
+### Command option validation
 In the ```GameController``` class, the process method of each operation is refactored into separate methods for validate and perform.
 ```java
 public static boolean processFortifyCommand(GameMap gameMap, String command) {
@@ -236,7 +348,7 @@ public static boolean validateFortify(GameMap gameMap, String command) {
     return result;
   }
 ```
-## Split behaviour of each phase into their own controller
+### Split behaviour of each phase into their own controller
 Refactor methods from ```GameRunner``` class from *build#1* into methods that are grouped based on the context in which they operate.
 ```java
 class MainController {
@@ -276,7 +388,7 @@ class GameController {
 }
 ```
 
-## Move player actions like attack, fortify, reinforce into Player class
+### Move player actions like attack, fortify, reinforce into Player class
 Move methods ```attack, fortify, reinforce``` from ```GameMap``` class into ```Player``` class. So the player object can directly invoke those commands.
 ```java
 class Player {
@@ -302,7 +414,7 @@ class Player {
   }
 }
 ```  
-## Refactor list of possible commands to 'help' command
+### Refactor list of possible commands to 'help' command
 In *build#1* list of possible commands were manually printed using a hardcoded string. It is now extracted into a custom 'help' command, which can be invoked in any phase.
 
 'help' prints out all valid commands of the current ```Context``` by using ```command.getUsage()``` 
@@ -323,7 +435,7 @@ System.out.println(
   }
 ```
 
-## Delegate user feedback to display()
+### Delegate user feedback to display()
 Created a helper function for displaying feedback to the user.
 Works with both the GUI and the console to show feedback appropriately.
 ```java
@@ -336,7 +448,7 @@ Works with both the GUI and the console to show feedback appropriately.
   }
 ```
 
-## Refactor GameMap class to a singleton that is observable
+### Refactor GameMap class to a singleton that is observable
 At any point in the game there is only one instance of ```GameMap```, so it is now refactored into a singleton. Previously ```gameMap``` was stored as a field in the ```CLI``` class
 ```java
 class GameMap extends Observable{
