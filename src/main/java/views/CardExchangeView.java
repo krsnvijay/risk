@@ -2,6 +2,7 @@ package views;
 
 import models.Card;
 import models.GameMap;
+import models.player.PlayerStrategy;
 
 import java.util.List;
 import java.util.Observable;
@@ -47,7 +48,8 @@ public class CardExchangeView implements Observer {
   @Override
   public void update(Observable o, Object arg) {
     GameMap gameMap = GameMap.getGameMap();
-    List<Card> cardsInHand = gameMap.getCurrentPlayer().getStrategy().getCardsInHand();
+    PlayerStrategy strategy = gameMap.getCurrentPlayer().getStrategy();
+    List<Card> cardsInHand = strategy.getCardsInHand();
     List<String> cardsInHandString =
         cardsInHand.stream()
             .map(

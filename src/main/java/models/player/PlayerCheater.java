@@ -59,7 +59,8 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
   @Override
   public boolean attack(GameMap gameMap, String command) {
     display(String.format("%s attacks and captures all opposing neighbours.", playerName), true);
-    playerName = gameMap.getCurrentPlayer().getStrategy().getPlayerName();
+    PlayerStrategy strategy = gameMap.getCurrentPlayer().getStrategy();
+    playerName = strategy.getPlayerName();
     ArrayList<Country> countries =
         Player.getCountriesByOwnership(playerName, gameMap).stream()
             .filter(c -> c.getNumberOfArmies() > 2)
@@ -109,7 +110,7 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
       display(
           playerName
               + " currently has "
-              + gameMap.getCurrentPlayer().getStrategy().getCardsInHand().stream()
+              + strategy.getCardsInHand().stream()
               .map(Card::getName)
               .collect(Collectors.joining(" "))
               + " card(s).",
@@ -147,7 +148,8 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
       this.exchangeCardsForArmies(Player.getCardExchangeIndices(this.getCardsInHand()));
     }
     ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap);
-    gameMap.getCurrentPlayer().getStrategy().setNumberOfArmies(0);
+    PlayerStrategy strategy = gameMap.getCurrentPlayer().getStrategy();
+    strategy.setNumberOfArmies(0);
       countries.forEach(country -> {
           display(
                   String.format(

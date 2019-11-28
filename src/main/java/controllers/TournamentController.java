@@ -1,6 +1,7 @@
 package controllers;
 
 import models.GameMap;
+import models.player.PlayerStrategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,7 +76,8 @@ public class TournamentController {
           display("Turns Exceeded! Ending the current game", true);
           winner = "Draw";
         } else {
-          winner = gameMap.getCurrentPlayer().getStrategy().getPlayerName();
+          PlayerStrategy strategy = gameMap.getCurrentPlayer().getStrategy();
+          winner = strategy.getPlayerName();
         }
         // save the winners name
         if (!resultTable.containsKey(map)) {

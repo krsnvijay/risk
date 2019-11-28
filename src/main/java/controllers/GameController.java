@@ -101,11 +101,12 @@ public class GameController {
    * @return true if successfully exchanged cards
    */
   public static boolean processExchangeCardsCommand(GameMap gameMap, String command) {
+    PlayerStrategy strategy = gameMap.getCurrentPlayer().getStrategy();
     if (command.contains("-none")) {
       display(
           String.format(
               "%s doesn't want to exchange cards",
-              gameMap.getCurrentPlayer().getStrategy().getPlayerName()),
+              strategy.getPlayerName()),
           true);
       return true;
     }
@@ -115,7 +116,7 @@ public class GameController {
       positionOfCards[i - 1] = Integer.parseInt(commandSplit[i]);
     }
     // exchange cards method implementation
-    gameMap.getCurrentPlayer().getStrategy().exchangeCardsForArmies(positionOfCards);
+    strategy.exchangeCardsForArmies(positionOfCards);
     return true;
   }
 
@@ -146,7 +147,8 @@ public class GameController {
           false);
     }
     if (currentPlayer.getStrategy().getNumberOfArmies() == 0) {
-      if (gameMap.getCurrentPlayer().getStrategy().getCardsInHand().size() < 5) {
+      PlayerStrategy strategy = gameMap.getCurrentPlayer().getStrategy();
+      if (strategy.getCardsInHand().size() < 5) {
         changeToNextPhase(gameMap);
       } else {
         display(
