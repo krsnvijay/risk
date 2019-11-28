@@ -40,15 +40,6 @@ public class EditorControllerTest {
   }
 
   @Test
-  public void editContinent() {}
-
-  @Test
-  public void editCountry() {}
-
-  @Test
-  public void editNeighbor() {}
-
-  @Test
   public void validateMap() {
     //  Arrange
     File riskMap = new File("src/test/resources/riskinvalid.map");
@@ -74,6 +65,4 @@ public class EditorControllerTest {
     assertTrue(saveTestFile.exists());
   }
 
-  @Test
-  public void showMap() {}
 }

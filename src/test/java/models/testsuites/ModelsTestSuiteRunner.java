@@ -4,6 +4,9 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
+/**
+ * Test Suite Runner for Models
+ */
 public class ModelsTestSuiteRunner {
   public static void main(String[] args) {
     Result result = JUnitCore.runClasses(ModelsTestSuite.class);

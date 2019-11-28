@@ -62,8 +62,9 @@ public class DominationMapParserTest {
     while (scan.hasNext()) {
       sb.append(scan.nextLine());
     }
-
+    reason = "Loaded map should have appropriate sections of DominationMap";
     assertThat(
+        reason,
         sb.toString(),
         either(containsString("name"))
             .or(containsString("[file]"))
@@ -85,6 +86,7 @@ public class DominationMapParserTest {
         Paths.get("src/test/resources/mapparsersavetest.map"),
         mapParser.serializeMap(gameMap, "mapparsersavetest").getBytes());
     File saveTestFile = new File("src/test/resources/mapparsersavetest.map");
-    assertTrue(saveTestFile.exists());
+    reason = "Saved Map file should be present at the path";
+    assertTrue(reason, saveTestFile.exists());
   }
 }

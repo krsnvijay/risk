@@ -70,18 +70,6 @@ public class GameControllerTest {
     countries = gameMap.getCountries();
   }
 
-  /** Test to check whether the reinforced army is added to the country */
-  /*  @Test
-  public void reinforce() {
-    Country sourceCountry = gameMap.getCountries().get(INDIA);
-    sourceCountry.setOwnerName(PLAYER_1);
-    sourceCountry.setNumberOfArmies(5);
-    boolean result = gameMap.getPlayersList().get(0).reinforce(gameMap, CHINA, 2);
-    int numberOfArmies = sourceCountry.getNumberOfArmies();
-    reason = "The total armies should be 4";
-    assertTrue(reason, result);
-  }
-  */
 
   /** Test to check whether the attacking country has more than 2 armies */
   @Test

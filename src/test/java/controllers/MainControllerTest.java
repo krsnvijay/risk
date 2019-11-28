@@ -41,9 +41,6 @@ public class MainControllerTest {
     reason = "";
   }
 
-  /** Test to check if edit map commands are valid */
-  @Test
-  public void editMap() {}
 
   /**
    * Test to check whether the attacking country has more than 2 armies
@@ -69,7 +66,4 @@ public class MainControllerTest {
             .or(containsString("[borders]")));
     scan.close();
   }
-
-  @Test
-  public void exitGame() {}
 }

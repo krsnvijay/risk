@@ -14,6 +14,11 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Test class to check the functionalities of game save/load  {@link GamePersistenceHandler}
+ *
+ * @author Vijay Krishna
+ */
 public class GamePersistenceHandlerTest {
   public static final String PLAYER_1 = "Player1";
   public static final String PLAYER_2 = "Player2";
@@ -61,7 +66,7 @@ public class GamePersistenceHandlerTest {
    * Tests savegame functionality
    * Test passes if the gameState is saved to a file as json
    *
-   * @throws IOException
+   * @throws IOException when file not found
    */
   @Test
   public void saveState() throws IOException {

@@ -61,8 +61,10 @@ public class ConquestMapParserTest {
     while (scan.hasNext()) {
       sb.append(scan.nextLine());
     }
+    reason = "Loaded map should have appropriate sections of ConquestMap";
 
     assertThat(
+        reason,
         sb.toString(),
         either(containsString("[Map]"))
             .or(containsString("[Continents]"))
@@ -70,6 +72,11 @@ public class ConquestMapParserTest {
     scan.close();
   }
 
+  /**
+   * Tests if the map has been saved successfully
+   *
+   * @throws IOException when map location is invalid
+   */
   @Test
   public void saveMap() throws IOException {
     ConquestMapParser mapParser = new ConquestMapParser();
@@ -77,6 +84,7 @@ public class ConquestMapParserTest {
         Paths.get("src/test/resources/conquestmapparsersavetest.map"),
         mapParser.serializeMap(gameMap, "conquestmapparsersavetest").getBytes());
     File saveTestFile = new File("src/test/resources/conquestmapparsersavetest.map");
-    assertTrue(saveTestFile.exists());
+    reason = "Saved Map file should be present at the path";
+    assertTrue(reason, saveTestFile.exists());
   }
 }
