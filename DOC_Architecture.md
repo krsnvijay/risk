@@ -3,7 +3,7 @@
 We follow a model similar to the Model View Controller (MVC) pattern for structuring our project. This is how the directory structure looks like:
 ![Directory Structure](https://i.imgur.com/jjKAIFn.png)
  
-![Architectural Diagram](https://i.imgur.com/4sDe6dU.png)
+![Architectural Diagram](https://i.imgur.com/XNV47K4.png)
 
 ## The Models package 
 This package holds the definition for the various entities in the game: `Continent, Country, GameMap, Card` etc. It also has a player package with the various strategies and the `Player` class. 
