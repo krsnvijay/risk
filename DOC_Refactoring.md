@@ -8,7 +8,7 @@ Our main focus of *build#3* is to polish our code and ensure everything stays op
 * Implementation of Strategy pattern changes how our Player class behaves.
 * Making the code more understandable and efficient by caching chained calls to methods.
 * Renaming classes and variables for understanding and consistency.
-* Handling the number of method calls and information in memory.
+* Handling memory leaks.
 * Implementation of the Adaptor pattern to read Conquest map files as well as the Dominance game files (as before).
 
 ## Refactoring Operations
@@ -106,7 +106,37 @@ public class PlayerHuman extends Observable implements PlayerStrategy {
 ```
 
 ### Caching calls to long method chains
+We refactored a lot of chain methods by caching them into variables. An example of this refactor is something like this:
 
+```java
+display(
+  gameMap.getCurrentPlayer().getStrategy().getPlayerName()
+    + " currently has "
+    + gameMap.getCurrentPlayer().getStrategy().getCardsInHand().stream()
+        .map(Card::getName)
+        .collect(Collectors.joining(" "))
+    + " card(s).",
+  false);
+```
+
+Gets turned into something like this:
+
+```java
+PlayerStrategy strategy = gameMap.getCurrentPlayer().getStrategy();
+display(
+  strategy.getPlayerName()
+    + " currently has "
+    + strategy.getCardsInHand().stream()
+        .map(Card::getName)
+        .collect(Collectors.joining(" "))
+    + " card(s).",
+  false);
+```
+### Handling Memory Leaks
+Before this build, we were running the game loop and never stopping it. It was not a problem before, but in a tournament the calls can really stack up -- along with the variables being allocated in the heap at an alarming rate. To fix this issue, we added a new "phase" called `GAME_END_OF_TURN`. At the end of the turn, we refer back to the CLI and then restart the loop for the next phase. This ensures the variables are properly garbage collected and we don't strain the resources too much.
+
+### Implementation of the Adapter Pattern
+Our Domination file was being loaded without using any patterns through file handling. In preparation for *build#3* we had to implement the Adapter pattern and leave the current functionality intact. To do this, we moved the existing code to `DominationMapParser` which is called using the `MapAdapter` which autoloads the file based on the identified type.
 
 # From Build 2
 Our main focus of *build#2* is to improve the code that processes and validates the user input from the cli.
