@@ -12,6 +12,7 @@ import org.junit.runners.Suite;
   GameRunnerTest.class,
   MainControllerTest.class,
   SetupControllerTest.class,
-  StartUpControllerTest.class
+  StartUpControllerTest.class,
+        TournamentControllerTest.class
 })
 public class ControllersTestSuite {}

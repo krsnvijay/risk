@@ -25,7 +25,7 @@ public class TournamentController {
   /**
    * a map that holds the results table
    */
-  private static Map<String, ArrayList<String>> resultTable = new HashMap<>();
+  public static Map<String, ArrayList<String>> resultTable = new HashMap<>();
 
   /**
    * starts the tournament based on command
@@ -89,7 +89,6 @@ public class TournamentController {
     }
     // pretty print the results
     System.out.println(resultTable.toString());
-    System.exit(0);
     return true;
   }
 }
