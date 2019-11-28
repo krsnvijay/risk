@@ -18,7 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * test class to check the functionalities of GameController.java
+ * test class to check the functionalities of GameController.java {@link GameController}
  *
  * @see controllers.GameController
  * @author Siddharth Singh
@@ -118,11 +118,7 @@ public class GameControllerTest {
     assertTrue(reason, result);
   }
 
-  /** Test to check whether the player conquers a valid country */
-  @Test
-  public void conquerTest() {}
-
-  /** Test to check if a player won the game */
+   /** Test to check if a player won the game */
   @Test
   public void endOfGameTest() {
     playerName = gameMap.getPlayersList().get(0).getStrategy().getPlayerName();

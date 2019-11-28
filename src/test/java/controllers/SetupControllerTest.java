@@ -16,7 +16,7 @@ import java.util.Map;
 import static org.junit.Assert.assertTrue;
 
 /**
- * test class to check the functionalities of SetupController.java
+ * test class to check the functionalities of SetupController.java {@link SetupController}
  *
  * @see controllers.SetupController
  * @author Sabari Venkadesh

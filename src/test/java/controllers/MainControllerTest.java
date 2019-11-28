@@ -43,7 +43,7 @@ public class MainControllerTest {
 
 
   /**
-   * Test to check whether the attacking country has more than 2 armies
+   * Test to load a map
    *
    * @throws Exception IO exceptions
    */
@@ -53,11 +53,12 @@ public class MainControllerTest {
     Scanner scan = new Scanner(testMap);
     StringBuilder sb = new StringBuilder();
     String temp = "", str = "";
+    reason="Map loaded successfully";
     while (scan.hasNext()) {
       sb.append(scan.nextLine());
     }
 
-    assertThat(
+    assertThat(reason,
         sb.toString(),
         either(containsString("name"))
             .or(containsString("[file]"))

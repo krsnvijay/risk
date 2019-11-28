@@ -21,7 +21,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 /**
- * test class to check the functionalities of PlayerRandom.java {@link Player}
+ * test class to check the functionalities of PlayerRandom.java c
  */
 public class PlayerRandomTest {
 
@@ -89,7 +89,8 @@ public class PlayerRandomTest {
     numOfArmiesToReinforce = Player.calculateReinforcements(gameMap);
     GameMap.setRandomGenerator(23);
     player_1.getStrategy().reinforce(gameMap, reinforcedCountry.getName(), numOfArmiesToReinforce);
-    assertEquals(originalArmyCount + numOfArmiesToReinforce, reinforcedCountry.getNumberOfArmies());
+    reason="The player should reinforce random country";
+    assertEquals(reason,originalArmyCount + numOfArmiesToReinforce, reinforcedCountry.getNumberOfArmies());
   }
 
   /** check if player attacks from any random country that belongs to the Random Player */
@@ -99,7 +100,8 @@ public class PlayerRandomTest {
     Random randomGenerator = new Random(42);
     GameMap.setRandomGenerator(42);
     String result = player_1.randomAttack(gameMap);
-    assertThat(result, not(containsString("-noattack")));
+    reason="The player should attack random country";
+    assertThat(reason, result, not(containsString("-noattack")));
   }
 
 
@@ -109,6 +111,7 @@ public class PlayerRandomTest {
     PlayerRandom player_1 = new PlayerRandom(PLAYER_1);
     Random randomGenerator = new Random(40);
     String result = player_1.randomFortify(gameMap);
-    assertThat(result, containsString("none"));
+    reason="The player should fortify random country";
+    assertThat(reason, result, containsString("none"));
   }
 }
