@@ -34,22 +34,15 @@ public class TournamentControllerTest {
    * a map that holds the results table
    */
   private static Map<String, ArrayList<String>> resultTable = new HashMap<>();
-  /** store game state */
-  private GameMap gameMap;
 
-  @Before
-  public void setUp() throws Exception {
-    File riskMap = new File("src/test/resources/risk.map");
-    MapParser mapParser = new DominationMapParser();
-    gameMap = mapParser.loadMap(riskMap.getPath());
-  }
+
 
   @Test
   public void startTournament() {
     Path currentRelativePath = Paths.get("src/test/resources/risk.map");
     String mapPath = currentRelativePath.toAbsolutePath().toString();
     String command = String.format("tournament -M %s -P cheater benevolent -G 1 -D 50",mapPath);
-    TournamentController.startTournament(gameMap, command);
+    TournamentController.startTournament(null, command);
     resultTable = TournamentController.resultTable;
     String winner = resultTable.values().stream().findFirst().get().get(0);
     assertThat(winner, containsString("CHEATER"));

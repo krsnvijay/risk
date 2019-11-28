@@ -11,7 +11,8 @@ import utils.MapValidatorTest;
 /** Test Suite Runner for Risk */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-  BattleControllerTest.class,
+        TournamentControllerTest.class,
+        BattleControllerTest.class,
   EditorControllerTest.class,
   GameControllerTest.class,
   RunnerTest.class,
