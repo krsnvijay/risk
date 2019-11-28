@@ -8,9 +8,7 @@ import utils.DominationMapParserTest;
 import utils.GamePersistenceHandlerTest;
 import utils.MapValidatorTest;
 
-/**
- * Test Suite Runner for Risk
- */
+/** Test Suite Runner for Risk */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
   BattleControllerTest.class,
@@ -27,8 +25,8 @@ import utils.MapValidatorTest;
   PlayerBenevolentTest.class,
   MapValidatorTest.class,
   GameMapTest.class,
-   ConquestMapParserTest.class,
-   GamePersistenceHandlerTest.class,
-   DominationMapParserTest.class
+  ConquestMapParserTest.class,
+  GamePersistenceHandlerTest.class,
+  DominationMapParserTest.class
 })
 public class RiskTestSuite {}

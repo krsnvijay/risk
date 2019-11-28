@@ -17,7 +17,6 @@ import java.util.Observable;
  */
 public class PlayerHuman extends Observable implements PlayerStrategy {
 
-
   /** This instance variable holds the name of the player. */
   private String playerName;
 
@@ -84,6 +83,7 @@ public class PlayerHuman extends Observable implements PlayerStrategy {
 
   /**
    * Returns the strategy type
+   *
    * @return A String with the strategy's name.
    */
   @Override
@@ -127,7 +127,6 @@ public class PlayerHuman extends Observable implements PlayerStrategy {
     setChanged();
     notifyObservers();
   }
-
 
   /**
    * Reinforce a currently owned country with an army

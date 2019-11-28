@@ -13,9 +13,7 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.*;
 
-/**
- * Parses - (Serialize,Deserializes) risk map of type Domination
- */
+/** Parses - (Serialize,Deserializes) risk map of type Domination */
 public class DominationMapParser implements MapParser {
   /**
    * Loads the map file and parses it.
@@ -232,11 +230,11 @@ public class DominationMapParser implements MapParser {
     String files =
         gameMap.getFileName().isEmpty()
             ? String.join(
-            "\n",
-            "pic placeholder_pic.png",
-            "map placeholder_map.gif",
-            "crd placeholder.cards",
-            "prv placeholder.jpg")
+                "\n",
+                "pic placeholder_pic.png",
+                "map placeholder_map.gif",
+                "crd placeholder.cards",
+                "prv placeholder.jpg")
             : String.join("\n", gameMap.getFileSectionData());
 
     Map<String, Country> gameCountries = gameMap.getCountries();

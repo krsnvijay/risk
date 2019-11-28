@@ -22,24 +22,16 @@ import static views.ConsoleView.display;
  * @version 1.0
  */
 public class PlayerRandom extends Observable implements PlayerStrategy {
-  /**
-   * This instance variable holds the name of the player.
-   */
+  /** This instance variable holds the name of the player. */
   private String playerName = "Random";
 
-  /**
-   * Stores the number of armies a player has.
-   */
+  /** Stores the number of armies a player has. */
   private int numberOfArmies;
 
-  /**
-   * Stores the cards currently held by the player.
-   */
+  /** Stores the cards currently held by the player. */
   private ArrayList<Card> cardsInHand = new ArrayList<>();
 
-  /**
-   * Generate random numbers for the player.
-   */
+  /** Generate random numbers for the player. */
   private Random randomGenerator = GameMap.getRandomGenerator();
 
   /**
@@ -127,16 +119,16 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
       }
       attackCommand = randomAttack(gameMap);
     }
-    GameController.processAttackCommand(gameMap,attackCommand);
+    GameController.processAttackCommand(gameMap, attackCommand);
     return true;
   }
 
   /**
    * the player will reinforce a random country
    *
-   * @param gameMap        the GameMap instance
+   * @param gameMap the GameMap instance
    * @param countryToPlace the country to reinforce
-   * @param armiesToPlace  the number of armies
+   * @param armiesToPlace the number of armies
    * @return check whether reinforce is possible
    */
   @Override
@@ -158,17 +150,17 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
   /**
    * the player will fortify a random country
    *
-   * @param gameMap     the GameMap instance
+   * @param gameMap the GameMap instance
    * @param fromCountry the country to move from
-   * @param toCountry   the country to move to
-   * @param armyToMove  the number of armies
+   * @param toCountry the country to move to
+   * @param armyToMove the number of armies
    * @return check whether fortify is possible
    */
   @Override
   public boolean fortify(GameMap gameMap, String fromCountry, String toCountry, int armyToMove) {
     String fortifyCommand = randomFortify(gameMap);
-    if (fortifyCommand.contains("-none")){
-      GameController.processFortifyCommand(gameMap,fortifyCommand);
+    if (fortifyCommand.contains("-none")) {
+      GameController.processFortifyCommand(gameMap, fortifyCommand);
       return true;
     }
     if (GameController.validateFortify(gameMap, fortifyCommand))
@@ -184,29 +176,31 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
    */
   public String randomFortify(GameMap gameMap) {
     boolean shouldFortify = GameMap.getRandomGenerator().nextBoolean();
-    if (!shouldFortify)
-      return "fortify -none";
-    ArrayList<Country> countries = Player.getCountriesByOwnership(playerName, gameMap).stream()
-        .filter(c -> c.getNumberOfArmies() > 1)
-        .filter(c -> gameMap.getBorders().get(c.getName()).stream()
-            .map(gameMap.getCountries()::get).anyMatch(neighbor -> neighbor.getOwnerName().equals(c.getOwnerName())))
-        .collect(toCollection(ArrayList::new));
-    if (countries.isEmpty())
-      return "fortify -none";
+    if (!shouldFortify) return "fortify -none";
+    ArrayList<Country> countries =
+        Player.getCountriesByOwnership(playerName, gameMap).stream()
+            .filter(c -> c.getNumberOfArmies() > 1)
+            .filter(
+                c ->
+                    gameMap.getBorders().get(c.getName()).stream()
+                        .map(gameMap.getCountries()::get)
+                        .anyMatch(neighbor -> neighbor.getOwnerName().equals(c.getOwnerName())))
+            .collect(toCollection(ArrayList::new));
+    if (countries.isEmpty()) return "fortify -none";
     Country fortifyFromCountry = countries.get(randomGenerator.nextInt(countries.size()));
     ArrayList<Country> neighboringCountry =
         gameMap.getBorders().get(fortifyFromCountry.getName()).stream()
             .map(gameMap.getCountries()::get)
             .filter(c -> c.getOwnerName().equals(fortifyFromCountry.getOwnerName()))
             .collect(Collectors.toCollection(ArrayList::new));
-    if (neighboringCountry.isEmpty())
-      return "fortify -none";
-    Country fortifyToCountry = neighboringCountry.get(randomGenerator.nextInt(neighboringCountry.size()));
+    if (neighboringCountry.isEmpty()) return "fortify -none";
+    Country fortifyToCountry =
+        neighboringCountry.get(randomGenerator.nextInt(neighboringCountry.size()));
     int fortifyArmies = randomGenerator.nextInt(fortifyFromCountry.getNumberOfArmies() - 1);
-    if (fortifyArmies < 1)
-      fortifyArmies = 1;
-    return String.format("fortify %s %s %d", fortifyFromCountry.getName(), fortifyToCountry.getName(), fortifyArmies);
-
+    if (fortifyArmies < 1) fortifyArmies = 1;
+    return String.format(
+        "fortify %s %s %d",
+        fortifyFromCountry.getName(), fortifyToCountry.getName(), fortifyArmies);
   }
 
   /**
@@ -256,6 +250,7 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
 
   /**
    * Returns the strategy type
+   *
    * @return A String with the strategy's name.
    */
   @Override
@@ -263,9 +258,7 @@ public class PlayerRandom extends Observable implements PlayerStrategy {
     return "random";
   }
 
-  /**
-   * This is an override for pretty printing the name.
-   */
+  /** This is an override for pretty printing the name. */
   @Override
   public String toString() {
     return String.format("%s", this.playerName);

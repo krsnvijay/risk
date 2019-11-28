@@ -20,6 +20,7 @@ public interface MapParser {
 
   /**
    * The saveMap serializes a gameMap and saves it to a file
+   *
    * @param gameMap contains state of the game
    * @param fileLocation path to save the file at
    * @return boolean to indicate status

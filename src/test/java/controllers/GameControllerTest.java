@@ -70,7 +70,6 @@ public class GameControllerTest {
     countries = gameMap.getCountries();
   }
 
-
   /** Test to check whether the attacking country has more than 2 armies */
   @Test
   public void attackArmiesTest() {
@@ -118,7 +117,7 @@ public class GameControllerTest {
     assertTrue(reason, result);
   }
 
-   /** Test to check if a player won the game */
+  /** Test to check if a player won the game */
   @Test
   public void endOfGameTest() {
     playerName = gameMap.getPlayersList().get(0).getStrategy().getPlayerName();

@@ -16,9 +16,7 @@ import java.util.ArrayList;
  */
 public class ConcreteGameStateBuilder extends GameStateBuilder {
 
-  /**
-   * Constructor that initiates the building process.
-   */
+  /** Constructor that initiates the building process. */
   public ConcreteGameStateBuilder() {
     createGameState();
   }
@@ -55,6 +53,7 @@ public class ConcreteGameStateBuilder extends GameStateBuilder {
 
   /**
    * Builds current player Index
+   *
    * @param gameMap contains game state
    */
   @Override
@@ -64,6 +63,7 @@ public class ConcreteGameStateBuilder extends GameStateBuilder {
 
   /**
    * Builds number of traded set
+   *
    * @param gameMap contains game state
    */
   @Override
@@ -73,6 +73,7 @@ public class ConcreteGameStateBuilder extends GameStateBuilder {
 
   /**
    * Builds armies traded for set
+   *
    * @param gameMap contains game state
    */
   @Override
@@ -82,6 +83,7 @@ public class ConcreteGameStateBuilder extends GameStateBuilder {
 
   /**
    * Build card count for game map
+   *
    * @param gameMap contains gamestate
    */
   @Override
@@ -91,6 +93,7 @@ public class ConcreteGameStateBuilder extends GameStateBuilder {
 
   /**
    * builds borders from game map
+   *
    * @param gameMap contains game state
    */
   @Override
@@ -100,6 +103,7 @@ public class ConcreteGameStateBuilder extends GameStateBuilder {
 
   /**
    * builds playerList from the game state
+   *
    * @param gameMap contains gamestate
    */
   @Override
@@ -108,8 +112,12 @@ public class ConcreteGameStateBuilder extends GameStateBuilder {
     for (Player player : gameMap.getPlayersList()) {
       PlayerStrategy playerStrategy = player.getStrategy();
 
-      PlayerState playerState = new PlayerState(playerStrategy.getStrategyType(), playerStrategy.getPlayerName(),
-          playerStrategy.getNumberOfArmies(), playerStrategy.getCardsInHand());
+      PlayerState playerState =
+          new PlayerState(
+              playerStrategy.getStrategyType(),
+              playerStrategy.getPlayerName(),
+              playerStrategy.getNumberOfArmies(),
+              playerStrategy.getCardsInHand());
       playerStates.add(playerState);
     }
     gameState.setPlayersList(playerStates);
@@ -117,6 +125,7 @@ public class ConcreteGameStateBuilder extends GameStateBuilder {
 
   /**
    * Builds deck from game map
+   *
    * @param gameMap contains gamestate
    */
   @Override

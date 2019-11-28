@@ -16,19 +16,18 @@ public class PlayerState {
 
   /** This instance variable holds the name of the player. */
   private String playerName;
+  /** Stores the number of armies a player has. */
+  private int numberOfArmies;
+  /** Stores the cards currently held by the player. */
+  private ArrayList<Card> cardsInHand = new ArrayList<>();
 
-  public PlayerState(String strategy, String playerName, int numberOfArmies, ArrayList<Card> cardsInHand) {
+  public PlayerState(
+      String strategy, String playerName, int numberOfArmies, ArrayList<Card> cardsInHand) {
     this.strategy = strategy;
     this.playerName = playerName;
     this.numberOfArmies = numberOfArmies;
     this.cardsInHand = cardsInHand;
   }
-
-  /** Stores the number of armies a player has. */
-  private int numberOfArmies;
-
-  /** Stores the cards currently held by the player. */
-  private ArrayList<Card> cardsInHand = new ArrayList<>();
 
   /**
    * Gets the strategy for the player.
@@ -37,33 +36,6 @@ public class PlayerState {
    */
   public String getStrategy() {
     return strategy;
-  }
-
-  /**
-   * Gets the player name.
-   *
-   * @return The name as a string.
-   */
-  public String getPlayerName() {
-    return playerName;
-  }
-
-  /**
-   * Gets the number of armies.
-   *
-   * @return An integer with the number of armies.
-   */
-  public int getNumberOfArmies() {
-    return numberOfArmies;
-  }
-
-  /**
-   * Gets the cards in the Player's hand.
-   *
-   * @return An ArrayList of Card objects.
-   */
-  public ArrayList<Card> getCardsInHand() {
-    return cardsInHand;
   }
 
   /**
@@ -76,6 +48,15 @@ public class PlayerState {
   }
 
   /**
+   * Gets the player name.
+   *
+   * @return The name as a string.
+   */
+  public String getPlayerName() {
+    return playerName;
+  }
+
+  /**
    * Sets the name of the player.
    *
    * @param playerName A string with the name.
@@ -85,12 +66,30 @@ public class PlayerState {
   }
 
   /**
+   * Gets the number of armies.
+   *
+   * @return An integer with the number of armies.
+   */
+  public int getNumberOfArmies() {
+    return numberOfArmies;
+  }
+
+  /**
    * Sets the number of armies for the player.
    *
    * @param numberOfArmies An integer.
    */
   public void setNumberOfArmies(int numberOfArmies) {
     this.numberOfArmies = numberOfArmies;
+  }
+
+  /**
+   * Gets the cards in the Player's hand.
+   *
+   * @return An ArrayList of Card objects.
+   */
+  public ArrayList<Card> getCardsInHand() {
+    return cardsInHand;
   }
 
   /**

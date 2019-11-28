@@ -21,13 +21,9 @@ import static org.junit.Assert.assertTrue;
  * @author Vijay Krishna
  */
 public class ConquestMapParserTest {
-  /**
-   * gameMap loads the invalid risk map from the resources folder
-   */
+  /** gameMap loads the invalid risk map from the resources folder */
   private GameMap gameMap;
-  /**
-   * reason displays the reason for the failed condition
-   */
+  /** reason displays the reason for the failed condition */
   private String reason;
 
   /**

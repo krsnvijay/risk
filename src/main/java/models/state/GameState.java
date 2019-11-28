@@ -57,93 +57,21 @@ public class GameState {
   }
 
   /**
-   * Gets the deck of Cards for the game.
-   *
-   * @return An ArrayList of Cards (the deck).
-   */
-  public ArrayList<Card> getDeck() {
-    return deck;
-  }
-
-  /**
-   * Gets the borders for the map.
-   *
-   * @return A Map object with the borders.
-   */
-  public Map<String, Set<String>> getBorders() {
-    return borders;
-  }
-
-  /**
-   * Gets the continents in the map.
-   *
-   * @return A Map object with the continents.
-   */
-  public Map<String, Continent> getContinents() {
-    return continents;
-  }
-
-  /**
-   * Gets the countries in the map.
-   *
-   * @return A Map object with the countries.
-   */
-  public Map<String, Country> getCountries() {
-    return countries;
-  }
-
-  /**
-   * Gets the current context for the game.
-   *
-   * @return A Context enum object.
-   */
-  public Context getCurrentContext() {
-    return currentContext;
-  }
-
-  /**
-   * Gets the index for the current player in the playersList.
-   *
-   * @return An integer representing the current player index.
-   */
-  public int getCurrentPlayerIndex() {
-    return currentPlayerIndex;
-  }
-
-  /**
-   * Gets the number of card sets that have been traded.
-   *
-   * @return An integer representing the number of card sets that have been traded.
-   */
-  public int getNumberOfTradedSet() {
-    return numberOfTradedSet;
-  }
-
-  /**
-   * Gets the number of armies that have been traded for a card set.
-   *
-   * @return An integer representing the number of armies traded.
-   */
-  public int getArmiesTradedForSet() {
-    return armiesTradedForSet;
-  }
-
-  /**
-   * Gets the number of cards.
-   *
-   * @return An integer representing the number of cards.
-   */
-  public int getCardCount() {
-    return cardCount;
-  }
-
-  /**
    * Sets the players list.
    *
    * @param playersList the player list.
    */
   public void setPlayersList(ArrayList<PlayerState> playersList) {
     this.playersList = playersList;
+  }
+
+  /**
+   * Gets the deck of Cards for the game.
+   *
+   * @return An ArrayList of Cards (the deck).
+   */
+  public ArrayList<Card> getDeck() {
+    return deck;
   }
 
   /**
@@ -156,12 +84,30 @@ public class GameState {
   }
 
   /**
+   * Gets the borders for the map.
+   *
+   * @return A Map object with the borders.
+   */
+  public Map<String, Set<String>> getBorders() {
+    return borders;
+  }
+
+  /**
    * Sets the borders list for the map.
    *
    * @param borders A map of borders.
    */
   public void setBorders(Map<String, Set<String>> borders) {
     this.borders = borders;
+  }
+
+  /**
+   * Gets the continents in the map.
+   *
+   * @return A Map object with the continents.
+   */
+  public Map<String, Continent> getContinents() {
+    return continents;
   }
 
   /**
@@ -174,12 +120,30 @@ public class GameState {
   }
 
   /**
+   * Gets the countries in the map.
+   *
+   * @return A Map object with the countries.
+   */
+  public Map<String, Country> getCountries() {
+    return countries;
+  }
+
+  /**
    * Sets the countries for the map.
    *
    * @param countries A map of countries.
    */
   public void setCountries(Map<String, Country> countries) {
     this.countries = countries;
+  }
+
+  /**
+   * Gets the current context for the game.
+   *
+   * @return A Context enum object.
+   */
+  public Context getCurrentContext() {
+    return currentContext;
   }
 
   /**
@@ -192,12 +156,30 @@ public class GameState {
   }
 
   /**
+   * Gets the index for the current player in the playersList.
+   *
+   * @return An integer representing the current player index.
+   */
+  public int getCurrentPlayerIndex() {
+    return currentPlayerIndex;
+  }
+
+  /**
    * Sets the current player index.
    *
    * @param currentPlayerIndex An integer.
    */
   public void setCurrentPlayerIndex(int currentPlayerIndex) {
     this.currentPlayerIndex = currentPlayerIndex;
+  }
+
+  /**
+   * Gets the number of card sets that have been traded.
+   *
+   * @return An integer representing the number of card sets that have been traded.
+   */
+  public int getNumberOfTradedSet() {
+    return numberOfTradedSet;
   }
 
   /**
@@ -210,12 +192,30 @@ public class GameState {
   }
 
   /**
+   * Gets the number of armies that have been traded for a card set.
+   *
+   * @return An integer representing the number of armies traded.
+   */
+  public int getArmiesTradedForSet() {
+    return armiesTradedForSet;
+  }
+
+  /**
    * Sets number of armies traded for sets.
    *
    * @param armiesTradedForSet An integer.
    */
   public void setArmiesTradedForSet(int armiesTradedForSet) {
     this.armiesTradedForSet = armiesTradedForSet;
+  }
+
+  /**
+   * Gets the number of cards.
+   *
+   * @return An integer representing the number of cards.
+   */
+  public int getCardCount() {
+    return cardCount;
   }
 
   /**

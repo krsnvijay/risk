@@ -12,9 +12,7 @@ import java.util.function.BiPredicate;
  * @version 1.0
  */
 public enum Command {
-  /**
-   * Creates commands (validated with RegEx) and links them to their methods.
-   */
+  /** Creates commands (validated with RegEx) and links them to their methods. */
   GAME_HELP("^help$", MainController::processGameHelpCommand, "help"),
   EXIT_GAME("^exitgame$", MainController::processExitGameCommand, "exitgame"),
   EDIT_MAP("^editmap (.+)$", MainController::processEditMapCommand, "editmap <fileLocation>"),
@@ -35,8 +33,8 @@ public enum Command {
   START_TOURNAMENT(
       "^tournament -M (([\\S]+) ){1,5}-P ((aggressive|random|benevolent|cheater) ){2,4}-G [1-5] -D [0-9]{2}$",
       TournamentController::startTournament,
-      "tournament -M <list of map files> -P <list of player strategies> -G <number of games> -D" +
-          " <max number of turns>"),
+      "tournament -M <list of map files> -P <list of player strategies> -G <number of games> -D"
+          + " <max number of turns>"),
   GAME_PLAYER(
       "^gameplayer( -(add ([^ ]+) (aggressive|random|benevolent|cheater|human)|remove ([^ ]+)))+$",
       MainController::processGamePlayerCommand,
@@ -70,19 +68,13 @@ public enum Command {
   SAVE_GAME("^savegame (.+)$", GameController::processSaveGameCommand, "savegame <fileName>"),
   LOAD_GAME("^loadgame (.+)$", MainController::processLoadGameCommand, "loadgame <fileName>");
 
-  /**
-   * Holds the Regex for the command.
-   */
+  /** Holds the Regex for the command. */
   String regex;
 
-  /**
-   * Holds the operation for the command (the signature remains the same for every command).
-   */
+  /** Holds the operation for the command (the signature remains the same for every command). */
   BiPredicate<GameMap, String> operation;
 
-  /**
-   * Holds the usage text.
-   */
+  /** Holds the usage text. */
   String usage;
 
   /**

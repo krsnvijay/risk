@@ -18,6 +18,18 @@ public class Card {
   private String country;
 
   /**
+   * The constructor for a Card object.
+   *
+   * @param country Country associated with the card
+   */
+  public Card(String country) {
+    super();
+    this.country = country;
+    this.type = typeOfCard.values()[cardCount % 3];
+    cardCount++;
+  }
+
+  /**
    * Gets the number of cards.
    *
    * @return An integer representing the count.
@@ -28,22 +40,11 @@ public class Card {
 
   /**
    * Sets the number of cards.
+   *
    * @param cardCount An integer representing the count.
    */
   public static void setCardCount(int cardCount) {
     Card.cardCount = cardCount;
-  }
-
-  /**
-   * The constructor for a Card object.
-   *
-   * @param country Country associated with the card
-   */
-  public Card(String country) {
-    super();
-    this.country = country;
-    this.type = typeOfCard.values()[cardCount % 3];
-    cardCount++;
   }
 
   /**
@@ -99,9 +100,7 @@ public class Card {
     CAVALRY("Cavalry"),
     ARTILLERY("Artillery");
 
-    /**
-     * Holds the value for the card.
-     */
+    /** Holds the value for the card. */
     public String value;
 
     /**

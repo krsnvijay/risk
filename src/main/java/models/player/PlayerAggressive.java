@@ -40,8 +40,7 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
   }
 
   /**
-   * Adds an observer by a call to the
-   * 'super' implementation of addObserver
+   * Adds an observer by a call to the 'super' implementation of addObserver
    *
    * @param object CardViewExchange observer that is to be added
    */
@@ -50,8 +49,7 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
   }
 
   /**
-   * Gets the strongest country to reinforce
-   * (OR) attack from using the Aggressive strategy
+   * Gets the strongest country to reinforce (OR) attack from using the Aggressive strategy
    *
    * @param gameMap reference to the whole game map
    * @param op either "attack" or "reinforce"
@@ -93,8 +91,7 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
   }
 
   /**
-   * Gets the strongest country to fortify
-   * from using the Aggressive strategy
+   * Gets the strongest country to fortify from using the Aggressive strategy
    *
    * @param gameMap reference to the whole game map
    * @return the Map Entry of the described strongest country
@@ -186,7 +183,6 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
    * @param gameMap the GameMap instance / reference to game map
    * @param countryToPlace the country to place armies on
    * @param armiesToPlace the number of armies to place
-   *
    * @return successful/failed reinforce execution
    */
   @Override
@@ -215,7 +211,6 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
    * @param fromCountry the country from which armies are drawn
    * @param toCountry the country to which armies are transferred
    * @param armyToMove the number of armies to place
-   *
    * @return successful/failed reinforce execution
    */
   @Override
@@ -273,6 +268,7 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
 
   /**
    * Finds the strongest country to fortify from along DFS path
+   *
    * @param gameMap an instance of GameMap / reference to the game map
    * @param currPlayerName the name of the current player
    * @param maxCountry the country with max. armies to be fortified
@@ -312,7 +308,8 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
    * Utility to perform Depth-First Search
    *
    * @param gameMap the GameMap instance / a reference to the game map
-   * @param filteredGameMap a filtered game map containing only countries and borders owned by current player
+   * @param filteredGameMap a filtered game map containing only countries and borders owned by
+   *     current player
    * @param visited a set containing the visited countries along DFS path
    * @param start the starting point for the depth-first search
    * @return the set of visited countries in the DFS path
@@ -346,7 +343,6 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
             .collect(Collectors.toCollection(ArrayList::new));
     return sortedReverse.get(0).getName();
   }
-
 
   /**
    * This method returns the name of the player.
@@ -386,6 +382,7 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
 
   /**
    * Returns the strategy type
+   *
    * @return A String with the strategy's name.
    */
   @Override
@@ -438,5 +435,4 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
   public void subtractArmies(int count) {
     this.numberOfArmies -= count;
   }
-
 }

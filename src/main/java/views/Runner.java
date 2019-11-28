@@ -35,36 +35,26 @@ import static views.ConsoleView.display;
 public class Runner extends Application {
   /** Contains the list of Observers. */
   public static List<Observer> ObserverList = new ArrayList<>();
-
+  /** Holds a reference to the phase view * */
+  public static PhaseView phaseViewRef;
+  /** Holds a reference to the World Domination View * */
+  public static WDView wdViewRef;
   /** Labels for WD View. */
   private Label rootTitleLabel, rootControlLabel, rootArmyLabel;
-
   /** Labels for the Phase View. */
   private Label rootPhaseNameLabel, rootPlayerLabel, rootPhaseInfoLabel;
-
   /** Label for the continent section. */
   private Label rootContinentLabel;
-
   /** BorderPane hosting the WD view. */
   private BorderPane WDSection;
-
   /** HBox hosting the Card View. */
   private HBox cardSection = new HBox();
-
   /** ScrollPane for scrollable cards in hand. */
   private ScrollPane cardScroller = new ScrollPane();
-
   /** An Array of Labels for cards * */
   private ArrayList<Label> cardLabels = new ArrayList<>();
-
   /** A Temporary Map of Players mapped to cards they have in hand * */
   private Map<String, List<String>> cardLabelStringsTempMap = new HashMap<>();
-
-  /** Holds a reference to the phase view **/
-  public static PhaseView phaseViewRef;
-
-  /** Holds a reference to the World Domination View **/
-  public static WDView wdViewRef;
 
   /** Constructor for the runner class. */
   public Runner() {

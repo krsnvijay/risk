@@ -3,14 +3,9 @@ package utils;
 import models.GameMap;
 import models.state.GameState;
 
-/**
- * Director for the GameState class
- * Accepts a builder and constructs the GameState object
- */
+/** Director for the GameState class Accepts a builder and constructs the GameState object */
 public class GameStateDirector {
-  /**
-   * builder for GameState
-   */
+  /** builder for GameState */
   private GameStateBuilder builder;
 
   /**
@@ -24,6 +19,7 @@ public class GameStateDirector {
 
   /**
    * Constructs gameState from the builder
+   *
    * @param gameMap contains game state
    */
   public void constructGameState(GameMap gameMap) {
@@ -42,11 +38,10 @@ public class GameStateDirector {
 
   /**
    * Get constructed game state from the builder
+   *
    * @return GameState object
    */
   public GameState getGameState() {
     return builder.getGameState();
   }
-
-
 }

@@ -13,9 +13,7 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.*;
 
-/**
- * Parses - (Serialize,Deserializes) risk map of type Conquest
- */
+/** Parses - (Serialize,Deserializes) risk map of type Conquest */
 public class ConquestMapParser implements MapParser {
   /**
    * Loads the map file and parses it.
@@ -206,12 +204,12 @@ public class ConquestMapParser implements MapParser {
     String files =
         gameMap.getFileName().isEmpty()
             ? String.join(
-            "\n",
-            "author=NoOne",
-            "image=noImage.bmp",
-            "wrap=no",
-            "scroll=horizontal",
-            "warn=yes")
+                "\n",
+                "author=NoOne",
+                "image=noImage.bmp",
+                "wrap=no",
+                "scroll=horizontal",
+                "warn=yes")
             : String.join("\n", gameMap.getFileSectionData());
 
     Map<String, Country> gameCountries = gameMap.getCountries();

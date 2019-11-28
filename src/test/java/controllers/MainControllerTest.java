@@ -41,7 +41,6 @@ public class MainControllerTest {
     reason = "";
   }
 
-
   /**
    * Test to load a map
    *
@@ -53,12 +52,13 @@ public class MainControllerTest {
     Scanner scan = new Scanner(testMap);
     StringBuilder sb = new StringBuilder();
     String temp = "", str = "";
-    reason="Map loaded successfully";
+    reason = "Map loaded successfully";
     while (scan.hasNext()) {
       sb.append(scan.nextLine());
     }
 
-    assertThat(reason,
+    assertThat(
+        reason,
         sb.toString(),
         either(containsString("name"))
             .or(containsString("[file]"))

@@ -4,9 +4,7 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
-/**
- * Run the controllers test suite
- */
+/** Run the controllers test suite */
 public class ControllersTestSuiteRunner {
   public static void main(String[] args) {
     Result result = JUnitCore.runClasses(ControllersTestSuite.class);

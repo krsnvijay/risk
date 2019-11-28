@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Test class to check the functionalities of game save/load  {@link GamePersistenceHandler}
+ * Test class to check the functionalities of game save/load {@link GamePersistenceHandler}
  *
  * @author Vijay Krishna
  */
@@ -23,23 +23,15 @@ public class GamePersistenceHandlerTest {
   public static final String PLAYER_1 = "Player1";
   public static final String PLAYER_2 = "Player2";
 
-  /**
-   * player name
-   */
+  /** player name */
   String playerName;
-  /**
-   * reason for failure
-   */
+  /** reason for failure */
   String reason;
 
-  /**
-   * list of countries
-   */
+  /** list of countries */
   Map<String, Country> countries;
 
-  /**
-   * store game state
-   */
+  /** store game state */
   private GameMap gameMap;
 
   /**
@@ -63,8 +55,7 @@ public class GamePersistenceHandlerTest {
   }
 
   /**
-   * Tests savegame functionality
-   * Test passes if the gameState is saved to a file as json
+   * Tests savegame functionality Test passes if the gameState is saved to a file as json
    *
    * @throws IOException when file not found
    */
@@ -76,12 +67,10 @@ public class GamePersistenceHandlerTest {
     File saveTestFile = new File(file.getPath());
     reason = "Temp savegame file should exist after save";
     assertTrue(reason, saveTestFile.exists());
-
   }
 
   /**
-   * Test loadgame functionality
-   * Test passes when the loaded game state is same as the original
+   * Test loadgame functionality Test passes when the loaded game state is same as the original
    *
    * @throws IOException when file not found
    */
@@ -98,7 +87,8 @@ public class GamePersistenceHandlerTest {
     reason = "Number of countries should be same as original";
     assertEquals(reason, noOfCountries, gameMap.getCountries().size());
     reason = "Current Player should be same";
-    assertEquals(reason, currentPlayerName, gameMap.getCurrentPlayer().getStrategy().getPlayerName());
+    assertEquals(
+        reason, currentPlayerName, gameMap.getCurrentPlayer().getStrategy().getPlayerName());
     reason = "Current Context should be the same";
     assertEquals(reason, context, gameMap.getCurrentContext());
   }

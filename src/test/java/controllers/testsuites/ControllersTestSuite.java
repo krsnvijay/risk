@@ -4,10 +4,7 @@ import controllers.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-/**
- * Test Suite for controllers
- */
-
+/** Test Suite for controllers */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
   BattleControllerTest.class,

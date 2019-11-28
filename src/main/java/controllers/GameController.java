@@ -36,7 +36,7 @@ public class GameController {
    */
   public static boolean processReinforceCommand(GameMap gameMap, String command) {
     if (validateReinforce(gameMap, command)) {
-        gameMap.setIsSavePossible(false);
+      gameMap.setIsSavePossible(false);
       return performReinforce(gameMap, command);
     } else {
       return false;
@@ -44,22 +44,25 @@ public class GameController {
   }
 
   /**
-   * This command processes the save game to capture the current state of the game and serializing it.
+   * This command processes the save game to capture the current state of the game and serializing
+   * it.
    *
    * @param gameMap The GameMap variable
    * @param command The command as a String
    * @return A boolean representing the result of the command.
    */
   public static boolean processSaveGameCommand(GameMap gameMap, String command) {
-      if (!gameMap.getIsSavePossible()) {
-          display("Savegame can only be called at the start of the turn and no reinforcements must be made", true);
-          return false;
-      }
+    if (!gameMap.getIsSavePossible()) {
+      display(
+          "Savegame can only be called at the start of the turn and no reinforcements must be made",
+          true);
+      return false;
+    }
     String fileLocation = command.split(" ", 2)[1];
     try {
       return GamePersistenceHandler.saveState(fileLocation);
     } catch (Exception e) {
-        display("save game failed " + e.getMessage(), true);
+      display("save game failed " + e.getMessage(), true);
       e.printStackTrace();
       return false;
     }
@@ -103,11 +106,7 @@ public class GameController {
   public static boolean processExchangeCardsCommand(GameMap gameMap, String command) {
     PlayerStrategy strategy = gameMap.getCurrentPlayer().getStrategy();
     if (command.contains("-none")) {
-      display(
-          String.format(
-              "%s doesn't want to exchange cards",
-              strategy.getPlayerName()),
-          true);
+      display(String.format("%s doesn't want to exchange cards", strategy.getPlayerName()), true);
       return true;
     }
     String[] commandSplit = command.split(" ");
@@ -298,38 +297,39 @@ public class GameController {
         currentPlayerStrategy.setNumberOfArmies(Player.calculateReinforcements(gameMap));
         display(
             String.format(
-                    "<%s's (%s) turn>",
+                "<%s's (%s) turn>",
                 currentPlayerStrategy.getPlayerName(), currentPlayerStrategy.getStrategyType()),
             true);
         gameMap.setCurrentContext(Context.GAME_REINFORCE);
         display("[Reinforce]", false);
-          display(
-                  String.format(
-                          "%s has %d armies left to reinforce",
-                          currentPlayerStrategy.getPlayerName(), currentPlayerStrategy.getNumberOfArmies()),
-                  false);
+        display(
+            String.format(
+                "%s has %d armies left to reinforce",
+                currentPlayerStrategy.getPlayerName(), currentPlayerStrategy.getNumberOfArmies()),
+            false);
         break;
       case GAME_REINFORCE:
         gameMap.setCurrentContext(Context.GAME_ATTACK);
-          display("[Attack]", false);
+        display("[Attack]", false);
         break;
       case GAME_ATTACK:
         gameMap.setCurrentContext(Context.GAME_FORTIFY);
-          display("[Fortify]", false);
-          if (!isAttackOrFortifyMovePossible(currentPlayerStrategy.getPlayerName(), gameMap)) {
-              display("No fortify move possible", true);
+        display("[Fortify]", false);
+        if (!isAttackOrFortifyMovePossible(currentPlayerStrategy.getPlayerName(), gameMap)) {
+          display("No fortify move possible", true);
           changeToNextPhase(gameMap);
         }
         break;
       case GAME_FORTIFY:
         display(
             String.format(
-                    "<End of %s's (%s) turn>",
+                "<End of %s's (%s) turn>",
                 currentPlayerStrategy.getPlayerName(), currentPlayerStrategy.getStrategyType()),
             true);
         display(String.format("[End Turn - %d]", GameMap.numOfTurns + 1), false);
         gameMap.updatePlayerIndex();
-        if (GameMap.numOfTurns%(gameMap.playersList.size()) == gameMap.getPlayersList().size() - 1) {
+        if (GameMap.numOfTurns % (gameMap.playersList.size())
+            == gameMap.getPlayersList().size() - 1) {
           display(String.format("[End Round - %d]", GameMap.numberOfRounds + 1), true);
           GameMap.numberOfRounds++;
         }
@@ -350,7 +350,7 @@ public class GameController {
 
     // If human return to the CLI loop
     if (currentPlayerStrategy instanceof PlayerHuman) {
-        gameMap.setIsSavePossible(true);
+      gameMap.setIsSavePossible(true);
       return;
     }
 
@@ -370,13 +370,12 @@ public class GameController {
     gameMap.setCurrentContext(Context.GAME_ATTACK);
     changeToNextPhase(gameMap);
 
-      // If no fortify move is possible end turn
-      if (gameMap.getCurrentContext() == Context.GAME_END_OF_TURN) {
-          return;
-      }
-      // Perform Fortify if move is possible and End current Player's turn
+    // If no fortify move is possible end turn
+    if (gameMap.getCurrentContext() == Context.GAME_END_OF_TURN) {
+      return;
+    }
+    // Perform Fortify if move is possible and End current Player's turn
     currentPlayerStrategy.fortify(gameMap, null, null, -1);
-
 
     gameMap.setCurrentContext(Context.GAME_FORTIFY);
     changeToNextPhase(gameMap);

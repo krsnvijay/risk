@@ -51,6 +51,7 @@ public interface PlayerStrategy {
 
   /**
    * To subtract armies from the Player.
+   *
    * @param count The integer count of armies to subtract.
    */
   void subtractArmies(int count);
@@ -99,6 +100,7 @@ public interface PlayerStrategy {
 
   /**
    * Returns the strategy type
+   *
    * @return A String with the strategy's name.
    */
   String getStrategyType();
@@ -128,7 +130,8 @@ public interface PlayerStrategy {
     }
     if (cardSet.size() == 1 || cardSet.size() == 3) {
       GameMap.setNumberOfTradedSet(GameMap.getNumberOfTradedSet() + 1);
-      int armiesAcquired = giveArmies(GameMap.getNumberOfTradedSet(),GameMap.getArmiesTradedForSet());
+      int armiesAcquired =
+          giveArmies(GameMap.getNumberOfTradedSet(), GameMap.getArmiesTradedForSet());
       setNumberOfArmies(getNumberOfArmies() + armiesAcquired);
 
       ArrayList<Card> cardsToAddToDeck = new ArrayList<>();
@@ -166,11 +169,12 @@ public interface PlayerStrategy {
 
   /**
    * This method gives armies to the player
+   *
    * @param numberOfTradedSet maintains card set traded in the game
    * @param armiesTradedForSet placeholder for armies traded for set
    * @return int with the number of armies.
    */
-  public default int giveArmies(int numberOfTradedSet,int armiesTradedForSet) {
+  public default int giveArmies(int numberOfTradedSet, int armiesTradedForSet) {
     if (numberOfTradedSet == 1) {
       armiesTradedForSet += 4;
     } else if (numberOfTradedSet < 6) {

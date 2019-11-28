@@ -38,9 +38,7 @@ public class EditorControllerTest {
     gameMap = mapParser.loadMap(riskMap.getPath());
     reason = "";
   }
-/**
- * test to validate the map
- */
+  /** test to validate the map */
   @Test
   public void validateMap() {
     //  Arrange
@@ -50,7 +48,7 @@ public class EditorControllerTest {
       MapParser mapParser = new DominationMapParser();
       gameMap = mapParser.loadMap(riskMap.getPath());
       MapValidator mapValidator = new MapValidator();
-      reason="Invalid map being loaded";
+      reason = "Invalid map being loaded";
       // Assert
       assertFalse(reason, MapValidator.validateMap(gameMap));
     } catch (Exception e) {
@@ -59,6 +57,7 @@ public class EditorControllerTest {
   }
   /**
    * test to save the map
+   *
    * @throws IOException if map file is invalid
    */
   @Test
@@ -68,8 +67,7 @@ public class EditorControllerTest {
         Paths.get("src/test/resources/mapparsersavetest.map"),
         mapParser.serializeMap(gameMap, "mapparsersavetest").getBytes());
     File saveTestFile = new File("src/test/resources/mapparsersavetest.map");
-    reason="The map has been saved successfully";
-    assertTrue(reason,saveTestFile.exists());
+    reason = "The map has been saved successfully";
+    assertTrue(reason, saveTestFile.exists());
   }
-
 }
