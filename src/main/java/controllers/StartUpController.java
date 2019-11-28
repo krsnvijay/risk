@@ -29,10 +29,7 @@ public class StartUpController {
     PlayerStrategy strategy = gameMap.getCurrentPlayer().getStrategy();
     if (result) {
       display(
-          String.format(
-              "%s placed an army in %s",
-              strategy.getPlayerName(), countryName),
-          true);
+          String.format("%s placed an army in %s", strategy.getPlayerName(), countryName), true);
       if (gameMap.checkGameReady()) {
         startPhaseLoop(gameMap);
         return true;
@@ -70,9 +67,9 @@ public class StartUpController {
   public static boolean processPlaceAllCommand(GameMap gameMap, String command) {
     gameMap.placeAll();
     display("Placed player armies randomly in countries that they own", true);
-      if (!GameController.isTournament) {
-          startPhaseLoop(gameMap);
-      }
+    if (!GameController.isTournament) {
+      startPhaseLoop(gameMap);
+    }
     return true;
   }
 }

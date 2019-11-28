@@ -72,7 +72,9 @@ public class PlayerAggressiveTest {
         .reinforce(gameMap, strongestCountry.get().getName(), numOfArmiesToReinforce);
     reason = "Aggressive player should reinforce the strongest country only";
     assertEquals(
-        reason,originalArmyCount + numOfArmiesToReinforce, strongestCountry.get().getNumberOfArmies());
+        reason,
+        originalArmyCount + numOfArmiesToReinforce,
+        strongestCountry.get().getNumberOfArmies());
   }
 
   /** check if player fortifies from the strongest country that belongs to Aggressive Player */
@@ -101,7 +103,7 @@ public class PlayerAggressiveTest {
         .getStrategy()
         .fortify(gameMap, strongestCountry.getName(), strongerCountry.getName(), 0);
     int actualFortifyArmies = strongestCountry.getNumberOfArmies();
-      reason = "Aggressive player should fortify the strongest country only";
+    reason = "Aggressive player should fortify the strongest country only";
     assertEquals(reason, expectedFortifyArmies, actualFortifyArmies);
   }
 }

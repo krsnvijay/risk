@@ -14,10 +14,8 @@ import static models.Command.*;
  * @version 1.0
  */
 public enum Context {
-  /**
-   * Creates the phases for the Game.
-   */
-  MAIN_MENU(EDIT_MAP, GAME_PLAYER, LOAD_MAP, LOAD_GAME,START_TOURNAMENT),
+  /** Creates the phases for the Game. */
+  MAIN_MENU(EDIT_MAP, GAME_PLAYER, LOAD_MAP, LOAD_GAME, START_TOURNAMENT),
   MAP_EDITOR(SHOW_MAP, EDIT_CONTINENT, EDIT_COUNTRY, EDIT_NEIGHBOR, VALIDATE_MAP, SAVE_MAP),
   GAME_SETUP(GAME_HELP, SHOW_MAP, EXIT_GAME, GAME_PLAYER, POPULATE_COUNTRIES),
   GAME_STARTUP(SHOW_MAP_OWNERSHIP, PLACE_ARMY, PLACE_ALL),
@@ -28,14 +26,10 @@ public enum Context {
   GAME_FORTIFY(SAVE_GAME, SHOW_MAP_OWNERSHIP, FORTIFY),
   GAME_END_OF_TURN();
 
-  /**
-   * An array of Command objects with valid commands (for a particular phase).
-   */
+  /** An array of Command objects with valid commands (for a particular phase). */
   Command[] validCommands;
 
-  /**
-   * An array of default commands, available everywhere.
-   */
+  /** An array of default commands, available everywhere. */
   Command[] defaultCommands = {GAME_HELP, EXIT_GAME};
 
   /**

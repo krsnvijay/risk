@@ -18,7 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * test class to check the functionalities of GameController.java
+ * test class to check the functionalities of GameController.java {@link GameController}
  *
  * @see controllers.GameController
  * @author Siddharth Singh
@@ -70,7 +70,6 @@ public class GameControllerTest {
     countries = gameMap.getCountries();
   }
 
-
   /** Test to check whether the attacking country has more than 2 armies */
   @Test
   public void attackArmiesTest() {
@@ -117,10 +116,6 @@ public class GameControllerTest {
     boolean result = GameController.processExchangeCardsCommand(gameMap, command);
     assertTrue(reason, result);
   }
-
-  /** Test to check whether the player conquers a valid country */
-  @Test
-  public void conquerTest() {}
 
   /** Test to check if a player won the game */
   @Test

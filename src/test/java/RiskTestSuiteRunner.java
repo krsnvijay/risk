@@ -2,9 +2,7 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
-/**
- * Test Suite Runner for Risk
- */
+/** Test Suite Runner for Risk */
 public class RiskTestSuiteRunner {
   /**
    * Main function to run the suite

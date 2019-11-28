@@ -15,14 +15,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * test class to check the functionalities of GameRunner.java
+ * test class to check the functionalities of Runner.java {@link views.Runner}
  *
  * @author Sabari Venkadesh
  */
-public class GameRunnerTest {
+public class RunnerTest {
 
-  /** players in the game should either be more than 2 and less than 6 */
-  /** list of playes */
+  /** list of players */
   private static ArrayList<Player> playersList = new ArrayList<>();
   /** player name */
   String playerName;

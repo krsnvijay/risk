@@ -11,7 +11,6 @@ import utils.MapParser;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
@@ -89,22 +88,16 @@ public class PlayerCheaterTest {
     ArrayList<Country> countries = Player.getCountriesByOwnership(PLAYER_1, gameMap);
     int cheaterArmy = countries.get(0).getNumberOfArmies();
     Optional<Country> expectedCheaterCountry =
-            countries.stream()
-                    .filter(c -> c.getName().equals("China"))
-                    .findFirst();
-    int expectedCheaterArmy =
-           2 * expectedCheaterCountry.get().getNumberOfArmies();
+        countries.stream().filter(c -> c.getName().equals("China")).findFirst();
+    int expectedCheaterArmy = 2 * expectedCheaterCountry.get().getNumberOfArmies();
 
     player_1
         .getStrategy()
         .fortify(gameMap, countries.get(0).getName(), countries.get(1).getName(), cheaterArmy);
 
     Optional<Country> actualCheaterCountry =
-        countries.stream()
-            .filter(c -> c.getName().equals("China"))
-            .findFirst();
-    int actualCheaterArmy =
-        actualCheaterCountry.get().getNumberOfArmies();
+        countries.stream().filter(c -> c.getName().equals("China")).findFirst();
+    int actualCheaterArmy = actualCheaterCountry.get().getNumberOfArmies();
     reason = "Cheater should double the armies of each country in fortify";
     assertEquals(reason, expectedCheaterArmy, actualCheaterArmy);
   }

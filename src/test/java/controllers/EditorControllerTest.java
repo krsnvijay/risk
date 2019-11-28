@@ -16,7 +16,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * test class to check the functionalities of EditorController.java
+ * test class to check the functionalities of EditorController.java {@link EditorController}
  *
  * @see controllers.EditorController
  * @author Sabari Venkadesh
@@ -38,7 +38,7 @@ public class EditorControllerTest {
     gameMap = mapParser.loadMap(riskMap.getPath());
     reason = "";
   }
-
+  /** test to validate the map */
   @Test
   public void validateMap() {
     //  Arrange
@@ -48,13 +48,18 @@ public class EditorControllerTest {
       MapParser mapParser = new DominationMapParser();
       gameMap = mapParser.loadMap(riskMap.getPath());
       MapValidator mapValidator = new MapValidator();
+      reason = "Invalid map being loaded";
       // Assert
-      assertFalse(MapValidator.validateMap(gameMap));
+      assertFalse(reason, MapValidator.validateMap(gameMap));
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
-
+  /**
+   * test to save the map
+   *
+   * @throws IOException if map file is invalid
+   */
   @Test
   public void saveMap() throws IOException {
     DominationMapParser mapParser = new DominationMapParser();
@@ -62,7 +67,7 @@ public class EditorControllerTest {
         Paths.get("src/test/resources/mapparsersavetest.map"),
         mapParser.serializeMap(gameMap, "mapparsersavetest").getBytes());
     File saveTestFile = new File("src/test/resources/mapparsersavetest.map");
-    assertTrue(saveTestFile.exists());
+    reason = "The map has been saved successfully";
+    assertTrue(reason, saveTestFile.exists());
   }
-
 }

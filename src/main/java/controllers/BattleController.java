@@ -106,8 +106,7 @@ public class BattleController {
    * @param gameMap contains game state
    * @return true if attack move is possible otherwise returns false
    */
-  public static boolean isAttackOrFortifyMovePossible(
-      String attackerName, GameMap gameMap) {
+  public static boolean isAttackOrFortifyMovePossible(String attackerName, GameMap gameMap) {
     return Player.getCountriesByOwnership(attackerName, gameMap).stream()
         .mapToInt(Country::getNumberOfArmies)
         .anyMatch(armyCount -> armyCount > 1);

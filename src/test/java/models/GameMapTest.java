@@ -190,7 +190,8 @@ public class GameMapTest {
       gameMap = mapParser.loadMap(riskMap.getPath());
       MapValidator mapValidator = new MapValidator();
       // Assert
-      assertFalse(MapValidator.validateMap(gameMap));
+      reason = "Invalid map has been loaded";
+      assertFalse(reason, MapValidator.validateMap(gameMap));
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -213,6 +214,7 @@ public class GameMapTest {
     }
     gameMap.setCountries(map);
     //  Assert
-    assertFalse(MapValidator.validateMap(gameMap));
+    reason = "No duplicate country names must exist";
+    assertFalse(reason, MapValidator.validateMap(gameMap));
   }
 }

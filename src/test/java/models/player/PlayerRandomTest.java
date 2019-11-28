@@ -3,8 +3,6 @@ package models.player;
 import models.Context;
 import models.Country;
 import models.GameMap;
-import models.player.Player;
-import models.player.PlayerRandom;
 import org.junit.Before;
 import org.junit.Test;
 import utils.DominationMapParser;
@@ -20,9 +18,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
-/**
- * test class to check the functionalities of PlayerRandom.java {@link Player}
- */
+/** test class to check the functionalities of PlayerRandom.java c */
 public class PlayerRandomTest {
 
   public static final String PLAYER_1 = "Player1";
@@ -30,23 +26,15 @@ public class PlayerRandomTest {
   public static final String INDIA = "India";
   public static final String CHINA = "China";
 
-  /**
-   * player name
-   */
+  /** player name */
   String playerName;
-  /**
-   * reason for failure
-   */
+  /** reason for failure */
   String reason;
 
-  /**
-   * list of countries
-   */
+  /** list of countries */
   Map<String, Country> countries;
 
-  /**
-   * store game state
-   */
+  /** store game state */
   private GameMap gameMap;
 
   /**
@@ -68,7 +56,6 @@ public class PlayerRandomTest {
     gameMap.placeAll();
     GameMap.setCurrentPlayerIndex(0);
     countries = gameMap.getCountries();
-
   }
 
   /** check if player reinforces any random country that belongs to the Random Player */
@@ -89,7 +76,9 @@ public class PlayerRandomTest {
     numOfArmiesToReinforce = Player.calculateReinforcements(gameMap);
     GameMap.setRandomGenerator(23);
     player_1.getStrategy().reinforce(gameMap, reinforcedCountry.getName(), numOfArmiesToReinforce);
-    assertEquals(originalArmyCount + numOfArmiesToReinforce, reinforcedCountry.getNumberOfArmies());
+    reason = "The player should reinforce random country";
+    assertEquals(
+        reason, originalArmyCount + numOfArmiesToReinforce, reinforcedCountry.getNumberOfArmies());
   }
 
   /** check if player attacks from any random country that belongs to the Random Player */
@@ -99,9 +88,9 @@ public class PlayerRandomTest {
     Random randomGenerator = new Random(42);
     GameMap.setRandomGenerator(42);
     String result = player_1.randomAttack(gameMap);
-    assertThat(result, not(containsString("-noattack")));
+    reason = "The player should attack random country";
+    assertThat(reason, result, not(containsString("-noattack")));
   }
-
 
   /** check if player fortifies any random country that belongs to the Random Player */
   @Test
@@ -109,6 +98,7 @@ public class PlayerRandomTest {
     PlayerRandom player_1 = new PlayerRandom(PLAYER_1);
     Random randomGenerator = new Random(40);
     String result = player_1.randomFortify(gameMap);
-    assertThat(result, containsString("none"));
+    reason = "The player should fortify random country";
+    assertThat(reason, result, containsString("none"));
   }
 }

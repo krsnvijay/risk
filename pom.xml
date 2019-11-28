@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.soen.project</groupId>
     <artifactId>risk-game</artifactId>
@@ -16,7 +17,8 @@
         </plugins>
     </build>
     <name>Risk</name>
-    <description>An implementation of the board game Risk/Domination to fulfil the project requirement of SOEN6441</description>
+    <description>An implementation of the board game Risk/Domination to fulfil the project requirement of SOEN6441
+    </description>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/junit/junit -->
         <dependency>

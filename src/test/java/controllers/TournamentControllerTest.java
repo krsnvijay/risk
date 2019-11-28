@@ -18,7 +18,12 @@ import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
-
+/**
+ * test class to check the functionalities of TournamentController.java {@link TournamentController}
+ *
+ * @see controllers.TournamentController
+ * @author Siddharth Singh
+ */
 public class TournamentControllerTest {
   /**
    * a property holding the max. number of turns for each game

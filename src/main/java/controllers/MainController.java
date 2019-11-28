@@ -168,8 +168,8 @@ public class MainController {
       WorldDomination.destroyInstance();
       GameMap.getGameMap().addObserver(Runner.phaseViewRef);
       WorldDomination.getInstance().addObserver(Runner.wdViewRef);
-      Runner.phaseViewRef.update(GameMap.getGameMap(),"CURRENT_PLAYER");
-      Runner.phaseViewRef.update(GameMap.getGameMap(),"CURRENT_CONTEXT");
+      Runner.phaseViewRef.update(GameMap.getGameMap(), "CURRENT_PLAYER");
+      Runner.phaseViewRef.update(GameMap.getGameMap(), "CURRENT_CONTEXT");
       Runner.wdViewRef.update(WorldDomination.getInstance(), null);
       // finish
       return true;

@@ -156,12 +156,12 @@ public class EditorController {
     boolean result = false;
     boolean isMapValid = processValidateMapCommand(gameMap, command);
     if (isMapValid) {
-        MapAdaptor mapAdaptor = new MapAdaptor();
-        try {
-            result = mapAdaptor.autoSaveMap(gameMap, fileLocation);
-        } catch (Exception e) {
-            display("Unable to save map " + e.getMessage(), true);
-        }
+      MapAdaptor mapAdaptor = new MapAdaptor();
+      try {
+        result = mapAdaptor.autoSaveMap(gameMap, fileLocation);
+      } catch (Exception e) {
+        display("Unable to save map " + e.getMessage(), true);
+      }
       if (result) {
         display("Game map saved to " + fileLocation, false);
         gameMap.setCurrentContext(Context.MAIN_MENU);

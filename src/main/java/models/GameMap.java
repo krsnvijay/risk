@@ -19,63 +19,43 @@ public class GameMap extends Observable {
   /** The singleton instance of the game's state */
   public static GameMap gameMap = null;
 
-  /**
-   * number of rounds in a game
-   */
+  /** number of rounds in a game */
   public static int numberOfRounds = 0;
 
   /** check if the game finishes */
   public static boolean isGameOver = false;
-
+  /** variable to store number of turns */
+  public static int numOfTurns = 0;
   /** Maintains whose turn it is (index). */
   private static int currentPlayerIndex = 0;
-
   /** Maintains the number of sets traded in game */
   private static int numberOfTradedSet = 0;
-
   /** Number of armies traded in for each set */
   private static int armiesTradedForSet = 0;
-
   /** random Generator for the game */
   private static Random randomGenerator = new Random();
-
   /** This maintains a list of players currently in the game. */
   public ArrayList<Player> playersList = new ArrayList<>();
-
   /** This maintains a log of phase-wise activity in the game */
   public StringBuilder phaseLog = new StringBuilder();
-
   /** This maintains a list of RISK cards in the deck. */
   public ArrayList<Card> deck = null;
-
   /** Contains the information in the [File] section. */
   private ArrayList<String> fileSectionData;
-
   /** Stores an adjacency list of all borders. */
   private Map<String, Set<String>> borders;
-
   /** Stores a map of all continents. */
   private Map<String, Continent> continents;
-
   /** Stores a map of all countries. */
   private Map<String, Country> countries;
-
   /** The name of the map file. */
   private String fileName;
-
   /** The current phase of the game. */
   private Context currentContext;
-
   /** The type of the map, true if domination false for conquest */
   private boolean isMapTypeDomination = true;
-
   /** variable that indicates if savegame command is possible */
   private boolean isSavePossible = true;
-
-  /**
-   * variable to store number of turns
-   */
-  public static int numOfTurns = 0;
 
   /** The constructor for the GameMap. */
   public GameMap() {
@@ -193,24 +173,6 @@ public class GameMap extends Observable {
   }
 
   /**
-   * getter for map type
-   *
-   * @return true for domination false for conquest
-   */
-  public boolean isMapTypeDomination() {
-    return isMapTypeDomination;
-  }
-
-  /**
-   * setter for map type
-   *
-   * @param mapTypeDomination boolean for appropriate map type
-   */
-  public void setMapTypeDomination(boolean mapTypeDomination) {
-    isMapTypeDomination = mapTypeDomination;
-  }
-
-  /**
    * A method to get the existing instance of gameMap, or creating one if it doesn't exist.
    *
    * @return The instance of the gameMap.
@@ -222,9 +184,7 @@ public class GameMap extends Observable {
     return gameMap;
   }
 
-  /**
-   * Destroys the GameMap object resetting the state.
-   */
+  /** Destroys the GameMap object resetting the state. */
   public static void destroyGameMap() {
     gameMap = null;
     GameMap.numberOfRounds = 0;
@@ -248,6 +208,24 @@ public class GameMap extends Observable {
    */
   public static String showBorders(Map.Entry<String, Set<String>> border) {
     return String.format("%s %s", border.getKey(), String.join(" ", border.getValue()));
+  }
+
+  /**
+   * getter for map type
+   *
+   * @return true for domination false for conquest
+   */
+  public boolean isMapTypeDomination() {
+    return isMapTypeDomination;
+  }
+
+  /**
+   * setter for map type
+   *
+   * @param mapTypeDomination boolean for appropriate map type
+   */
+  public void setMapTypeDomination(boolean mapTypeDomination) {
+    isMapTypeDomination = mapTypeDomination;
   }
 
   /**
@@ -502,6 +480,7 @@ public class GameMap extends Observable {
    * Adds a game player to the current state
    *
    * @param playerName player to add
+   * @param strategy player's strategy (aggressive,human,benevolent,random,cheater)
    * @return boolean to indicate status
    */
   public boolean addGamePlayer(String playerName, String strategy) {

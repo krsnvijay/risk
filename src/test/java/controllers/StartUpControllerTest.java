@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * test class to check the functionalities of StartUpController.java
+ * test class to check the functionalities of StartUpController.java {@link StartUpController}
  *
  * @see controllers.StartUpController
  * @author Siddharth Singh

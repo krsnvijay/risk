@@ -73,8 +73,10 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
     weakestCountry.ifPresent(
         c -> {
           gameMap.placeArmy(c.getName(), armiesToPlace);
-          display(String.format("%s reinforced by %s using %d armies.",
-              c.getName(), playerName, armiesToPlace), true);
+          display(
+              String.format(
+                  "%s reinforced by %s using %d armies.", c.getName(), playerName, armiesToPlace),
+              true);
         });
     if (cardsInHand.size() > 3) {
       this.exchangeCardsForArmies(Player.getCardExchangeIndices(this.getCardsInHand()));
@@ -119,14 +121,16 @@ public class PlayerBenevolent extends Observable implements PlayerStrategy {
             boolean isArmyRemoved = target.removeArmies(halfTheArmies);
             if (isArmyRemoved) {
               weakest.addArmies(halfTheArmies);
-              display(String.format("%s fortified by %s using %d armies.",
-                  weakest.getName(), playerName, halfTheArmies), true);
+              display(
+                  String.format(
+                      "%s fortified by %s using %d armies.",
+                      weakest.getName(), playerName, halfTheArmies),
+                  true);
             }
           }
         });
     return true;
   }
-
 
   /**
    * This method returns the name of the player.

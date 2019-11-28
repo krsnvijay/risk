@@ -13,6 +13,7 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.*;
 
+/** Parses - (Serialize,Deserializes) risk map of type Conquest */
 public class ConquestMapParser implements MapParser {
   /**
    * Loads the map file and parses it.
@@ -58,13 +59,13 @@ public class ConquestMapParser implements MapParser {
           case "[Territories]":
             do {
               countries.putAll(
-                      sectionData.stream()
-                              .map(this::deserializeCountry)
-                              .collect(toMap(Country::getName, Function.identity())));
+                  sectionData.stream()
+                      .map(this::deserializeCountry)
+                      .collect(toMap(Country::getName, Function.identity())));
               borders.putAll(
-                      sectionData.stream()
-                              .map(this::deserializeBorder)
-                              .collect(toMap(Map.Entry::getKey, Map.Entry::getValue)));
+                  sectionData.stream()
+                      .map(this::deserializeBorder)
+                      .collect(toMap(Map.Entry::getKey, Map.Entry::getValue)));
               sectionData = readSectionData.apply(scanner);
             } while (sectionData.size() != 0);
             break;

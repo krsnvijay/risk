@@ -17,9 +17,7 @@ import static views.ConsoleView.display;
  * @version 1.0
  */
 public class TournamentController {
-  /**
-   * a property holding the max. number of turns for each game
-   */
+  /** a property holding the max. number of turns for each game */
   public static int maxNumberOfTurnsProperty;
 
   /**

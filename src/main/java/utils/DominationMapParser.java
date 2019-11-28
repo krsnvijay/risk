@@ -13,6 +13,7 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.*;
 
+/** Parses - (Serialize,Deserializes) risk map of type Domination */
 public class DominationMapParser implements MapParser {
   /**
    * Loads the map file and parses it.
@@ -97,7 +98,7 @@ public class DominationMapParser implements MapParser {
     GameMap gameMap = GameMap.getGameMap();
     fileName = String.format("name %s map", fileName);
     gameMap.populateGameMap(fileSectionData, borders, continents, countries, fileName);
-      gameMap.setMapTypeDomination(true);
+    gameMap.setMapTypeDomination(true);
     return gameMap;
   }
 
