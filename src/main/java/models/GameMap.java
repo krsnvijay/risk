@@ -502,6 +502,7 @@ public class GameMap extends Observable {
    * Adds a game player to the current state
    *
    * @param playerName player to add
+   * @param strategy player's strategy (aggressive,human,benevolent,random,cheater)
    * @return boolean to indicate status
    */
   public boolean addGamePlayer(String playerName, String strategy) {

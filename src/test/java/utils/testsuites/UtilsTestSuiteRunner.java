@@ -10,6 +10,7 @@ import org.junit.runner.notification.Failure;
 public class UtilsTestSuiteRunner {
   /**
    * Test Suite Runner for Utils
+   * @param args for main
    */
   public static void main(String[] args) {
     Result result = JUnitCore.runClasses(UtilsTestSuite.class);

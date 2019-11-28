@@ -26,7 +26,7 @@ public class ConcreteGameStateBuilder extends GameStateBuilder {
   /**
    * Builds the continents.
    *
-   * @param gameMap
+   * @param gameMap contains game map state
    */
   @Override
   void buildContinents(GameMap gameMap) {
@@ -36,7 +36,7 @@ public class ConcreteGameStateBuilder extends GameStateBuilder {
   /**
    * Builds the countries.
    *
-   * @param gameMap
+   * @param gameMap contain game state
    */
   @Override
   void buildCountries(GameMap gameMap) {

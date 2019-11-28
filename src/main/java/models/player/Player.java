@@ -137,7 +137,7 @@ public class Player {
 
   /**
    * Utility to get indices for AI players.
-   *
+   * @param cardsInHand list of cards that are to be exchanged
    * @return an integer array of indices.
    */
   public static int[] getCardExchangeIndices(ArrayList<Card> cardsInHand) {

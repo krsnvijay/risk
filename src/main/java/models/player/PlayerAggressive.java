@@ -43,7 +43,7 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
    * Adds an observer by a call to the
    * 'super' implementation of addObserver
    *
-   * @param object
+   * @param object CardViewExchange observer that is to be added
    */
   public void addObserver(CardExchangeView object) {
     super.addObserver(object);
@@ -312,7 +312,7 @@ public class PlayerAggressive extends Observable implements PlayerStrategy {
    * Utility to perform Depth-First Search
    *
    * @param gameMap the GameMap instance / a reference to the game map
-   * @param filteredGameMap a filtered game map containing only countries & borders owned by current player
+   * @param filteredGameMap a filtered game map containing only countries and borders owned by current player
    * @param visited a set containing the visited countries along DFS path
    * @param start the starting point for the depth-first search
    * @return the set of visited countries in the DFS path

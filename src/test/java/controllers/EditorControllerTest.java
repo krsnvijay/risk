@@ -59,8 +59,8 @@ public class EditorControllerTest {
   }
   /**
    * test to save the map
+   * @throws IOException if map file is invalid
    */
-
   @Test
   public void saveMap() throws IOException {
     DominationMapParser mapParser = new DominationMapParser();
