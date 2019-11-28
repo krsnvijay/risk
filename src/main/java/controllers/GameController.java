@@ -289,7 +289,7 @@ public class GameController {
     PlayerStrategy currentPlayerStrategy = player.getStrategy();
     switch (currentContext) {
       case GAME_END_OF_TURN:
-        if (GameMap.getCurrentPlayerIndex() == 0) {
+        if (GameMap.numOfTurns % (gameMap.playersList.size()) == 0) {
           display(String.format("[Start Round - %d]", GameMap.numberOfRounds + 1), true);
         }
         display(String.format("[Start Turn - %d]", GameMap.numOfTurns + 1), false);
@@ -327,7 +327,7 @@ public class GameController {
             true);
         display(String.format("[End Turn - %d]", GameMap.numOfTurns + 1), false);
         gameMap.updatePlayerIndex();
-        if (GameMap.getCurrentPlayerIndex() == GameMap.getGameMap().getPlayersList().size() - 1) {
+        if (GameMap.numOfTurns%(gameMap.playersList.size()) == gameMap.getPlayersList().size() - 1) {
           display(String.format("[End Round - %d]", GameMap.numberOfRounds + 1), true);
           GameMap.numberOfRounds++;
         }

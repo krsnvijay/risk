@@ -75,12 +75,12 @@ public class PlayerCheater extends Observable implements PlayerStrategy {
             display(
                     String.format(
                             "Changing ownership of %s from %s to %s",
-                            neighbor.getName(), neighbor.getOwnerName(), playerName),
+                            neighbor.getName(), originalOwner, playerName),
                     true);
             display(
                     String.format(
                             "Moved %d armies from %s to %s",
-                            cheaterCountry.getNumberOfArmies() / 2, cheaterCountry.getName(), neighbor.getName()),
+                            cheaterCountry.getNumberOfArmies() / 2, cheaterCountry.getName(), originalOwner),
                     false);
           neighbor.setNumberOfArmies(cheaterCountry.getNumberOfArmies() / 2);
           cheaterCountry.removeArmies(cheaterCountry.getNumberOfArmies() / 2);

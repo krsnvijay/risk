@@ -65,6 +65,7 @@ public class TournamentController {
         SetupController.processPopulateCountriesCommand(gameMap, null);
         StartUpController.processPlaceAllCommand(gameMap, null);
         GameMap.numberOfRounds = 0;
+        GameMap.numOfTurns = 0;
         while (!GameMap.isGameOver && GameMap.numberOfRounds < maxNumberOfTurnsProperty) {
           GameController.startPhaseLoop(GameMap.getGameMap());
           GameMap.numOfTurns++;
