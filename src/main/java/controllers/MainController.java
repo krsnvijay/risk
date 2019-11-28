@@ -6,6 +6,7 @@ import models.GameMap;
 import models.WorldDomination;
 import utils.GamePersistenceHandler;
 import utils.MapAdaptor;
+import utils.MapValidator;
 import views.Runner;
 
 import java.io.FileNotFoundException;
@@ -73,7 +74,10 @@ public class MainController {
     try {
       MapAdaptor mapAdaptor = new MapAdaptor();
       newGameMap = mapAdaptor.autoLoadMap(fileLocation);
-      result = true;
+      if (MapValidator.validateMap(gameMap)) {
+        result = true;
+      }
+
     } catch (Exception e) {
       display(e.getMessage(), false);
     }

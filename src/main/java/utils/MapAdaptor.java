@@ -45,11 +45,13 @@ public class MapAdaptor {
    * @throws Exception file read exception
    */
   public GameMap autoLoadMap(String fileName) throws Exception {
+    GameMap gameMap;
     if (isMapTypeConquest(fileName)) {
-      return conquestMapParser.loadMap(fileName);
+      gameMap = conquestMapParser.loadMap(fileName);
     } else {
-      return dominationMapParser.loadMap(fileName);
+      gameMap = dominationMapParser.loadMap(fileName);
     }
+      return gameMap;
   }
 
   /**

@@ -1,11 +1,13 @@
 package controllers;
 
+import models.Context;
 import models.GameMap;
 import models.player.PlayerStrategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static views.ConsoleView.display;
 
@@ -86,7 +88,10 @@ public class TournamentController {
       }
     }
     // pretty print the results
-    System.out.println(resultTable.toString());
+    System.out.println("RESULTS TABLE");
+    for(Map.Entry<String, ArrayList<String>> entry:resultTable.entrySet()){
+      System.out.println(String.format("%s -> %s",entry.getKey(), String.join(" ", entry.getValue())));
+    }
     return true;
   }
 }
