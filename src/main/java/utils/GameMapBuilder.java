@@ -84,7 +84,17 @@ public abstract class GameMapBuilder {
      */
     abstract void buildNumberOfTradedSet(GameState gameState);
 
+    /**
+     * This method builds armiesTradedForSet
+     *
+     * @param gameState The GameState object.
+     */
     abstract void buildArmiesTradedForSet(GameState gameState);
 
+    /**
+     * This method builds cardCount
+     *
+     * @param gameState The GameState object.
+     */
     abstract void buildCardCount(GameState gameState);
 }

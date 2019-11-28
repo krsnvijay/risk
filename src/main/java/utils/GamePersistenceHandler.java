@@ -15,7 +15,17 @@ import java.nio.file.Paths;
 
 import static views.ConsoleView.display;
 
+/**
+ * Handles persistence of the game
+ */
 public class GamePersistenceHandler {
+    /**
+     * save state as json to a file location
+     *
+     * @param fileName path to the file
+     * @return boolean if save is successful
+     * @throws IOException file access error
+     */
     public static boolean saveState(String fileName) throws IOException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         ConcreteGameStateBuilder concreteGameStateBuilder = new ConcreteGameStateBuilder();
@@ -29,6 +39,12 @@ public class GamePersistenceHandler {
         return true;
     }
 
+    /**
+     * Load state from the file location
+     * @param fileName path to file location
+     * @return boolean if successful
+     * @throws FileNotFoundException if path file is invalid
+     */
     public static boolean loadState(String fileName) throws FileNotFoundException {
         Gson gson = new Gson();
         BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
