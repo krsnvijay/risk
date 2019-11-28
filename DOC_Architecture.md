@@ -75,6 +75,6 @@ We use the adapter pattern to load both Domination and Conquest map files. In th
 
 We use the builder pattern to save the game state. We seralise the state using `GameState` and `PlayerState` in the player package located in models. The utils hold the concrete builder classes and the director. The `GamePersistenceHandler` manages the saving and loading.
 
-### Observers Pattern
+### Observer Pattern
 
 We implemented the Observer pattern to handle view updation. Our `GameMap`, `WorldDomination`, and all the Player Strategy classes are the subjects that extend the Observable Java class. The observer interface is implemented in the `CardExchangeView`, `PhaseView`, and `WDView` in the GUI. Each is tied to and managed by `Runner`.
